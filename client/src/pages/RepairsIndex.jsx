@@ -16,7 +16,7 @@ const RepairsIndex = () => {
     const priorityBrands = ['Apple', 'Samsung', 'OnePlus', 'Google', 'Huawei', 'LG', 'Motorola', 'Oppo', 'Realme', 'Xiaomi'];
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/brands')
+        axios.get('/api/brands')
             .then(res => {
                 const sorted = res.data.sort((a, b) => {
                     const idxA = priorityBrands.indexOf(a.name);
@@ -33,7 +33,7 @@ const RepairsIndex = () => {
 
     const fetchModels = (brand) => {
         setSelectedBrand(brand);
-        axios.get(`http://localhost:3001/api/brands/${brand.id}/models`)
+        axios.get(`/api/brands/${brand.id}/models`)
             .then(res => setModels(res.data))
             .catch(err => console.error(err));
     };

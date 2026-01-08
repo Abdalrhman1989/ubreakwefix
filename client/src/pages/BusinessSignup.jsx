@@ -9,7 +9,7 @@ const BusinessSignup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3001/api/business/signup', formData);
+            await axios.post('/api/business/signup', formData);
             setSubmitted(true);
         } catch (error) {
             console.error(error);

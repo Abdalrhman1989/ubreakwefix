@@ -14,7 +14,7 @@ const SearchBox = () => {
         // Debounce search
         const delayDebounceFn = setTimeout(() => {
             if (query.length > 1) {
-                axios.get(`http://localhost:3001/api/models?search=${query}`)
+                axios.get(`/api/models?search=${query}`)
                     .then(res => {
                         setResults(res.data);
                         setShowResults(true);

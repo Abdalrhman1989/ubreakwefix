@@ -12,7 +12,7 @@ const DeviceSelector = () => {
 
     // Fetch Brands on Load
     useEffect(() => {
-        axios.get('http://localhost:3001/api/brands')
+        axios.get('/api/brands')
             .then(res => setBrands(res.data))
             .catch(err => console.error(err));
     }, []);
@@ -20,7 +20,7 @@ const DeviceSelector = () => {
     // Fetch Models when Brand changes
     useEffect(() => {
         if (selectedBrand) {
-            axios.get(`http://localhost:3001/api/brands/${selectedBrand}/models`)
+            axios.get(`/api/brands/${selectedBrand}/models`)
                 .then(res => setModels(res.data))
                 .catch(err => console.error(err));
             setSelectedModel('');
@@ -31,7 +31,7 @@ const DeviceSelector = () => {
     // Fetch Repairs when Model changes
     useEffect(() => {
         if (selectedModel) {
-            axios.get(`http://localhost:3001/api/models/${selectedModel}/repairs`)
+            axios.get(`/api/models/${selectedModel}/repairs`)
                 .then(res => setRepairs(res.data))
                 .catch(err => console.error(err));
         } else {

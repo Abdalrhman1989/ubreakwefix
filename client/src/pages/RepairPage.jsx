@@ -26,8 +26,8 @@ const RepairPage = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/models/${modelId}`).then(res => setModel(res.data));
-        axios.get(`http://localhost:3001/api/models/${modelId}/repairs`).then(res => setRepairs(res.data));
+        axios.get(`/api/models/${modelId}`).then(res => setModel(res.data));
+        axios.get(`/api/models/${modelId}/repairs`).then(res => setRepairs(res.data));
     }, [modelId]);
 
     const handleAdd = (repair) => {

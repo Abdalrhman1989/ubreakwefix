@@ -28,7 +28,7 @@ const SellDevice = () => {
 
     // Initial Load - Fetch Brands
     useEffect(() => {
-        fetch('http://localhost:3001/api/brands')
+        fetch('/api/brands')
             .then(res => res.json())
             .then(data => setBrands(data))
             .catch(err => console.error(err));
@@ -37,7 +37,7 @@ const SellDevice = () => {
     // Fetch Models when Brand changes
     useEffect(() => {
         if (selectedBrand) {
-            fetch(`http://localhost:3001/api/brands/${selectedBrand.id}/models`)
+            fetch(`/api/brands/${selectedBrand.id}/models`)
                 .then(res => res.json())
                 .then(data => setModels(data))
                 .catch(err => console.error(err));
@@ -90,7 +90,7 @@ const SellDevice = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/api/sell-device', {
+            const response = await fetch('/api/sell-device', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(fullData),

@@ -22,7 +22,7 @@ const Booking = () => {
         e.preventDefault();
         setStatus('submitting');
         try {
-            await axios.post('http://localhost:3001/api/bookings', formData);
+            await axios.post('/api/bookings', formData);
             setStatus('success');
             setTimeout(() => {
                 navigate('/');

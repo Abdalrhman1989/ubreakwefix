@@ -17,7 +17,7 @@ const SellScreen = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3001/api/sell-screen', {
+            const response = await fetch('/api/sell-screen', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
