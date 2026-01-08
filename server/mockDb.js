@@ -1,60 +1,157 @@
 
 // MOCK DATA
-const brands = [
-    { id: 1, name: 'Apple', image: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
-    { id: 2, name: 'Samsung', image: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' },
-    { id: 3, name: 'OnePlus', image: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/OnePlus_Logo.svg' },
-    { id: 4, name: 'Google', image: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg' },
-    { id: 5, name: 'Huawei', image: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Huawei_Logo.svg' },
-    { id: 6, name: 'Sony', image: 'https://upload.wikimedia.org/wikipedia/commons/c/c3/Sony_logo.svg' },
-    { id: 7, name: 'Nokia', image: 'https://upload.wikimedia.org/wikipedia/commons/0/02/Nokia_wordmark.svg' },
-    { id: 8, name: 'Xiaomi', image: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo_%282021-%29.svg' }
-];
+// User provided data structure
+const rawData = {
+    "brands": [
+        {
+            "name": "Apple",
+            "slug": "apple",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+            "models": [
+                "iPhone 16", "iPhone 16 Plus", "iPhone 16 Pro", "iPhone 16 Pro Max",
+                "iPhone 15", "iPhone 15 Plus", "iPhone 15 Pro", "iPhone 15 Pro Max",
+                "iPhone 14", "iPhone 14 Plus", "iPhone 14 Pro", "iPhone 14 Pro Max",
+                "iPhone 13", "iPhone 13 mini", "iPhone 13 Pro", "iPhone 13 Pro Max",
+                "iPhone 12", "iPhone 12 mini", "iPhone 12 Pro", "iPhone 12 Pro Max",
+                "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
+                "iPhone XS", "iPhone XS Max", "iPhone XR", "iPhone X",
+                "iPhone 8", "iPhone 8 Plus", "iPhone 7", "iPhone 7 Plus",
+                "iPhone 6", "iPhone 6 Plus", "iPhone 6s", "iPhone 6s Plus",
+                "iPhone SE (1st generation)", "iPhone SE (2nd generation)", "iPhone SE (3rd generation)"
+            ]
+        },
+        {
+            "name": "Samsung",
+            "slug": "samsung",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
+            "models": [
+                "Galaxy S24", "Galaxy S24+", "Galaxy S24 Ultra",
+                "Galaxy S23", "Galaxy S23+", "Galaxy S23 Ultra",
+                "Galaxy S22", "Galaxy S22+", "Galaxy S22 Ultra",
+                "Galaxy S21", "Galaxy S21+", "Galaxy S21 Ultra",
+                "Galaxy S20", "Galaxy S20+", "Galaxy S20 Ultra", "Galaxy S20 FE",
+                "Galaxy S10", "Galaxy S10+", "Galaxy S10e",
+                "Galaxy S9", "Galaxy S9+", "Galaxy S8", "Galaxy S8+",
+                "Galaxy Z Fold 6", "Galaxy Z Fold 5", "Galaxy Z Fold 4", "Galaxy Z Fold 3",
+                "Galaxy Z Flip 6", "Galaxy Z Flip 5", "Galaxy Z Flip 4", "Galaxy Z Flip 3",
+                "Galaxy A05", "Galaxy A05s", "Galaxy A14", "Galaxy A15",
+                "Galaxy A24", "Galaxy A25", "Galaxy A34", "Galaxy A35",
+                "Galaxy A54", "Galaxy A55", "Galaxy A71", "Galaxy A72",
+                "Galaxy Note 20", "Galaxy Note 20 Ultra",
+                "Galaxy Note 10", "Galaxy Note 10+", "Galaxy Note 9", "Galaxy Note 8"
+            ]
+        },
+        {
+            "name": "Google",
+            "slug": "google",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+            "models": [
+                "Pixel 8", "Pixel 8 Pro", "Pixel 7", "Pixel 7 Pro",
+                "Pixel 6", "Pixel 6 Pro", "Pixel 6a",
+                "Pixel 5", "Pixel 5a", "Pixel 4", "Pixel 4 XL", "Pixel 4a"
+            ]
+        },
+        {
+            "name": "Huawei",
+            "slug": "huawei",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Huawei_Logo.svg",
+            "models": [
+                "P60 Pro", "P50 Pro", "P40 Pro", "P30 Pro",
+                "Mate 50 Pro", "Mate 40 Pro", "Mate 30 Pro",
+                "Nova 11", "Nova 10", "Nova 9", "Y9", "Y7", "Y6"
+            ]
+        },
+        {
+            "name": "OnePlus",
+            "slug": "oneplus",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/2/2b/OnePlus_Logo.svg",
+            "models": [
+                "OnePlus 12", "OnePlus 11", "OnePlus 10 Pro",
+                "OnePlus 9 Pro", "OnePlus 9", "OnePlus 8 Pro", "OnePlus 8",
+                "OnePlus Nord 3", "OnePlus Nord 2", "OnePlus Nord CE"
+            ]
+        },
+        {
+            "name": "Xiaomi",
+            "slug": "xiaomi",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo_%282021-%29.svg",
+            "models": [
+                "Xiaomi 14", "Xiaomi 13", "Xiaomi 12",
+                "Redmi Note 13", "Redmi Note 12", "Redmi Note 11",
+                "Redmi 12", "Redmi 11", "Mi 11", "Mi 10"
+            ]
+        },
+        {
+            "name": "Oppo",
+            "slug": "oppo",
+            "image": null,
+            "models": [
+                "Find X6 Pro", "Find X5 Pro", "Reno 10", "Reno 8", "Reno 6",
+                "A98", "A78", "A54"
+            ]
+        },
+        {
+            "name": "Sony",
+            "slug": "sony",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Sony_logo.svg",
+            "models": [
+                "Xperia 1 V", "Xperia 1 IV", "Xperia 5 V", "Xperia 5 IV",
+                "Xperia 10 V", "Xperia 10 IV"
+            ]
+        },
+        {
+            "name": "LG",
+            "slug": "lg",
+            "image": null,
+            "models": [
+                "LG Velvet", "LG V60 ThinQ", "LG G8", "LG G7", "LG K61", "LG K51"
+            ]
+        },
+        {
+            "name": "Nokia",
+            "slug": "nokia",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/0/02/Nokia_wordmark.svg",
+            "models": [
+                "Nokia X30", "Nokia G60", "Nokia G50", "Nokia G21", "Nokia C32", "Nokia C21"
+            ]
+        }
+    ]
+};
 
+const brands = [];
 const models = [];
 const repairs = [];
+let brandIdCounter = 1;
 let modelIdCounter = 1;
 let repairIdCounter = 1;
 
-// Seed Data
-brands.forEach(brand => {
-    const brandModels = [
-        'Pro', 'Lite', 'Ultra', 'Plus', 'Mini', 'Max'
-    ].map(suffix => ({
-        id: modelIdCounter++,
-        brand_id: brand.id,
-        name: `${brand.name} ${suffix} ${Math.floor(Math.random() * 10) + 10}`,
-        image: null
-    }));
+rawData.brands.forEach(b => {
+    const brandId = brandIdCounter++;
+    brands.push({ id: brandId, name: b.name, image: b.image });
 
-    if (brand.name === 'Apple') {
-        ['iPhone 15 Pro', 'iPhone 14', 'iPhone 13', 'iPhone 12', 'iPhone 11', 'iPhone X'].forEach(m => {
-            brandModels.push({ id: modelIdCounter++, brand_id: brand.id, name: m });
-        });
-    }
-    // ... add more if needed
+    b.models.forEach(m => {
+        const modelId = modelIdCounter++;
+        models.push({ id: modelId, brand_id: brandId, name: m, image: null });
 
-    brandModels.forEach(model => {
-        models.push(model);
-        // Add repairs
+        // Add repairs for each model
         const repairTypes = [
             { name: 'Skærm (Original)', price: 1499, description: 'Original kvalitet skærm.' },
             { name: 'Skærm (Kopi)', price: 899, description: 'AAA+ kvalitet skærm.' },
             { name: 'Batteri', price: 499, description: 'Nyt batteri med høj kapacitet.' },
-            { name: 'Bagside', price: 599, description: 'Udskiftning af bagglas.' }
+            { name: 'Bagside', price: 599, description: 'Udskiftning af bagglas.' },
+            { name: 'Ladestik', price: 399, description: 'Rens eller udskiftning af port.' },
+            { name: 'Højtaler', price: 399, description: 'Ny højtaler.' },
+            { name: 'Kamera', price: 799, description: 'Udskiftning af bagkamera.' }
         ];
 
         repairTypes.forEach(r => {
-            repairs.push({ id: repairIdCounter++, model_id: model.id, ...r });
+            repairs.push({ id: repairIdCounter++, model_id: modelId, ...r });
         });
     });
 });
 
-const bookings = [];
-
 module.exports = {
     all: (sql, params, callback) => {
-        // Mock Implementation of SQL Selects
         try {
             if (sql.includes('FROM brands')) {
                 return callback(null, brands);
@@ -94,7 +191,6 @@ module.exports = {
         callback(null, null);
     },
     run: (sql, params, callback) => {
-        // Just succeed for writes
         if (callback) callback.call({ lastID: Date.now() }, null);
     }
 };
