@@ -6,7 +6,30 @@ export const translations = {
             about: "Om os",
             business: "Erhverv",
             contact: "Kontakt",
-            bookNow: "Bestil Tid"
+            bookNow: "Bestil Tid",
+            login: "Log ind",
+            myAccount: "Min Konto"
+        },
+        auth: {
+            loginTitle: "Log ind på din konto",
+            registerTitle: "Opret ny konto",
+            email: "Email",
+            password: "Adgangskode",
+            confirmPassword: "Bekræft adgangskode",
+            name: "Fulde navn",
+            phone: "Telefonnummer",
+            address: "Adresse",
+            loginBtn: "Log ind",
+            registerBtn: "Opret konto",
+            noAccount: "Har du ikke en konto?",
+            hasAccount: "Har du allerede en konto?",
+            createOne: "Opret en her",
+            loginHere: "Log ind her",
+            logout: "Log ud",
+            welcome: "Velkommen",
+            myDetails: "Mine oplysninger",
+            myOrders: "Mine ordrer/reparationer",
+            noOrders: "Ingen tidligere ordrer fundet."
         },
         hero: {
             new: "Nyhed: iPhone 16 Reparationer Tilgængelige",
@@ -119,7 +142,30 @@ export const translations = {
             about: "About Us",
             business: "Business",
             contact: "Contact",
-            bookNow: "Book Now"
+            bookNow: "Book Now",
+            login: "Login",
+            myAccount: "My Account"
+        },
+        auth: {
+            loginTitle: "Login to your account",
+            registerTitle: "Create new account",
+            email: "Email",
+            password: "Password",
+            confirmPassword: "Confirm Password",
+            name: "Full Name",
+            phone: "Phone Number",
+            address: "Address",
+            loginBtn: "Login",
+            registerBtn: "Create Account",
+            noAccount: "Don't have an account?",
+            hasAccount: "Already have an account?",
+            createOne: "Create one here",
+            loginHere: "Login here",
+            logout: "Logout",
+            welcome: "Welcome",
+            myDetails: "My Details",
+            myOrders: "My Orders/Repairs",
+            noOrders: "No previous orders found."
         },
         hero: {
             new: "New: iPhone 16 Repairs Available",

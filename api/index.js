@@ -13,6 +13,47 @@ app.use(express.json());
 
 const router = express.Router();
 
+// Auth Routes
+router.post('/auth/register', (req, res) => {
+    const { name, email, password, phone, address } = req.body;
+    if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Check if exists
+    db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
+        if (rows && rows.length > 0) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
+
+        // Create
+        db.run("INSERT INTO users (name, email, password, phone, address) VALUES (?,?,?,?,?)",
+            [name, email, password, phone || '', address || ''],
+            function (err) {
+                res.json({ id: this.lastID, name, email, message: 'User registered successfully' });
+            }
+        );
+    });
+});
+
+router.post('/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
+        if (!rows || rows.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+        const user = rows[0];
+        // Simple password check for mock
+        if (user.password !== password) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Return user info (no token needed for simple storage, or fake one)
+        const { password: _, ...userWithoutPass } = user;
+        res.json({ user: userWithoutPass, token: 'mock-jwt-token-' + user.id });
+    });
+});
+
 router.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date(), env: process.env.NODE_ENV, source: 'api/index.js' });
 });

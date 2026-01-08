@@ -269,3 +269,18 @@ h4 {
     /* Keep inverted on hover to ensure visibility */
     filter: grayscale(0%) invert(1) opacity(1);
 }
+
+/* Profile Page Grid */
+.profile-grid {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) 3fr;
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}

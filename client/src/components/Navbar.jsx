@@ -3,11 +3,13 @@ import { ShoppingBag, Menu, User, Sun, Moon, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 
 const Navbar = () => {
     const { cart } = useCart();
     const { language, toggleLanguage, t } = useLanguage();
+    const { user } = useAuth();
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
@@ -50,6 +52,14 @@ const Navbar = () => {
                     <Link to="/erhverv" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.business')}</Link>
                     <Link to="/om-os" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.about')}</Link>
                     <Link to="/kontakt" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.contact')}</Link>
+
+                    {user ? (
+                        <Link to="/profile" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <User size={18} /> {t('nav.myAccount')}
+                        </Link>
+                    ) : (
+                        <Link to="/login" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.login')}</Link>
+                    )}
                 </div>
 
                 <div className="desktop-only" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
@@ -120,6 +130,12 @@ const Navbar = () => {
                         <Link to="/erhverv" className="mobile-nav-link">{t('nav.business')}</Link>
                         <Link to="/om-os" className="mobile-nav-link">{t('nav.about')}</Link>
                         <Link to="/kontakt" className="mobile-nav-link">{t('nav.contact')}</Link>
+
+                        {user ? (
+                            <Link to="/profile" className="mobile-nav-link" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('nav.myAccount')}</Link>
+                        ) : (
+                            <Link to="/login" className="mobile-nav-link">{t('nav.login')}</Link>
+                        )}
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center' }}>
                             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>

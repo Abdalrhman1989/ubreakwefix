@@ -20,37 +20,46 @@ import { CartProvider } from './context/CartContext';
 import './index.css';
 
 import { LanguageProvider } from './context/LanguageContext';
+import { AuthProvider } from './context/AuthContext';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
 
 import CookieConsent from './components/CookieConsent';
 
 function App() {
     return (
         <LanguageProvider>
-            <CartProvider>
-                <Router>
-                    <div className="app-container">
-                        <Navbar />
-                        <CookieConsent />
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/reparation/:modelId" element={<RepairPage />} />
-                            <Route path="/checkout" element={<Checkout />} />
-                            <Route path="/book" element={<Booking />} />
-                            <Route path="/reparationer" element={<RepairsIndex />} />
-                            <Route path="/om-os" element={<About />} />
-                            <Route path="/kontakt" element={<Contact />} />
-                            <Route path="/erhverv" element={<Business />} />
-                            <Route path="/erhverv/opret" element={<BusinessSignup />} />
-                            <Route path="/betalingsbetingelser" element={<PaymentTerms />} />
-                            <Route path="/handelsbetingelser" element={<TermsAndConditions />} />
-                            <Route path="/forsendelse" element={<ShippingPolicy />} />
-                            <Route path="/saelg-enhed" element={<SellDevice />} />
-                            <Route path="/saelg-skaerm" element={<SellScreen />} />
-                        </Routes>
-                        <Footer />
-                    </div>
-                </Router>
-            </CartProvider>
+            <AuthProvider>
+                <CartProvider>
+                    <Router>
+                        <div className="app-container">
+                            <Navbar />
+                            <CookieConsent />
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/reparation/:modelId" element={<RepairPage />} />
+                                <Route path="/checkout" element={<Checkout />} />
+                                <Route path="/book" element={<Booking />} />
+                                <Route path="/reparationer" element={<RepairsIndex />} />
+                                <Route path="/om-os" element={<About />} />
+                                <Route path="/kontakt" element={<Contact />} />
+                                <Route path="/erhverv" element={<Business />} />
+                                <Route path="/erhverv/opret" element={<BusinessSignup />} />
+                                <Route path="/betalingsbetingelser" element={<PaymentTerms />} />
+                                <Route path="/handelsbetingelser" element={<TermsAndConditions />} />
+                                <Route path="/forsendelse" element={<ShippingPolicy />} />
+                                <Route path="/saelg-enhed" element={<SellDevice />} />
+                                <Route path="/saelg-skaerm" element={<SellScreen />} />
+                                <Route path="/login" element={<Login />} />
+                                <Route path="/register" element={<Register />} />
+                                <Route path="/profile" element={<Profile />} />
+                            </Routes>
+                            <Footer />
+                        </div>
+                    </Router>
+                </CartProvider>
+            </AuthProvider>
         </LanguageProvider>
     );
 }

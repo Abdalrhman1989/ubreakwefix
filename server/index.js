@@ -14,6 +14,27 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date(), env: process.env.NODE_ENV });
 });
 
+app.post('/api/auth/register', (req, res) => {
+    const { name, email, password, phone, address } = req.body;
+    db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
+        if (rows && rows.length > 0) return res.status(400).json({ error: 'User already exists' });
+        db.run("INSERT INTO users (name, email, password, phone, address) VALUES (?,?,?,?,?)",
+            [name, email, password, phone || '', address || ''],
+            function (err) { res.json({ id: this.lastID, message: 'User registered' }); }
+        );
+    });
+});
+
+app.post('/api/auth/login', (req, res) => {
+    const { email, password } = req.body;
+    db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
+        if (!rows || rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
+        if (rows[0].password !== password) return res.status(401).json({ error: 'Invalid credentials' });
+        const { password: _, ...u } = rows[0];
+        res.json({ user: u, token: 'mock-jwt-' + u.id });
+    });
+});
+
 app.get('/api/brands', (req, res) => {
     const sql = "SELECT * FROM brands ORDER BY name";
     db.all(sql, [], (err, rows) => {

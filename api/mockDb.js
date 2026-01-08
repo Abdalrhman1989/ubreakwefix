@@ -150,9 +150,23 @@ rawData.brands.forEach(b => {
     });
 });
 
+const users = [
+    // Default admin/demo user
+    { id: 1, name: 'Demo User', email: 'user@example.com', password: 'password123', address: '123 Tech Lane', phone: '12345678' }
+];
+let userIdCounter = 2;
+
 module.exports = {
     all: (sql, params, callback) => {
         try {
+            if (sql.includes('FROM users')) {
+                if (sql.includes('WHERE email')) {
+                    // Login check
+                    const email = params[0];
+                    return callback(null, users.filter(u => u.email === email));
+                }
+                return callback(null, users);
+            }
             if (sql.includes('FROM brands')) {
                 return callback(null, brands);
             }
@@ -191,6 +205,20 @@ module.exports = {
         callback(null, null);
     },
     run: (sql, params, callback) => {
+        if (sql.includes('INSERT INTO users')) {
+            // params: [name, email, password, phone, address]
+            const newUser = {
+                id: userIdCounter++,
+                name: params[0],
+                email: params[1],
+                password: params[2],
+                phone: params[3],
+                address: params[4]
+            };
+            users.push(newUser);
+            if (callback) callback.call({ lastID: newUser.id }, null);
+            return;
+        }
         if (callback) callback.call({ lastID: Date.now() }, null);
     }
 };
