@@ -1,0 +1,318 @@
+:root {
+    --primary-color: #E86A2A;
+    --primary-hover: #d5591e;
+    --text-dark: #1a1a1a;
+    --text-muted: #6c757d;
+    --bg-light: #f8f9fa;
+    --border-color: #e9ecef;
+    --card-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    --card-hover-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: #F8F9FB; /* Very light gray/blue tint */
+    color: var(--text-dark);
+}
+
+/* --- Typography Overrides --- */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+/* --- Buttons --- */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+    background-color: var(--primary-hover) !important;
+    border-color: var(--primary-hover) !important;
+    transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    transform: none;
+}
+
+.btn-outline-secondary {
+    border-color: #dee2e6;
+    color: var(--text-dark);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    color: var(--text-dark);
+}
+
+/* --- Stepper --- */
+.stepper-container {
+    padding: 0 1rem;
+    margin-bottom: 2.5rem;
+    z-index: 1;
+}
+
+.stepper-line {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    height: 2px;
+    background-color: #e9ecef;
+    transform: translateY(-50%);
+    z-index: -1;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #F8F9FB; /* Match body bg to mask line if needed, or transparent */
+    padding: 0 10px;
+    background: #F8F9FB;
+    cursor: default;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+/* Active Step */
+.step-item.active .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 4px rgba(232, 106, 42, 0.2);
+}
+
+.step-item.active .step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Completed Step */
+.step-item.completed .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.step-item.completed .step-label {
+    color: var(--primary-color);
+}
+
+
+/* --- Cards --- */
+.card {
+    border: 1px solid white;
+    box-shadow: var(--card-shadow);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    background-color: white;
+    overflow: hidden;
+}
+
+.repair-card {
+    cursor: pointer;
+    border: 2px solid transparent;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1.25rem;
+    position: relative;
+}
+
+.repair-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.repair-card.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(232, 106, 42, 0.03);
+}
+
+.repair-icon {
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    margin-right: 1rem;
+    min-width: 24px;
+}
+
+.repair-card.selected .repair-icon {
+    color: var(--primary-color);
+}
+
+.price-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #F8F9FB;
+    color: var(--text-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.repair-card.selected .price-badge {
+    background-color: white;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* --- Color Pills --- */
+.color-pill {
+    cursor: pointer;
+    border: 1px solid #e9ecef;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.color-pill:hover {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+}
+
+.color-pill.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(232, 106, 42, 0.05);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* --- Sticky Sidebar --- */
+.sticky-summary {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-card {
+    border: 1px solid #e9ecef;
+    border-radius: var(--radius-lg);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.summary-total {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Responsive Text --- */
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+/* --- Helper --- */
+.duration-badge {
+    color: var(--primary-color);
+    background: rgba(232, 106, 42, 0.1);
+    
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+/* --- Back Button --- */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    transition: color 0.2s;
+}
+
+.btn-back:hover {
+    color: var(--text-dark);
+}
+
+/* --- Device Image Frame --- */
+.device-frame {
+    width: 100px;
+    height: 120px;
+    object-fit: contain;
+    mix-blend-mode: multiply; /* Helps integrate white bg images */
+}
+
+/* 2-column grid override for repair cards */
+.repair-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .repair-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
