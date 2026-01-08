@@ -91,16 +91,8 @@ const RepairsIndex = () => {
                                 <img
                                     src={brand.image || `https://placehold.co/100x50?text=${brand.name}`}
                                     alt={brand.name}
-                                    style={{
-                                        maxWidth: '80%', maxHeight: '60px',
-                                        objectFit: 'contain',
-                                        filter: 'grayscale(100%) opacity(0.8)',
-                                        transition: 'filter 0.2s',
-                                        marginBottom: '20px'
-                                    }}
-                                    onLoad={(e) => e.target.style.filter = 'grayscale(100%) opacity(0.8)'}
-                                    onMouseEnter={(e) => e.target.style.filter = 'grayscale(0%) opacity(1)'}
-                                    onMouseLeave={(e) => e.target.style.filter = 'grayscale(100%) opacity(0.8)'}
+                                    className="brand-logo"
+                                    onClick={(e) => { e.stopPropagation(); fetchModels(brand); }}
                                 />
                                 <span style={{ fontWeight: '600', color: 'var(--text-main)', fontSize: '1.2rem' }}>{brand.name}</span>
                             </div>
