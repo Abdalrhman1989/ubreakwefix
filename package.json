@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "echo 'Using vercel.json configuration'"
+        "build": "cd client && npm install && npm run build && mkdir -p ../public && cp -r dist/* ../public"
     },
     "engines": {
         "node": ">=18"
