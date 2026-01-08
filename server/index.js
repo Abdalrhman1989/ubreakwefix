@@ -17,7 +17,10 @@ app.get('/api/health', (req, res) => {
 app.get('/api/brands', (req, res) => {
     const sql = "SELECT * FROM brands ORDER BY name";
     db.all(sql, [], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err) {
+            console.error("DB Error:", err);
+            return res.status(500).json({ error: err.message });
+        }
         res.json(rows);
     });
 });
