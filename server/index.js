@@ -10,6 +10,10 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date(), env: process.env.NODE_ENV });
+});
+
 app.get('/api/brands', (req, res) => {
     const sql = "SELECT * FROM brands ORDER BY name";
     db.all(sql, [], (err, rows) => {

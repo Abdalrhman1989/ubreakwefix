@@ -3,7 +3,7 @@ const path = require('path');
 const os = require('os');
 
 const dbPath = process.env.NODE_ENV === 'production'
-    ? path.join(os.tmpdir(), 'ubreakwefix.db')
+    ? ':memory:'
     : path.resolve(__dirname, 'ubreakwefix.db');
 
 const db = new sqlite3.Database(dbPath, (err) => {
