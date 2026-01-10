@@ -1,6 +1,29 @@
 
-// MOCK DATA
-// User provided data structure
+// MOCK DATA for Vercel Deployment
+// This mimics the SQLite database with in-memory arrays.
+
+// 1. Categories Data
+const categories = [
+    { id: 1, name: "Cases & Covers", description: "Protective cases for all models", image_url: "https://images.unsplash.com/photo-1601539222066-2b632c2ea742?auto=format&fit=crop&q=80&w=400", parent_id: null },
+    { id: 2, name: "Screen Protectors", description: "Tempered glass and films", image_url: "https://images.unsplash.com/photo-1663189745863-7e4726488775?auto=format&fit=crop&q=80&w=400", parent_id: null },
+    { id: 3, name: "Chargers & Cables", description: "Fast chargers and durable cables", image_url: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&q=80&w=400", parent_id: null },
+    { id: 4, name: "Audio", description: "Headphones and speakers", image_url: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=400", parent_id: null },
+    { id: 5, name: "Holders & Mounts", description: "Car mounts and stands", image_url: "https://images.unsplash.com/photo-1634547960627-7c70c2e3c035?auto=format&fit=crop&q=80&w=400", parent_id: null }
+];
+
+// 2. Products Data
+const products = [
+    { id: 1, name: "Slim Silicone Case - iPhone 15", category: "Cases & Covers", price: 199, stock_quantity: 50, image_url: "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=400", description: "Silky soft-touch finish.", condition: "New", storage: null, color: "Black" },
+    { id: 2, name: "Clear MagSafe Case - iPhone 15 Pro", category: "Cases & Covers", price: 299, stock_quantity: 30, image_url: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400", description: "Show off your iPhone's color.", condition: "New", storage: null, color: "Clear" },
+    { id: 3, name: "Tempered Glass - Universal", category: "Screen Protectors", price: 99, stock_quantity: 100, image_url: "https://images.unsplash.com/photo-1688636511175-9e6345638a5a?auto=format&fit=crop&q=80&w=400", description: "9H Hardness protection.", condition: "New", storage: null, color: "Transparent" },
+    { id: 4, name: "Fast USB-C Charger 20W", category: "Chargers & Cables", price: 149, stock_quantity: 45, image_url: "https://plus.unsplash.com/premium_photo-1675716443562-b771d72a3da7?auto=format&fit=crop&q=80&w=400", description: "Rapid charging for all devices.", condition: "New", storage: null, color: "White" },
+    { id: 5, name: "Wireless Earbuds Pro", category: "Audio", price: 899, stock_quantity: 20, image_url: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&q=80&w=400", description: "Active noise cancellation.", condition: "New", storage: null, color: "White" },
+    { id: 6, name: "Braided Lightning Cable (2m)", category: "Chargers & Cables", price: 129, stock_quantity: 60, image_url: "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&q=80&w=400", description: "Extra durability.", condition: "New", storage: null, color: "Blue" },
+    { id: 7, name: "Magnetic Car Mount", category: "Holders & Mounts", price: 179, stock_quantity: 25, image_url: "https://images.unsplash.com/photo-1634547960627-7c70c2e3c035?auto=format&fit=crop&q=80&w=400", description: "Strong magnet for safe driving.", condition: "New", storage: null, color: "Black" },
+    { id: 8, name: "Rugged Armor Case - Samsung S24", category: "Cases & Covers", price: 249, stock_quantity: 35, image_url: "https://images.unsplash.com/photo-1614051680183-b7884f3cc770?auto=format&fit=crop&q=80&w=400", description: "Heavy duty protection.", condition: "New", storage: null, color: "Gray" }
+];
+
+// 3. Brands & Models Data
 const rawData = {
     "brands": [
         {
@@ -151,25 +174,39 @@ rawData.brands.forEach(b => {
 });
 
 const users = [
-    // Default admin/demo user
-    { id: 1, name: 'Demo User', email: 'user@example.com', password: 'password123', address: '123 Tech Lane', phone: '12345678' }
+    { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', address: 'Admin HQ', phone: '00000000' },
+    { id: 2, name: 'Business User', email: 'business@example.com', password: 'business123', role: 'business', address: 'Business Ave', phone: '11111111' },
+    { id: 3, name: 'Test User', email: 'test@example.com', password: 'password123', role: 'user', address: 'User Lane', phone: '22222222' }
 ];
-let userIdCounter = 2;
+let userIdCounter = 4;
+
+const bookings = [];
+let bookingIdCounter = 1;
+
+const business_accounts = [];
+let businessIdCounter = 1;
+
+const shop_orders = [];
+let orderIdCounter = 1;
 
 module.exports = {
     all: (sql, params, callback) => {
         try {
+            // USERS
             if (sql.includes('FROM users')) {
-                if (sql.includes('WHERE email')) {
-                    // Login check
+                if (sql && sql.includes('WHERE email')) {
                     const email = params[0];
                     return callback(null, users.filter(u => u.email === email));
                 }
                 return callback(null, users);
             }
+
+            // BRANDS
             if (sql.includes('FROM brands')) {
                 return callback(null, brands);
             }
+
+            // MODELS
             if (sql.includes('FROM models')) {
                 if (sql.includes('WHERE brand_id')) {
                     const brandId = params[0];
@@ -180,17 +217,53 @@ module.exports = {
                     return callback(null, models.filter(m => m.name.toLowerCase().includes(search)).map(m => ({ ...m, brand_name: brands.find(b => b.id === m.brand_id)?.name })));
                 }
                 if (sql.includes('JOIN brands')) {
-                    // For 'SELECT models.*, brands.name...' without where
                     return callback(null, models.slice(0, 20).map(m => ({ ...m, brand_name: brands.find(b => b.id === m.brand_id)?.name })));
                 }
                 return callback(null, models);
             }
+
+            // REPAIRS
             if (sql.includes('FROM repairs')) {
                 const modelId = params[0];
                 return callback(null, repairs.filter(r => r.model_id == modelId));
             }
+
+            // CATEGORIES
+            if (sql.includes('FROM categories')) {
+                return callback(null, categories);
+            }
+
+            // PRODUCTS
+            if (sql.includes('FROM products')) {
+                // Mock simple filter
+                if (sql.includes('category =')) {
+                    // Very basic match for now
+                    const cat = params[0];
+                    return callback(null, products.filter(p => p.category === cat));
+                }
+                if (sql.includes('WHERE id =')) {
+                    return callback(null, products.filter(p => p.id == params[0]));
+                }
+                return callback(null, products);
+            }
+
+            // BOOKINGS
+            if (sql.includes('FROM bookings')) {
+                if (sql.includes('user_id =')) {
+                    const uid = params[0];
+                    return callback(null, bookings.filter(b => b.user_id == uid));
+                }
+                return callback(null, bookings);
+            }
+
+            // BUSINESS ACCOUNTS
+            if (sql.includes('FROM business_accounts')) {
+                return callback(null, business_accounts);
+            }
+
             callback(null, []);
         } catch (e) {
+            console.error("MOCK DB ERROR", e);
             callback(e);
         }
     },
@@ -202,23 +275,84 @@ module.exports = {
                 return callback(null, { ...model, brand_name: brand?.name });
             }
         }
+        if (sql.includes('FROM products') && sql.includes('WHERE id')) {
+            const prod = products.find(p => p.id == params[0]);
+            return callback(null, prod);
+        }
+        if (sql.includes('FROM users') && sql.includes('WHERE email')) {
+            const user = users.find(u => u.email == params[0]);
+            return callback(null, user);
+        }
+        if (sql.includes('FROM bookings') && sql.includes('WHERE id')) {
+            const booking = bookings.find(b => b.id == params[0]);
+            return callback(null, booking);
+        }
         callback(null, null);
     },
     run: (sql, params, callback) => {
+        console.log("Mock Run:", sql, params);
         if (sql.includes('INSERT INTO users')) {
-            // params: [name, email, password, phone, address]
+            // params: [name, email, password, phone, address] (role assumed user unless specified)
             const newUser = {
                 id: userIdCounter++,
                 name: params[0],
                 email: params[1],
                 password: params[2],
-                phone: params[3],
-                address: params[4]
+                phone: params[3] || '',
+                address: params[4] || '',
+                role: 'user'
             };
+            // Check if role is in params (not standard in this mock but logic might vary)
+            // Fix for generic insert
             users.push(newUser);
             if (callback) callback.call({ lastID: newUser.id }, null);
             return;
         }
+
+        if (sql.includes('INSERT INTO bookings')) {
+            // ...values (?,?,?,?,?,?,?)
+            const newBooking = {
+                id: bookingIdCounter++,
+                user_id: params[0],
+                customer_name: params[1],
+                customer_email: params[2],
+                customer_phone: params[3],
+                device_model: params[4],
+                problem: params[5],
+                booking_date: params[6],
+                status: 'pending',
+                created_at: new Date().toISOString()
+            };
+            bookings.push(newBooking);
+            if (callback) callback.call({ lastID: newBooking.id }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE bookings SET status')) {
+            const status = params[0];
+            const id = params[1];
+            const bk = bookings.find(b => b.id == id);
+            if (bk) bk.status = status;
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('INSERT INTO business_accounts')) {
+            const acc = {
+                id: businessIdCounter++,
+                company_name: params[0],
+                cvr: params[1],
+                email: params[2],
+                phone: params[3],
+                address: params[4],
+                status: 'pending',
+                created_at: new Date().toISOString()
+            };
+            business_accounts.push(acc);
+            if (callback) callback.call({ lastID: acc.id }, null);
+            return;
+        }
+
         if (callback) callback.call({ lastID: Date.now() }, null);
     }
 };

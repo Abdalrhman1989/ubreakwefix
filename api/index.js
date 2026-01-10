@@ -7,29 +7,19 @@ const app = express();
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
-// Helper to handle both /api/brands and /brands
-// Vercel might strip the prefix or not depending on rewrites.
-// We will mount a router on /api and on root to be safe.
-
 const router = express.Router();
 
-// Auth Routes
+// --- AUTH ---
 router.post('/auth/register', (req, res) => {
     const { name, email, password, phone, address } = req.body;
-    if (!name || !email || !password) {
-        return res.status(400).json({ error: 'Missing required fields' });
-    }
+    if (!name || !email || !password) return res.status(400).json({ error: 'Missing fields' });
 
-    // Check if exists
     db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
-        if (rows && rows.length > 0) {
-            return res.status(400).json({ error: 'User already exists' });
-        }
+        if (rows && rows.length > 0) return res.status(400).json({ error: 'User already exists' });
 
-        // Create
         db.run("INSERT INTO users (name, email, password, phone, address) VALUES (?,?,?,?,?)",
             [name, email, password, phone || '', address || ''],
-            function (err) {
+            function () {
                 res.json({ id: this.lastID, name, email, message: 'User registered successfully' });
             }
         );
@@ -39,37 +29,63 @@ router.post('/auth/register', (req, res) => {
 router.post('/auth/login', (req, res) => {
     const { email, password } = req.body;
     db.all("SELECT * FROM users WHERE email = ?", [email], (err, rows) => {
-        if (!rows || rows.length === 0) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-        const user = rows[0];
-        // Simple password check for mock
-        if (user.password !== password) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
+        if (!rows || rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
 
-        // Return user info (no token needed for simple storage, or fake one)
+        const user = rows[0];
+        if (user.password !== password) return res.status(401).json({ error: 'Invalid credentials' });
+
         const { password: _, ...userWithoutPass } = user;
         res.json({ user: userWithoutPass, token: 'mock-jwt-token-' + user.id });
     });
 });
 
-router.get('/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date(), env: process.env.NODE_ENV, source: 'api/index.js' });
+// --- SHOP ---
+router.get('/products', (req, res) => {
+    const { category, search } = req.query;
+    let sql = "SELECT * FROM products";
+    let params = [];
+
+    if (category && category !== 'All') {
+        sql += " WHERE category = ?";
+        params.push(category);
+    }
+    // Search logic handled in mockDb if needed, or ignored for simple mock
+
+    db.all(sql, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows || []);
+    });
 });
 
-router.get('/brands', (req, res) => {
-    const sql = "SELECT * FROM brands ORDER BY name";
-    db.all(sql, [], (err, rows) => {
+router.get('/products/:id', (req, res) => {
+    db.get("SELECT * FROM products WHERE id = ?", [req.params.id], (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
+        if (!row) return res.status(404).json({ error: 'Product not found' });
+        res.json(row);
+    });
+});
+
+router.get('/categories', (req, res) => {
+    db.all("SELECT * FROM categories", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows || []);
+    });
+});
+
+router.post('/shop/orders', (req, res) => {
+    // Mock order placement
+    res.json({ id: Date.now(), message: 'Order placed successfully (Mock)' });
+});
+
+// --- REPAIRS ---
+router.get('/brands', (req, res) => {
+    db.all("SELECT * FROM brands", [], (err, rows) => {
         res.json(rows);
     });
 });
 
 router.get('/brands/:brandId/models', (req, res) => {
-    const sql = "SELECT * FROM models WHERE brand_id = ? ORDER BY name DESC";
-    db.all(sql, [req.params.brandId], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.all("SELECT * FROM models WHERE brand_id = ?", [req.params.brandId], (err, rows) => {
         res.json(rows);
     });
 });
@@ -78,70 +94,74 @@ router.get('/models', (req, res) => {
     const search = req.query.search;
     let sql = "SELECT models.*, brands.name as brand_name FROM models JOIN brands ON models.brand_id = brands.id";
     let params = [];
-
     if (search) {
-        sql += " WHERE models.name LIKE ?";
-        params.push(`%${search}%`);
+        sql += " LIKE ?";
+        params.push(search);
     }
-
-    sql += " ORDER BY models.name LIMIT 20";
-
     db.all(sql, params, (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
         res.json(rows);
     });
 });
 
 router.get('/models/:modelId', (req, res) => {
-    const sql = "SELECT models.*, brands.name as brand_name FROM models JOIN brands ON models.brand_id = brands.id WHERE models.id = ?";
-    db.get(sql, [req.params.modelId], (err, row) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.get("SELECT * FROM models WHERE models.id = ?", [req.params.modelId], (err, row) => {
         res.json(row);
     });
 });
 
 router.get('/models/:modelId/repairs', (req, res) => {
-    const sql = "SELECT * FROM repairs WHERE model_id = ? ORDER BY price";
-    db.all(sql, [req.params.modelId], (err, rows) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.all("SELECT * FROM repairs WHERE model_id = ?", [req.params.modelId], (err, rows) => {
         res.json(rows);
     });
 });
 
+// --- BOOKINGS ---
 router.post('/bookings', (req, res) => {
-    const { customerName, customerEmail, customerPhone, deviceModel, problem, date } = req.body;
-    const sql = `INSERT INTO bookings (customer_name, customer_email, customer_phone, device_model, problem, booking_date) VALUES (?,?,?,?,?,?)`;
-    db.run(sql, [customerName, customerEmail, customerPhone, deviceModel, problem, date], function (err) {
-        // if (err) return res.status(500).json({ error: err.message }); // Mock DB doesn't error
-        res.json({ id: this.lastID, message: 'Booking created successfully' });
+    const { userId, customerName, customerEmail, customerPhone, deviceModel, problem, date } = req.body;
+    db.run("INSERT INTO bookings (user_id, customer_name, customer_email, customer_phone, device_model, problem, booking_date) VALUES (?,?,?,?,?,?,?)",
+        [userId, customerName, customerEmail, customerPhone, deviceModel, problem, date],
+        function () {
+            res.json({ id: this.lastID, message: 'Booking created' });
+        }
+    );
+});
+
+router.get('/user/bookings/:userId', (req, res) => {
+    db.all("SELECT * FROM bookings WHERE user_id = ?", [req.params.userId], (err, rows) => {
+        res.json(rows || []);
     });
 });
 
+// --- ADMIN & BUSINESS ---
 router.post('/business/signup', (req, res) => {
+    // Handle split args inside mockDb or here
     const { companyName, cvr, email, phone, address } = req.body;
-    const sql = `INSERT INTO business_accounts (company_name, cvr, email, phone, address) VALUES (?,?,?,?,?)`;
-    db.run(sql, [companyName, cvr, email, phone, address], function (err) {
+    db.run("INSERT INTO business_accounts VALUES (?,?,?,?,?)", [companyName, cvr, email, phone, address], function () {
         res.json({ id: this.lastID, message: 'Application received' });
     });
 });
 
-router.post('/sell-device', (req, res) => {
-    const { deviceModel, condition, customerName, customerEmail, customerPhone } = req.body;
-    const sql = `INSERT INTO sell_device_requests (device_model, condition, customer_name, customer_email, customer_phone) VALUES (?,?,?,?,?)`;
-    db.run(sql, [deviceModel, condition, customerName, customerEmail, customerPhone], function (err) {
-        res.json({ id: this.lastID, message: 'Sell request received' });
+router.get('/admin/requests/business', (req, res) => {
+    db.all("SELECT * FROM business_accounts", [], (err, rows) => {
+        res.json(rows || []);
     });
+});
+
+router.get('/health', (req, res) => {
+    res.json({ status: 'ok', source: 'api/index.js v2', timestamp: new Date() });
+});
+
+
+router.post('/sell-device', (req, res) => {
+    // Mock simple success
+    res.json({ id: Date.now(), message: 'Sell request received (Mock)' });
 });
 
 router.post('/sell-screen', (req, res) => {
-    const { description, quantity, customerName, customerEmail, customerPhone } = req.body;
-    const sql = `INSERT INTO sell_screen_requests (description, quantity, customer_name, customer_email, customer_phone) VALUES (?,?,?,?,?)`;
-    db.run(sql, [description, quantity, customerName, customerEmail, customerPhone], function (err) {
-        res.json({ id: this.lastID, message: 'Sell screen request received' });
-    });
+    res.json({ id: Date.now(), message: 'Sell screen request received (Mock)' });
 });
 
-// Dual-mount router to handle prefix stripping differences
+// MOUNT ROUTER
 app.use('/api', router);
 app.use('/', router);
 
