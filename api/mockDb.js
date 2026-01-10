@@ -194,10 +194,19 @@ const shop_orders = [
         customer_email: 'user@example.com',
         total_amount: 1499,
         items_json: JSON.stringify([{ id: 101, name: 'iPhone 13 screen', quantity: 1, price: 1499 }]),
+        status: 'Pending',
         created_at: new Date().toISOString()
     }
 ];
 let orderIdCounter = 1;
+
+let settings = {
+    store_name: 'UBreak WeFix',
+    support_email: 'support@ubreakwefix.com',
+    support_phone: '+45 12 34 56 78',
+    maintenance_mode: false,
+    holiday_mode: false
+};
 
 module.exports = {
     all: (sql, params, callback) => {
@@ -276,6 +285,38 @@ module.exports = {
                 return callback(null, shop_orders || []);
             }
 
+            // ANALYTICS - REVENUE
+            if (sql.includes('ANALYTICS revenue')) {
+                // Mock 7 days of revenue
+                const data = Array.from({ length: 7 }, (_, i) => {
+                    const d = new Date();
+                    d.setDate(d.getDate() - (6 - i));
+                    return {
+                        date: d.toISOString().split('T')[0],
+                        amount: Math.floor(Math.random() * 5000) + 1000
+                    };
+                });
+                return callback(null, data);
+            }
+
+            // ANALYTICS - ACTIVITY
+            if (sql.includes('ANALYTICS activity')) {
+                // ... existing activity code ...
+                const activities = [
+                    { id: 1, type: 'order', message: 'New order #105 received', time: '2 mins ago', user: 'John Doe' },
+                    { id: 2, type: 'booking', message: 'Repair booking #42 created', time: '15 mins ago', user: 'Sarah Smith' },
+                    { id: 3, type: 'user', message: 'New user registration', time: '1 hour ago', user: 'Mike Johnson' },
+                    { id: 4, type: 'review', message: '5-star review received', time: '3 hours ago', user: 'Emily Davis' },
+                    { id: 5, type: 'stock', message: 'Low stock warning: iPhone 13 Screen', time: '5 hours ago', user: 'System' }
+                ];
+                return callback(null, activities);
+            }
+
+            // SETTINGS
+            if (sql.includes('FROM settings')) {
+                return callback(null, settings);
+            }
+
             callback(null, []);
         } catch (e) {
             console.error("MOCK DB ERROR", e);
@@ -352,7 +393,17 @@ module.exports = {
             return;
         }
 
+        if (sql.includes('UPDATE shop_orders SET status')) {
+            const status = params[0];
+            const id = params[1];
+            const order = shop_orders.find(o => o.id == id);
+            if (order) order.status = status;
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
         if (sql.includes('INSERT INTO business_accounts')) {
+            // ... existing ...
             const acc = {
                 id: businessIdCounter++,
                 company_name: params[0],
@@ -365,6 +416,19 @@ module.exports = {
             };
             business_accounts.push(acc);
             if (callback) callback.call({ lastID: acc.id }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE settings')) {
+            // params: [store_name, email, phone, maintenance, holiday]
+            settings = {
+                store_name: params[0],
+                support_email: params[1],
+                support_phone: params[2],
+                maintenance_mode: params[3],
+                holiday_mode: params[4]
+            };
+            if (callback) callback.call({ changes: 1 }, null);
             return;
         }
 

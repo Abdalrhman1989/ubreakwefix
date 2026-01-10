@@ -360,6 +360,46 @@ app.get('/api/admin/shop/orders', (req, res) => {
     });
 });
 
+app.put('/api/admin/shop/orders/:id/status', (req, res) => {
+    const { status } = req.body;
+    db.run("UPDATE shop_orders SET status = ? WHERE id = ?", [status, req.params.id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+    });
+});
+
+app.get('/api/admin/analytics/revenue', (req, res) => {
+    db.all("ANALYTICS revenue", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.get('/api/admin/analytics/activity', (req, res) => {
+    db.all("ANALYTICS activity", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.get('/api/admin/settings', (req, res) => {
+    db.get("SELECT * FROM settings", (err, row) => {
+        // mockDb returns obj directly for 'get' or 'all' depending on implementation
+        // For 'all' it returns [obj], for 'get' usually nothing unless specific ID logic
+        // Let's use 'all' effectively since we used 'FROM settings' in 'all'
+        db.all("SELECT * FROM settings", [], (err, rows) => {
+            res.json(rows || {});
+        });
+    });
+});
+
+app.post('/api/admin/settings', (req, res) => {
+    const { store_name, support_email, support_phone, maintenance_mode, holiday_mode } = req.body;
+    db.run("UPDATE settings SET val = ?", [store_name, support_email, support_phone, maintenance_mode, holiday_mode], (err) => {
+        res.json({ success: true });
+    });
+});
+
 app.get('/api/admin/stats', (req, res) => {
     const stats = {};
     db.get("SELECT COUNT(*) as count FROM brands", (err, row) => {

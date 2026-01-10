@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { LayoutDashboard, Smartphone, Layers, Wrench, LogOut, Package, Users, User, ArrowLeft, Menu, X, Sun, Moon, Briefcase, ShoppingBag } from 'lucide-react';
+import { LayoutDashboard, Smartphone, Layers, Wrench, LogOut, Package, Users, User, ArrowLeft, Menu, X, Sun, Moon, Briefcase, ShoppingBag, Settings } from 'lucide-react';
 
 const AdminLayout = () => {
     const { user, logout } = useAuth();
@@ -43,6 +43,7 @@ const AdminLayout = () => {
         { path: '/admin/shop-orders', icon: <ShoppingBag size={20} />, label: 'Shop Orders' },
         { path: '/admin/business-requests', icon: <Briefcase size={20} />, label: 'Business Requests' },
         { path: '/admin/users', icon: <Users size={20} />, label: 'Users' },
+        { path: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' },
         { path: '/admin/profile', icon: <User size={20} />, label: 'Profile' },
     ];
 

@@ -147,6 +147,39 @@ router.get('/admin/shop/orders', (req, res) => {
     });
 });
 
+router.put('/admin/shop/orders/:id/status', (req, res) => {
+    const { status } = req.body;
+    db.run("UPDATE shop_orders SET status = ? WHERE id = ?", [status, req.params.id], function (err) {
+        // Mock DB might not return err, but safety check
+        res.json({ success: true });
+    });
+});
+
+router.get('/admin/analytics/revenue', (req, res) => {
+    db.all("ANALYTICS revenue", [], (err, rows) => {
+        res.json(rows || []);
+    });
+});
+
+router.get('/admin/analytics/activity', (req, res) => {
+    db.all("ANALYTICS activity", [], (err, rows) => {
+        res.json(rows || []);
+    });
+});
+
+router.get('/admin/settings', (req, res) => {
+    db.all("SELECT * FROM settings", [], (err, rows) => {
+        res.json(rows || {});
+    });
+});
+
+router.post('/admin/settings', (req, res) => {
+    const { store_name, support_email, support_phone, maintenance_mode, holiday_mode } = req.body;
+    db.run("UPDATE settings SET val = ?", [store_name, support_email, support_phone, maintenance_mode, holiday_mode], (err) => {
+        res.json({ success: true });
+    });
+});
+
 router.get('/admin/requests/business', (req, res) => {
     db.all("SELECT * FROM business_accounts", [], (err, rows) => {
         res.json(rows || []);

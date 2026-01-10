@@ -31,6 +31,7 @@ import AdminModels from './pages/admin/AdminModels';
 import AdminRepairs from './pages/admin/AdminRepairs';
 import AdminBookings from './pages/admin/AdminBookings';
 import AdminShopOrders from './pages/admin/AdminShopOrders';
+import AdminSettings from './pages/admin/AdminSettings';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminUserProfile from './pages/admin/AdminUserProfile';
 import BusinessDashboard from './pages/BusinessDashboard';
@@ -108,6 +109,7 @@ function App() {
                                     <Route path="bookings" element={<AdminBookings />} />
                                     <Route path="shop-orders" element={<AdminShopOrders />} />
                                     <Route path="business-requests" element={<AdminBusinessRequests />} />
+                                    <Route path="settings" element={<AdminSettings />} />
                                     <Route path="users" element={<AdminUsers />} />
                                     <Route path="users/:id" element={<AdminUserProfile />} />
                                     <Route path="profile" element={<AdminProfile />} />
