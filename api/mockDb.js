@@ -186,7 +186,17 @@ let bookingIdCounter = 1;
 const business_accounts = [];
 let businessIdCounter = 1;
 
-const shop_orders = [];
+const shop_orders = [
+    {
+        id: 1,
+        user_id: 1,
+        customer_name: 'Demo User',
+        customer_email: 'user@example.com',
+        total_amount: 1499,
+        items_json: JSON.stringify([{ id: 101, name: 'iPhone 13 screen', quantity: 1, price: 1499 }]),
+        created_at: new Date().toISOString()
+    }
+];
 let orderIdCounter = 1;
 
 module.exports = {
