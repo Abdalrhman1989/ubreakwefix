@@ -261,6 +261,11 @@ module.exports = {
                 return callback(null, business_accounts);
             }
 
+            // SHOP ORDERS
+            if (sql.includes('FROM shop_orders')) {
+                return callback(null, shop_orders || []);
+            }
+
             callback(null, []);
         } catch (e) {
             console.error("MOCK DB ERROR", e);

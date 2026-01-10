@@ -30,6 +30,7 @@ import AdminBrands from './pages/admin/AdminBrands';
 import AdminModels from './pages/admin/AdminModels';
 import AdminRepairs from './pages/admin/AdminRepairs';
 import AdminBookings from './pages/admin/AdminBookings';
+import AdminShopOrders from './pages/admin/AdminShopOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminUserProfile from './pages/admin/AdminUserProfile';
 import BusinessDashboard from './pages/BusinessDashboard';
@@ -105,6 +106,7 @@ function App() {
                                     <Route path="models" element={<AdminModels />} />
                                     <Route path="repairs" element={<AdminRepairs />} />
                                     <Route path="bookings" element={<AdminBookings />} />
+                                    <Route path="shop-orders" element={<AdminShopOrders />} />
                                     <Route path="business-requests" element={<AdminBusinessRequests />} />
                                     <Route path="users" element={<AdminUsers />} />
                                     <Route path="users/:id" element={<AdminUserProfile />} />

@@ -353,6 +353,13 @@ app.post('/api/shop/orders', (req, res) => {
 });
 
 // ADMIN ROUTES
+app.get('/api/admin/shop/orders', (req, res) => {
+    db.all("SELECT * FROM shop_orders ORDER BY created_at DESC", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 app.get('/api/admin/stats', (req, res) => {
     const stats = {};
     db.get("SELECT COUNT(*) as count FROM brands", (err, row) => {

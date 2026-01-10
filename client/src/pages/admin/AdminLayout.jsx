@@ -40,6 +40,7 @@ const AdminLayout = () => {
         { path: '/admin/models', icon: <Smartphone size={20} />, label: 'Models' },
         { path: '/admin/repairs', icon: <Wrench size={20} />, label: 'Repairs' },
         { path: '/admin/bookings', icon: <Layers size={20} />, label: 'Bookings' },
+        { path: '/admin/shop-orders', icon: <ShoppingBag size={20} />, label: 'Shop Orders' },
         { path: '/admin/business-requests', icon: <Briefcase size={20} />, label: 'Business Requests' },
         { path: '/admin/users', icon: <Users size={20} />, label: 'Users' },
         { path: '/admin/profile', icon: <User size={20} />, label: 'Profile' },

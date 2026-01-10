@@ -141,6 +141,12 @@ router.post('/business/signup', (req, res) => {
     });
 });
 
+router.get('/admin/shop/orders', (req, res) => {
+    db.all("SELECT * FROM shop_orders", [], (err, rows) => {
+        res.json(rows || []);
+    });
+});
+
 router.get('/admin/requests/business', (req, res) => {
     db.all("SELECT * FROM business_accounts", [], (err, rows) => {
         res.json(rows || []);
