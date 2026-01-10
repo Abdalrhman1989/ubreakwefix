@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Building, Hash, Mail, Phone, MapPin } from 'lucide-react';
 
 const BusinessSignup = () => {
     const [formData, setFormData] = useState({ companyName: '', cvr: '', email: '', phone: '', address: '' });
@@ -19,7 +19,7 @@ const BusinessSignup = () => {
 
     if (submitted) {
         return (
-            <div style={{ padding: '100px 0', textAlign: 'center', minHeight: '60vh' }}>
+            <div className="container" style={{ padding: '100px 0', textAlign: 'center', minHeight: '60vh' }}>
                 <div style={{ background: 'var(--bg-surface)', padding: '60px', borderRadius: '24px', display: 'inline-block', boxShadow: 'var(--shadow-lg)' }}>
                     <CheckCircle size={80} color="var(--primary)" style={{ marginBottom: '20px' }} />
                     <h1 style={{ fontSize: '2.5rem', marginBottom: '20px' }}>Ansøgning Modtaget!</h1>
@@ -42,59 +42,74 @@ const BusinessSignup = () => {
                 <form onSubmit={handleSubmit} className="card-glass" style={{ padding: '40px' }}>
                     <div style={{ display: 'grid', gap: '20px' }}>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Virksomhedsnavn</label>
-                            <input
-                                type="text"
-                                required
-                                className="input-search"
-                                style={{ borderRadius: '8px', padding: '12px' }}
-                                value={formData.companyName}
-                                onChange={e => setFormData({ ...formData, companyName: e.target.value })}
-                            />
+                            <label className="form-label">Virksomhedsnavn</label>
+                            <div className="input-with-icon">
+                                <Building size={18} className="icon" />
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Firma ApS"
+                                    className="input-field"
+                                    value={formData.companyName}
+                                    onChange={e => setFormData({ ...formData, companyName: e.target.value })}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>CVR-nummer</label>
-                            <input
-                                type="text"
-                                required
-                                className="input-search"
-                                style={{ borderRadius: '8px', padding: '12px' }}
-                                value={formData.cvr}
-                                onChange={e => setFormData({ ...formData, cvr: e.target.value })}
-                            />
+                            <label className="form-label">CVR-nummer</label>
+                            <div className="input-with-icon">
+                                <Hash size={18} className="icon" />
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="12345678"
+                                    className="input-field"
+                                    value={formData.cvr}
+                                    onChange={e => setFormData({ ...formData, cvr: e.target.value })}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Email</label>
-                            <input
-                                type="email"
-                                required
-                                className="input-search"
-                                style={{ borderRadius: '8px', padding: '12px' }}
-                                value={formData.email}
-                                onChange={e => setFormData({ ...formData, email: e.target.value })}
-                            />
+                            <label className="form-label">Email</label>
+                            <div className="input-with-icon">
+                                <Mail size={18} className="icon" />
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="kontakt@firma.dk"
+                                    className="input-field"
+                                    value={formData.email}
+                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Telefon</label>
-                            <input
-                                type="tel"
-                                required
-                                className="input-search"
-                                style={{ borderRadius: '8px', padding: '12px' }}
-                                value={formData.phone}
-                                onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                            />
+                            <label className="form-label">Telefon</label>
+                            <div className="input-with-icon">
+                                <Phone size={18} className="icon" />
+                                <input
+                                    type="tel"
+                                    required
+                                    placeholder="+45 12 34 56 78"
+                                    className="input-field"
+                                    value={formData.phone}
+                                    onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                />
+                            </div>
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Adresse</label>
-                            <input
-                                type="text"
-                                required
-                                className="input-search"
-                                style={{ borderRadius: '8px', padding: '12px' }}
-                                value={formData.address}
-                                onChange={e => setFormData({ ...formData, address: e.target.value })}
-                            />
+                            <label className="form-label">Adresse</label>
+                            <div className="input-with-icon">
+                                <MapPin size={18} className="icon" />
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Industrivej 1"
+                                    className="input-field"
+                                    value={formData.address}
+                                    onChange={e => setFormData({ ...formData, address: e.target.value })}
+                                />
+                            </div>
                         </div>
 
                         <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '16px', fontSize: '1.1rem', marginTop: '20px' }}>

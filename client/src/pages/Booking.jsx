@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const Booking = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+
     const [formData, setFormData] = useState({
         customerName: '',
         customerEmail: '',
@@ -12,6 +15,18 @@ const Booking = () => {
         problem: '',
         date: ''
     });
+
+    useEffect(() => {
+        if (user) {
+            setFormData(prev => ({
+                ...prev,
+                customerName: user.name || '',
+                customerEmail: user.email || '',
+                customerPhone: user.phone || ''
+            }));
+        }
+    }, [user]);
+
     const [status, setStatus] = useState('idle'); // idle, submitting, success, error
 
     const handleChange = (e) => {
@@ -22,11 +37,12 @@ const Booking = () => {
         e.preventDefault();
         setStatus('submitting');
         try {
-            await axios.post('/api/bookings', formData);
+            const dataToSend = { ...formData, userId: user ? user.id : null };
+            await axios.post('/api/bookings', dataToSend);
             setStatus('success');
             setTimeout(() => {
-                navigate('/');
-            }, 3000);
+                navigate('/profile'); // Redirect to profile to see the order
+            }, 2000);
         } catch (error) {
             console.error(error);
             setStatus('error');

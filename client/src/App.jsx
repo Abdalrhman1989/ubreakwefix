@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Checkout from './pages/Checkout';
@@ -24,8 +24,44 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminBrands from './pages/admin/AdminBrands';
+import AdminModels from './pages/admin/AdminModels';
+import AdminRepairs from './pages/admin/AdminRepairs';
+import AdminBookings from './pages/admin/AdminBookings';
+import AdminUsers from './pages/admin/AdminUsers';
+import AdminUserProfile from './pages/admin/AdminUserProfile';
+import BusinessDashboard from './pages/BusinessDashboard';
+import AdminBusinessRequests from './pages/admin/AdminBusinessRequests';
+import AdminProfile from './pages/admin/AdminProfile';
+
+
+import Shop from './pages/Shop';
+import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
+
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminProductForm from './pages/admin/AdminProductForm';
+import AdminCategories from './pages/admin/AdminCategories';
 
 import CookieConsent from './components/CookieConsent';
+
+function Layout({ children }) {
+    const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith('/admin');
+
+    return (
+        <div className="app-container">
+            {/* TopBar might be needed, adding it if not admin */}
+            {!isAdminRoute && <TopBar />}
+            {!isAdminRoute && <Navbar />}
+            {!isAdminRoute && <CookieConsent />}
+            {children}
+            {!isAdminRoute && <Footer />}
+        </div>
+    );
+}
 
 function App() {
     return (
@@ -33,10 +69,9 @@ function App() {
             <AuthProvider>
                 <CartProvider>
                     <Router>
-                        <div className="app-container">
-                            <Navbar />
-                            <CookieConsent />
+                        <Layout>
                             <Routes>
+                                {/* Public Routes */}
                                 <Route path="/" element={<Home />} />
                                 <Route path="/reparation/:modelId" element={<RepairPage />} />
                                 <Route path="/checkout" element={<Checkout />} />
@@ -51,12 +86,36 @@ function App() {
                                 <Route path="/forsendelse" element={<ShippingPolicy />} />
                                 <Route path="/saelg-enhed" element={<SellDevice />} />
                                 <Route path="/saelg-skaerm" element={<SellScreen />} />
+
                                 <Route path="/login" element={<Login />} />
                                 <Route path="/register" element={<Register />} />
                                 <Route path="/profile" element={<Profile />} />
+                                <Route path="/business/dashboard" element={<BusinessDashboard />} />
+
+                                {/* Shop Routes */}
+                                <Route path="/shop" element={<Shop />} />
+                                <Route path="/shop/product/:id" element={<ProductDetails />} />
+                                <Route path="/cart" element={<Cart />} />
+
+
+                                {/* Admin Routes */}
+                                <Route path="/admin" element={<AdminLayout />}>
+                                    <Route index element={<AdminDashboard />} />
+                                    <Route path="brands" element={<AdminBrands />} />
+                                    <Route path="models" element={<AdminModels />} />
+                                    <Route path="repairs" element={<AdminRepairs />} />
+                                    <Route path="bookings" element={<AdminBookings />} />
+                                    <Route path="business-requests" element={<AdminBusinessRequests />} />
+                                    <Route path="users" element={<AdminUsers />} />
+                                    <Route path="users/:id" element={<AdminUserProfile />} />
+                                    <Route path="profile" element={<AdminProfile />} />
+                                    <Route path="products" element={<AdminProducts />} />
+                                    <Route path="products/new" element={<AdminProductForm />} />
+                                    <Route path="products/edit/:id" element={<AdminProductForm />} />
+                                    <Route path="categories" element={<AdminCategories />} />
+                                </Route>
                             </Routes>
-                            <Footer />
-                        </div>
+                        </Layout>
                     </Router>
                 </CartProvider>
             </AuthProvider>

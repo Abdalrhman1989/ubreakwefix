@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', token);
             // axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // If backend supported it
-            return { success: true };
+            return { success: true, user }; // Changed to return user
         } catch (error) {
             console.error("Login failed", error);
             return { success: false, error: error.response?.data?.error || 'Login failed' };

@@ -18,12 +18,30 @@ const Login = () => {
         e.preventDefault();
         setError('');
         setLoading(true);
-        const res = await login(formData.email, formData.password);
-        setLoading(false);
-        if (res.success) {
-            navigate('/profile');
-        } else {
-            setError(res.error);
+        try {
+            const res = await login(formData.email, formData.password);
+            setLoading(false);
+            if (res.success) {
+                // Assuming the login function now returns user data including role
+                // or that the useAuth().login function internally sets the user state
+                // and we can access the user from the context after a successful login.
+                // For this change, we'll assume `res` contains user data if successful.
+                // If `login` from useAuth only returns success/error, you'd need to fetch user data separately
+                // or modify the `login` function in AuthContext to return user details.
+                // For the sake of making the requested change, let's assume `res.user` exists.
+                if (res.user && res.user.role === 'admin') {
+                    navigate('/admin');
+                } else if (res.user && res.user.role === 'business') {
+                    navigate('/business/dashboard');
+                } else {
+                    navigate('/profile');
+                }
+            } else {
+                setError(res.error);
+            }
+        } catch (err) {
+            setLoading(false);
+            setError(err.message || 'An unexpected error occurred.');
         }
     };
 

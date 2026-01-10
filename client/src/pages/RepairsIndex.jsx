@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Smartphone, Tablet } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Smartphone, Tablet, Watch } from 'lucide-react';
 import SearchBox from '../components/SearchBox';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -9,6 +9,7 @@ const RepairsIndex = () => {
     const { t } = useLanguage();
     const [brands, setBrands] = useState([]);
     const [selectedBrand, setSelectedBrand] = useState(null);
+    const [selectedFamily, setSelectedFamily] = useState(null);
     const [models, setModels] = useState([]);
     const navigate = useNavigate();
 
@@ -33,10 +34,38 @@ const RepairsIndex = () => {
 
     const fetchModels = (brand) => {
         setSelectedBrand(brand);
+        setSelectedFamily(null);
         axios.get(`/api/brands/${brand.id}/models`)
             .then(res => setModels(res.data))
             .catch(err => console.error(err));
     };
+
+    const getFamilies = (models) => {
+        if (!models) return [];
+        const familiesMap = new Map();
+
+        models.forEach(m => {
+            if (m.family && m.family !== 'Other') {
+                if (!familiesMap.has(m.family)) {
+                    // Determine icon based on family name
+                    let icon = <Smartphone size={40} />;
+                    if (m.family.includes('Watch')) icon = <Watch size={40} />;
+                    else if (m.family.includes('iPad') || m.family.includes('Tablet')) icon = <Tablet size={40} />;
+
+                    familiesMap.set(m.family, { name: m.family, icon });
+                }
+            }
+        });
+
+        return Array.from(familiesMap.values());
+    };
+
+    const families = selectedBrand ? getFamilies(models) : [];
+    const showFamilies = selectedBrand && families.length > 0 && !selectedFamily;
+
+    const displayedModels = selectedFamily
+        ? models.filter(m => m.family === selectedFamily.name)
+        : models;
 
     return (
         <div style={{ background: 'var(--bg-body)', minHeight: '100vh', padding: '40px 0' }}>
@@ -45,7 +74,8 @@ const RepairsIndex = () => {
                 {/* Header Section */}
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                     <h1 style={{ fontSize: '3rem', marginBottom: '20px', color: 'var(--text-main)' }}>
-                        {selectedBrand ? `Vælg din ${selectedBrand.name} model` : 'Vælg din enhed'}
+                        {selectedFamily ? `Vælg din ${selectedFamily.name} model` :
+                            selectedBrand ? `Vælg din ${selectedBrand.name} serie` : 'Vælg din enhed'}
                     </h1>
                     <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '40px' }}>
                         Vi reparerer alle store mærker og modeller. Vælg din enhed for at se priser.
@@ -55,10 +85,13 @@ const RepairsIndex = () => {
                     </div>
                 </div>
 
-                {/* Back Button (Only when brand selected) */}
-                {selectedBrand && (
+                {/* Back Button */}
+                {(selectedBrand) && (
                     <button
-                        onClick={() => { setSelectedBrand(null); setModels([]); }}
+                        onClick={() => {
+                            if (selectedFamily) setSelectedFamily(null);
+                            else { setSelectedBrand(null); setModels([]); }
+                        }}
                         style={{
                             display: 'flex', alignItems: 'center', gap: '8px',
                             background: 'none', border: 'none',
@@ -66,7 +99,7 @@ const RepairsIndex = () => {
                             marginBottom: '20px', fontSize: '1.1rem', fontWeight: 'bold'
                         }}
                     >
-                        <ArrowLeft size={20} /> Tilbage til mærker
+                        <ArrowLeft size={20} /> {selectedFamily ? 'Tilbage til serier' : 'Tilbage til mærker'}
                     </button>
                 )}
 
@@ -98,10 +131,42 @@ const RepairsIndex = () => {
                             </div>
                         ))}
                     </div>
+                ) : showFamilies ? (
+                    // FAMILIES GRID
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
+                        {families.map((family, idx) => (
+                            <div
+                                key={idx}
+                                onClick={() => setSelectedFamily(family)}
+                                className="card-glass"
+                                style={{
+                                    padding: '30px',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    textAlign: 'center',
+                                    background: 'var(--bg-surface)'
+                                }}
+                            >
+                                <div style={{
+                                    width: '80px', height: '80px',
+                                    background: 'var(--bg-element)',
+                                    borderRadius: '50%',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    marginBottom: '15px',
+                                    color: 'var(--primary)'
+                                }}>
+                                    {family.icon}
+                                </div>
+                                <h3 style={{ fontSize: '1.2rem', color: 'var(--text-main)', margin: 0 }}>{family.name}</h3>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     // MODELS GRID
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
-                        {models.length > 0 ? models.map(model => (
+                        {displayedModels.length > 0 ? displayedModels.map(model => (
                             <div
                                 key={model.id}
                                 onClick={() => navigate(`/reparation/${model.id}`)}
@@ -130,7 +195,7 @@ const RepairsIndex = () => {
                             </div>
                         )) : (
                             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-                                Ingen modeller fundet for dette mærke.
+                                Ingen modeller fundet.
                             </div>
                         )}
                     </div>

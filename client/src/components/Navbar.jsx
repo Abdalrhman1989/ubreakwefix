@@ -49,9 +49,14 @@ const Navbar = () => {
                 <div className="desktop-only" style={{ display: 'flex', gap: '30px', fontWeight: '500', color: 'var(--text-main)', alignItems: 'center' }}>
                     <Link to="/" style={{ color: 'var(--text-main)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.home')}</Link>
                     <Link to="/reparationer" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.repairs')}</Link>
+                    <Link to="/shop" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">Shop</Link>
                     <Link to="/erhverv" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.business')}</Link>
                     <Link to="/om-os" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.about')}</Link>
                     <Link to="/kontakt" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.contact')}</Link>
+
+                    {user && user.role === 'admin' && (
+                        <Link to="/admin" style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'none' }} className="nav-link">Admin Panel</Link>
+                    )}
 
                     {user ? (
                         <Link to="/profile" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -102,23 +107,52 @@ const Navbar = () => {
                 </div>
 
                 {/* MOBILE CONTROLS */}
-                <div className="mobile-only" style={{ alignItems: 'center', gap: '16px' }}>
-                    <Link to="/checkout" style={{ position: 'relative', color: 'var(--text-main)' }}>
-                        <ShoppingBag size={24} />
+                {/* MOBILE CONTROLS */}
+                <div className="mobile-only" style={{ alignItems: 'center', gap: '8px' }}>
+                    <Link to="/checkout" style={{
+                        position: 'relative',
+                        color: 'var(--text-main)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '40px',
+                        height: '40px',
+                        background: 'transparent',
+                        borderRadius: '50%',
+                        transition: 'background 0.2s'
+                    }}>
+                        <ShoppingBag size={22} />
                         {cart.length > 0 && (
                             <span style={{
-                                position: 'absolute', top: '-6px', right: '-6px',
+                                position: 'absolute', top: '2px', right: '0px',
                                 background: '#EF4444', color: 'white',
-                                borderRadius: '50%', width: '16px', height: '16px',
+                                borderRadius: '999px', minWidth: '18px', height: '18px', padding: '0 4px',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: '0.6rem', fontWeight: 'bold'
+                                fontSize: '0.65rem', fontWeight: 'bold', border: '2px solid var(--bg-surface)'
                             }}>
                                 {cart.length}
                             </span>
                         )}
                     </Link>
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'none', border: 'none', color: 'var(--text-main)', zIndex: 1002 }}>
-                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+
+                    <button
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        style={{
+                            background: isMobileMenuOpen ? 'var(--bg-element)' : 'transparent',
+                            border: '1px solid var(--border-light)',
+                            color: 'var(--text-main)',
+                            zIndex: 1002,
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                    >
+                        {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                     </button>
                 </div>
 
@@ -127,10 +161,13 @@ const Navbar = () => {
                     <div style={{ marginTop: '80px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <Link to="/" className="mobile-nav-link">{t('nav.home')}</Link>
                         <Link to="/reparationer" className="mobile-nav-link">{t('nav.repairs')}</Link>
+                        <Link to="/shop" className="mobile-nav-link">Shop</Link>
                         <Link to="/erhverv" className="mobile-nav-link">{t('nav.business')}</Link>
                         <Link to="/om-os" className="mobile-nav-link">{t('nav.about')}</Link>
                         <Link to="/kontakt" className="mobile-nav-link">{t('nav.contact')}</Link>
-
+                        {user && user.role === 'admin' && (
+                            <Link to="/admin" className="mobile-nav-link" style={{ color: '#dc2626', fontWeight: 'bold' }}>Admin Panel</Link>
+                        )}
                         {user ? (
                             <Link to="/profile" className="mobile-nav-link" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('nav.myAccount')}</Link>
                         ) : (

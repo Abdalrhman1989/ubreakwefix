@@ -17,7 +17,9 @@ const rawData = {
                 "iPhone XS", "iPhone XS Max", "iPhone XR", "iPhone X",
                 "iPhone 8", "iPhone 8 Plus", "iPhone 7", "iPhone 7 Plus",
                 "iPhone 6", "iPhone 6 Plus", "iPhone 6s", "iPhone 6s Plus",
-                "iPhone SE (1st generation)", "iPhone SE (2nd generation)", "iPhone SE (3rd generation)"
+                "iPhone SE (1st generation)", "iPhone SE (2nd generation)", "iPhone SE (3rd generation)",
+                "iPad Pro 12.9 (6th gen)", "iPad Pro 11 (4th gen)", "iPad Air (5th gen)", "iPad (10th gen)", "iPad mini (6th gen)",
+                "Apple Watch Ultra 2", "Apple Watch Series 9", "Apple Watch SE (2nd gen)", "Apple Watch Series 8", "Apple Watch Ultra"
             ]
         },
         {
