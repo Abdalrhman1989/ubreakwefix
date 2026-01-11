@@ -252,11 +252,9 @@ const Shop = () => {
                         ) : (
                             <div className="products-grid">
                                 {products.map(product => (
-                                    <div key={product.id} className="product-card group">
-                                        <div className="card-image-wrapper">
-                                            <Link to={`/shop/product/${product.id}`}>
-                                                <img src={product.image_url} alt={product.name} loading="lazy" />
-                                            </Link>
+                                    <div key={product.id} className="product-card">
+                                        <Link to={`/shop/product/${product.id}`} className="card-image-wrapper">
+                                            <img src={product.image_url} alt={product.name} loading="lazy" />
 
                                             {/* Status Badges */}
                                             {product.stock_quantity === 0 ? (
@@ -266,16 +264,7 @@ const Shop = () => {
                                             ) : product.specs?.brand ? (
                                                 <span className="badge badge-neutral">{product.specs.brand}</span>
                                             ) : null}
-
-                                            {/* Hover Action */}
-                                            <button
-                                                onClick={() => addToCart(product)}
-                                                className="quick-add-btn"
-                                                disabled={product.stock_quantity === 0}
-                                            >
-                                                Add to Cart
-                                            </button>
-                                        </div>
+                                        </Link>
 
                                         <div className="card-content">
                                             <div className="card-meta">
@@ -290,7 +279,14 @@ const Shop = () => {
 
                                             <div className="card-footer">
                                                 <span className="price">{product.price} DKK</span>
-                                                <button className="heart-btn"><Heart size={18} /></button>
+                                                <button
+                                                    onClick={() => addToCart(product)}
+                                                    className="add-to-cart-btn"
+                                                    disabled={product.stock_quantity === 0}
+                                                >
+                                                    <ShoppingBag size={16} />
+                                                    Add
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -531,43 +527,41 @@ const Shop = () => {
                     color: var(--text-main);
                 }
 
-                /* Products */
+                /* Products Grid */
                 .products-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                    gap: 32px;
+                    /* Desktop: Auto-fit with min size (~3 columns standard) */
+                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                    gap: 24px;
                 }
 
+                /* Reverted Product Card - Bordered & Vertical */
                 .product-card {
                     display: flex;
                     flex-direction: column;
-                    gap: 16px;
-                    group: 1; /* For group utilities approximation */
+                    background: var(--bg-surface);
+                    border: 1px solid var(--border-light); /* Restored Border */
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                }
+
+                .product-card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: var(--shadow-lg);
+                    border-color: var(--primary);
                 }
 
                 .card-image-wrapper {
-                    background: var(--bg-surface);
-                    border-radius: var(--radius-lg);
+                    background: var(--bg-element); /* Slightly distinct from card bg */
                     aspect-ratio: 1;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 32px;
+                    padding: 24px;
                     position: relative;
                     overflow: hidden;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    border: 1px solid transparent;
-                }
-                
-                /* Dark Mode Border fix for cards */
-                [data-theme='dark'] .card-image-wrapper {
-                    border-color: var(--border-light);
-                    background: var(--bg-element);
-                }
-
-                .product-card:hover .card-image-wrapper {
-                    transform: translateY(-4px);
-                    box-shadow: var(--shadow-lg);
+                    border-bottom: 1px solid var(--border-light);
                 }
 
                 .card-image-wrapper img {
@@ -575,45 +569,11 @@ const Shop = () => {
                     height: 100%;
                     object-fit: contain;
                     transition: transform 0.5s ease;
-                    /* In Dark Mode, images (often black) need invert or brightness adjustment? */
-                    /* Assuming transparent PNGs, might look odd on dark if black product. 
-                       Mix-blend-mode multiply works best on light. 
-                       For dark, we might need a subtle white glow or just normal blending. */
                     mix-blend-mode: normal; 
                 }
 
                 .product-card:hover .card-image-wrapper img {
-                    transform: scale(1.08);
-                }
-
-                /* Quick Add Button - Appears on Hover */
-                .quick-add-btn {
-                    position: absolute;
-                    bottom: 16px;
-                    left: 50%;
-                    transform: translateX(-50%) translateY(20px);
-                    background: var(--text-main); /* Black on light, White on dark */
-                    color: var(--bg-body);
-                    border: none;
-                    padding: 10px 24px;
-                    border-radius: 30px;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    opacity: 0;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    cursor: pointer;
-                    white-space: nowrap;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                }
-
-                .product-card:hover .quick-add-btn {
-                    opacity: 1;
-                    transform: translateX(-50%) translateY(0);
-                }
-
-                .quick-add-btn:hover {
-                    background: var(--primary);
-                    color: white;
+                    transform: scale(1.08); /* Re-enabled scale */
                 }
 
                 .badge {
@@ -628,20 +588,23 @@ const Shop = () => {
                     letter-spacing: 0.05em;
                 }
 
-                .badge-neutral { background: var(--bg-element); color: var(--text-secondary); }
+                .badge-neutral { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-medium); }
                 .badge-warning { background: #FEF3C7; color: #D97706; }
                 .badge-error { background: #FEE2E2; color: #DC2626; }
 
                 .card-content {
+                    padding: 20px;
                     display: flex;
                     flex-direction: column;
-                    gap: 6px;
+                    gap: 8px;
+                    flex: 1;
                 }
 
                 .category-tag {
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                     color: var(--text-muted);
-                    font-weight: 500;
+                    font-weight: 600;
+                    text-transform: uppercase;
                 }
 
                 .product-title h3 {
@@ -663,26 +626,42 @@ const Shop = () => {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    margin-top: 4px;
+                    margin-top: auto;
+                    padding-top: 12px;
+                    border-top: 1px solid transparent; /* Keeps spacing consistent */
                 }
 
                 .price {
-                    font-size: 1.1rem;
-                    font-weight: 600;
+                    font-size: 1.25rem;
+                    font-weight: 800;
                     color: var(--text-main);
                 }
 
-                .heart-btn {
-                    background: none;
-                    border: none;
-                    color: var(--text-muted);
+                /* Reverted Add Button - Visible Pill */
+                .add-to-cart-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    background: var(--bg-element);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-light);
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
                     cursor: pointer;
-                    padding: 4px;
-                    transition: color 0.2s;
+                    transition: all 0.2s;
                 }
 
-                .heart-btn:hover {
-                    color: #EF4444;
+                .add-to-cart-btn:hover:not(:disabled) {
+                    background: var(--primary);
+                    color: white;
+                    border-color: var(--primary);
+                }
+                
+                .add-to-cart-btn:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
                 }
 
                 /* Mobile Stuff */
@@ -780,21 +759,67 @@ const Shop = () => {
                 }
                 
                 @media (max-width: 640px) {
+                    .shop-container {
+                        padding: 24px 16px;
+                    }
+
+                    /* FIX: Ensure we use a 2-column grid on mobile instead of stacked 1 column */
                     .products-grid {
+                         grid-template-columns: repeat(2, 1fr); 
+                         gap: 12px;
+                    }
+
+                    .product-card {
+                        /* Keep vertical on mobile too, looks better in 2-col grid */
+                        flex-direction: column;
+                        border-radius: var(--radius-md);
+                    }
+
+                    .card-image-wrapper {
+                        padding: 16px;
+                        aspect-ratio: 1; /* Keep square */
+                        border-bottom: 1px solid var(--border-light);
+                        width: 100%;
+                        height: auto;
+                    }
+
+                    .card-content {
+                        padding: 12px;
+                        gap: 6px;
+                    }
+
+                    .product-title h3 {
+                        font-size: 0.9rem;
+                        line-height: 1.3;
+                    }
+
+                    .price {
+                        font-size: 1rem;
+                    }
+
+                    .add-to-cart-btn {
+                        padding: 6px 12px;
+                        font-size: 0.75rem;
+                        gap: 4px;
+                    }
+                    
+                    /* Maybe hide the Add Text on very small screens? No, 2-col should fit. */
+                }
+
+                @media (max-width: 380px) {
+                     /* For very small devices, maybe stack them 1 column? */
+                     .products-grid {
                          grid-template-columns: 1fr;
                     }
                     .product-card {
-                        flex-direction: row;
+                        flex-direction: row; 
                         align-items: center;
-                        gap: 16px;
                     }
                     .card-image-wrapper {
-                        height: 120px;
-                        width: 120px;
-                        padding: 16px;
-                    }
-                    .quick-add-btn {
-                        display: none; /* Hide on mobile, use a static button if needed or card click */
+                        width: 100px;
+                        height: 100px;
+                        border-bottom: none;
+                        border-right: 1px solid var(--border-light);
                     }
                 }
             `}</style>
