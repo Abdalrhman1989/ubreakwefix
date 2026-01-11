@@ -43,7 +43,7 @@ const Navbar = () => {
             <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 
                 <Link to="/" style={{ textDecoration: 'none', zIndex: 1001 }}>
-                    <Logo size={28} />
+                    <Logo size={55} />
                 </Link>
 
                 {/* DESKTOP MENU */}
