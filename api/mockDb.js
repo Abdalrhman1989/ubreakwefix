@@ -339,6 +339,10 @@ module.exports = {
             const user = users.find(u => u.email == params[0]);
             return callback(null, user);
         }
+        if (sql.includes('FROM users') && sql.includes('WHERE id')) {
+            const user = users.find(u => u.id == params[0]);
+            return callback(null, user);
+        }
         if (sql.includes('FROM bookings') && sql.includes('WHERE id')) {
             const booking = bookings.find(b => b.id == params[0]);
             return callback(null, booking);
@@ -428,6 +432,36 @@ module.exports = {
                 maintenance_mode: params[3],
                 holiday_mode: params[4]
             };
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE users SET name')) {
+            // params: [name, email, phone, address, id]
+            const id = params[4];
+            const user = users.find(u => u.id == id);
+            if (user) {
+                user.name = params[0];
+                user.email = params[1];
+                user.phone = params[2];
+                user.address = params[3];
+            }
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE users SET password')) {
+            const id = params[1];
+            const user = users.find(u => u.id == id);
+            if (user) user.password = params[0];
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('DELETE FROM users')) {
+            const id = params[0];
+            const idx = users.findIndex(u => u.id == id);
+            if (idx !== -1) users.splice(idx, 1);
             if (callback) callback.call({ changes: 1 }, null);
             return;
         }

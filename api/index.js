@@ -180,9 +180,149 @@ router.post('/admin/settings', (req, res) => {
     });
 });
 
-router.get('/admin/requests/business', (req, res) => {
-    db.all("SELECT * FROM business_accounts", [], (err, rows) => {
+db.all("SELECT * FROM business_accounts", [], (err, rows) => {
+    res.json(rows || []);
+});
+});
+
+// --- ADMIN CRUD (Brands, Models, Repairs, Products, Users) ---
+
+// Brands
+router.post('/admin/brands', (req, res) => {
+    const { name, image } = req.body;
+    db.run("INSERT INTO brands (name, image) VALUES (?, ?)", [name, image], function () {
+        res.json({ id: this.lastID, name, image });
+    });
+});
+router.put('/admin/brands/:id', (req, res) => {
+    const { name, image } = req.body;
+    db.run("UPDATE brands SET name = ?, image = ? WHERE id = ?", [name, image, req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+router.delete('/admin/brands/:id', (req, res) => {
+    db.run("DELETE FROM brands WHERE id = ?", [req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+
+// Models
+router.post('/admin/models', (req, res) => {
+    const { brand_id, name, image } = req.body;
+    db.run("INSERT INTO models (brand_id, name, image) VALUES (?, ?, ?)", [brand_id, name, image], function () {
+        res.json({ id: this.lastID, brand_id, name });
+    });
+});
+router.put('/admin/models/:id', (req, res) => {
+    const { name, image } = req.body;
+    db.run("UPDATE models SET name = ?, image = ? WHERE id = ?", [name, image, req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+router.delete('/admin/models/:id', (req, res) => {
+    db.run("DELETE FROM models WHERE id = ?", [req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+
+// Repairs
+router.post('/admin/repairs', (req, res) => {
+    const { model_id, name, price, duration, description } = req.body;
+    db.run("INSERT INTO repairs (model_id, name, price, duration, description) VALUES (?, ?, ?, ?, ?)",
+        [model_id, name, price, duration, description], function () {
+            res.json({ id: this.lastID });
+        });
+});
+router.put('/admin/repairs/:id', (req, res) => {
+    const { name, price, duration, description } = req.body;
+    db.run("UPDATE repairs SET name = ?, price = ?, duration = ?, description = ? WHERE id = ?",
+        [name, price, duration, description, req.params.id], function () {
+            res.json({ success: true });
+        });
+});
+router.delete('/admin/repairs/:id', (req, res) => {
+    db.run("DELETE FROM repairs WHERE id = ?", [req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+
+// Products
+router.post('/admin/products', (req, res) => {
+    // Mock insert
+    res.json({ id: Date.now() });
+});
+router.put('/admin/products/:id', (req, res) => {
+    res.json({ success: true });
+});
+router.delete('/admin/products/:id', (req, res) => {
+    res.json({ success: true });
+});
+
+// Users
+router.get('/admin/users', (req, res) => {
+    db.all("SELECT * FROM users", [], (err, rows) => {
         res.json(rows || []);
+    });
+});
+
+router.get('/admin/users/:id', (req, res) => {
+    // Mock user detail fetch
+    db.get("SELECT * FROM users WHERE id = ?", [req.params.id], (err, user) => {
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        // Fetch bookings for this user
+        db.all("SELECT * FROM bookings WHERE user_id = ?", [req.params.id], (err, bookings) => {
+            const { password, ...safeUser } = user;
+            res.json({ ...safeUser, bookings: bookings || [] });
+        });
+    });
+});
+
+router.post('/admin/users', (req, res) => {
+    const { name, email, password, role, phone, address } = req.body;
+    db.run("INSERT INTO users (name, email, password, phone, address) VALUES (?,?,?,?,?)",
+        [name, email, password, phone || '', address || ''],
+        function () {
+            res.json({ id: this.lastID, message: 'User created' });
+        }
+    );
+});
+
+router.delete('/admin/users/:id', (req, res) => {
+    db.run("DELETE FROM users WHERE id = ?", [req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+
+// User Profile Updates
+router.put('/users/:id', (req, res) => {
+    const { name, email, phone, address } = req.body;
+    db.run("UPDATE users SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?",
+        [name, email, phone, address, req.params.id],
+        function () {
+            res.json({ success: true });
+        }
+    );
+});
+
+router.put('/users/:id/password', (req, res) => {
+    const { newPassword } = req.body;
+    // Simplified for mock, assuming auth checks passed or not strictly enforcing currentPassword check on mock
+    db.run("UPDATE users SET password = ? WHERE id = ?", [newPassword, req.params.id], function () {
+        res.json({ success: true });
+    });
+});
+
+router.get('/admin/bookings', (req, res) => {
+    db.all("SELECT * FROM bookings", [], (err, rows) => {
+        res.json(rows || []);
+    });
+});
+
+router.put('/admin/bookings/:id/status', (req, res) => {
+    const { status } = req.body;
+    db.run("UPDATE bookings SET status = ? WHERE id = ?", [status, req.params.id], function () {
+        res.json({ success: true, status });
     });
 });
 
