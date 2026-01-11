@@ -179,7 +179,7 @@ const AdminUsers = () => {
 
             {/* TABLE */}
             <div className="card-glass" style={{ overflowX: 'auto', background: 'var(--bg-surface)', border: '1px solid var(--border-light)' }}>
-                <table style={{ width: '100%', minWidth: '800px', borderCollapse: 'collapse' }}>
+                <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse' }}>
                     <thead style={{ background: 'var(--bg-element)', borderBottom: '1px solid var(--border-light)' }}>
                         <tr>
                             <th style={{ padding: '16px', textAlign: 'left', color: 'var(--text-muted)' }}>User</th>
@@ -251,6 +251,13 @@ const AdminUsers = () => {
                     </tbody>
                 </table>
             </div>
+
+            <style>{`
+                @media (max-width: 768px) {
+                    .card-glass { padding: 15px; }
+                    th, td { padding: 12px !important; }
+                }
+            `}</style>
         </div>
     );
 };

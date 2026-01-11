@@ -13,12 +13,19 @@ const AdminProductForm = () => {
         name: '',
         description: '',
         price: '',
-        category: '', // Will default after fetch
+        category_id: '', // Important for filtering
+        category: '', // Legacy/Visual
         image_url: '',
-        condition: '', // Like New, Good, Fair
-        storage: '', // 64GB, 128GB...
-        color: '', // Space Gray, Silver...
-        stock_quantity: 0
+        stock_quantity: 0,
+        specs: { // New specs object
+            brand: '',
+            model: '',
+            features: []
+        },
+        // Legacy flat fields kept for UI simplicity if needed, but we should map them to specs on submit
+        condition: '',
+        storage: '',
+        color: ''
     });
     const [loading, setLoading] = useState(false);
 
@@ -33,12 +40,10 @@ const AdminProductForm = () => {
         try {
             const res = await axios.get('/api/categories');
             setCategories(res.data);
-            setCategories(res.data);
 
-            // Auto-select
+            // Auto-select first if new
             if (!isEditMode && res.data.length > 0) {
-                // Try to find a leaf node or just first one
-                setFormData(prev => ({ ...prev, category: res.data[0].name }));
+                // Don't auto-set, force user to choose
             }
         } catch (error) {
             console.error("Error fetching categories:", error);
@@ -66,7 +71,15 @@ const AdminProductForm = () => {
     const fetchProduct = async () => {
         try {
             const res = await axios.get(`/api/products/${id}`);
-            setFormData(res.data);
+            const prod = res.data;
+            // Merge specs into top level for form handling if needed, or keep nested
+            setFormData({
+                ...prod,
+                condition: prod.specs?.condition || prod.condition || '', // Fallback
+                storage: prod.specs?.storage || prod.storage || '',
+                color: prod.specs?.color || prod.color || '',
+                specs: prod.specs || { brand: '', model: '', features: [] }
+            });
         } catch (error) {
             console.error("Error fetching product:", error);
             alert("Failed to load product data");
@@ -75,17 +88,45 @@ const AdminProductForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        if (name.startsWith('spec.')) {
+            const specKey = name.split('.')[1];
+            setFormData(prev => ({
+                ...prev,
+                specs: { ...prev.specs, [specKey]: value }
+            }));
+        } else if (name === 'category_id') {
+            const cat = categories.find(c => c.id == value);
+            setFormData(prev => ({
+                ...prev,
+                category_id: value,
+                category: cat ? cat.name : ''
+            }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        // Prepare payload - merge flat fields into specs for consistency
+        const payload = {
+            ...formData,
+            specs: {
+                ...formData.specs,
+                condition: formData.condition,
+                storage: formData.storage,
+                color: formData.color,
+                // Ensure array if features is string? (Simplification: keeping it simple)
+            }
+        };
+
         try {
             if (isEditMode) {
-                await axios.put(`/api/admin/products/${id}`, formData);
+                await axios.put(`/api/admin/products/${id}`, payload);
             } else {
-                await axios.post('/api/admin/products', formData);
+                await axios.post('/api/admin/products', payload);
             }
             navigate('/admin/products');
         } catch (error) {
@@ -97,14 +138,10 @@ const AdminProductForm = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+        <div className="admin-form-container">
             <button
                 onClick={() => navigate('/admin/products')}
-                style={{
-                    display: 'flex', alignItems: 'center', gap: '5px',
-                    background: 'none', border: 'none',
-                    color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '20px'
-                }}
+                className="btn-back"
             >
                 <ArrowLeft size={18} /> Back to Products
             </button>
@@ -113,117 +150,133 @@ const AdminProductForm = () => {
                 {isEditMode ? 'Edit Product' : 'Add New Product'}
             </h1>
 
-            <form onSubmit={handleSubmit} style={{ background: 'var(--bg-surface)', padding: '30px', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Product Name</label>
+            <form onSubmit={handleSubmit} className="admin-form">
+                <div className="form-group">
+                    <label>Product Name</label>
                     <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                     />
                 </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Description</label>
+                <div className="form-group">
+                    <label>Description</label>
                     <textarea
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
                         rows={4}
-                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                     />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Price (DKK)</label>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Price (DKK)</label>
                         <input
                             type="number"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
                             required
-                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                         />
                     </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Category</label>
+                    <div className="form-group">
+                        <label>Category</label>
                         <select
-                            name="category"
-                            value={formData.category}
+                            name="category_id"
+                            value={formData.category_id}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
+                            required
                         >
+                            <option value="">Select Category</option>
                             {formattedCategories.map(cat => (
-                                <option key={cat.id} value={cat.name}>{cat.displayName}</option>
+                                <option key={cat.id} value={cat.id}>{cat.displayName}</option>
                             ))}
                         </select>
                     </div>
                 </div>
 
-                {/* Used Phone Specifics */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', marginBottom: '20px' }}>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Condition (e.g. Good)</label>
+                {/* Specs Section */}
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '15px', marginTop: '10px' }}>Specifications</h3>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Brand</label>
+                        <input
+                            type="text"
+                            name="spec.brand"
+                            value={formData.specs?.brand || ''}
+                            onChange={handleChange}
+                            placeholder="e.g. Apple"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Model</label>
+                        <input
+                            type="text"
+                            name="spec.model"
+                            value={formData.specs?.model || ''}
+                            onChange={handleChange}
+                            placeholder="e.g. iPhone 15"
+                        />
+                    </div>
+                </div>
+
+                <div className="form-row three-col">
+                    <div className="form-group">
+                        <label>Condition</label>
                         <input
                             type="text"
                             name="condition"
                             value={formData.condition || ''}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                         />
                     </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Storage (e.g. 128GB)</label>
+                    <div className="form-group">
+                        <label>Storage</label>
                         <input
                             type="text"
                             name="storage"
                             value={formData.storage || ''}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                         />
                     </div>
-                    <div>
-                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Color</label>
+                    <div className="form-group">
+                        <label>Color</label>
                         <input
                             type="text"
                             name="color"
                             value={formData.color || ''}
                             onChange={handleChange}
-                            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                         />
                     </div>
                 </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Image URL</label>
+                <div className="form-group">
+                    <label>Image URL</label>
                     <input
                         type="text"
                         name="image_url"
                         value={formData.image_url}
                         onChange={handleChange}
                         placeholder="https://example.com/image.jpg"
-                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                     />
                     {formData.image_url && (
-                        <div style={{ marginTop: '10px' }}>
-                            <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '5px' }}>Preview:</p>
-                            <img src={formData.image_url} alt="Preview" style={{ height: '100px', objectFit: 'contain', background: '#f5f5f7', padding: '5px', borderRadius: '4px' }} />
+                        <div style={{ marginTop: '10px', background: '#f5f5f7', padding: '10px', borderRadius: '8px', textAlign: 'center' }}>
+                            <img src={formData.image_url} alt="Preview" style={{ height: '150px', objectFit: 'contain' }} />
                         </div>
                     )}
                 </div>
 
-                <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-main)', fontWeight: '500' }}>Stock Quantity</label>
+                <div className="form-group">
+                    <label>Stock Quantity</label>
                     <input
                         type="number"
                         name="stock_quantity"
                         value={formData.stock_quantity}
                         onChange={handleChange}
-                        style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-element)', color: 'var(--text-main)' }}
                     />
                 </div>
 
@@ -236,6 +289,32 @@ const AdminProductForm = () => {
                     <Save size={20} /> {loading ? 'Saving...' : 'Save Product'}
                 </button>
             </form>
+
+            <style>{`
+                .admin-form-container { padding: 20px; max-width: 800px; margin: 0 auto; }
+                .btn-back { display: flex; align-items: center; gap: 5px; background: none; border: none; color: var(--text-muted); cursor: pointer; margin-bottom: 20px; }
+                .admin-form { background: var(--bg-surface); padding: 30px; borderRadius: 12px; border: 1px solid var(--border-light); }
+                
+                .form-group { margin-bottom: 20px; }
+                .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 500; }
+                .form-group input, .form-group textarea, .form-group select { 
+                    width: 100%; padding: 12px; border-radius: 8px; 
+                    border: 1px solid var(--border-medium); 
+                    background: var(--bg-element); color: var(--text-main); font-size: 0.95rem;
+                }
+                
+                .form-row { display: grid; gap: 20px; grid-template-columns: 1fr; margin-bottom: 20px; }
+                
+                @media (min-width: 600px) {
+                    .form-row { grid-template-columns: 1fr 1fr; }
+                    .form-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
+                }
+
+                @media (max-width: 600px) {
+                    .admin-form { padding: 20px; }
+                    .form-row.three-col { grid-template-columns: 1fr; } 
+                }
+            `}</style>
         </div>
     );
 };

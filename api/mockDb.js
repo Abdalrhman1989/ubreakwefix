@@ -655,6 +655,48 @@ module.exports = {
             return;
         }
 
+        if (sql.includes('INSERT INTO products')) {
+            const newProduct = {
+                id: products.length + 1000,
+                name: params[0],
+                description: params[1],
+                price: params[2],
+                category_id: params[3], // Now expecting ID
+                category: params[4], // Legacy string support
+                image_url: params[5],
+                stock_quantity: params[6],
+                specs: params[7] ? JSON.parse(params[7]) : {} // Handle specs JSON
+            };
+            products.push(newProduct);
+            if (callback) callback.call({ lastID: newProduct.id }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE products')) {
+            const id = params[8]; // Assuming ID is last param
+            const prod = products.find(p => p.id == id);
+            if (prod) {
+                prod.name = params[0];
+                prod.description = params[1];
+                prod.price = params[2];
+                prod.category_id = params[3];
+                prod.category = params[4];
+                prod.image_url = params[5];
+                prod.stock_quantity = params[6];
+                prod.specs = params[7] ? JSON.parse(params[7]) : (prod.specs || {});
+            }
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('DELETE FROM products')) {
+            const id = params[0];
+            const idx = products.findIndex(p => p.id == id);
+            if (idx !== -1) products.splice(idx, 1);
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
         if (callback) callback.call({ lastID: Date.now() }, null);
     }
 };

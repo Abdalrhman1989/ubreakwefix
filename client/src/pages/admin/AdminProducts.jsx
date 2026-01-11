@@ -47,7 +47,7 @@ const AdminProducts = () => {
             </div>
 
             <div className="table-container" style={{ overflowX: 'auto', background: 'var(--bg-surface)', borderRadius: '12px', padding: '20px', boxShadow: 'var(--shadow-sm)' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', color: 'var(--text-main)' }}>
+                <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse', color: 'var(--text-main)' }}>
                     <thead>
                         <tr style={{ borderBottom: '1px solid var(--border-medium)', textAlign: 'left' }}>
                             <th style={{ padding: '15px' }}>Image</th>
@@ -93,6 +93,14 @@ const AdminProducts = () => {
                     </tbody>
                 </table>
             </div>
+
+            <style>{`
+                @media (max-width: 600px) {
+                    h1 { font-size: 1.5rem !important; }
+                    .table-container { padding: 10px !important; }
+                    th, td { padding: 10px !important; }
+                }
+            `}</style>
         </div>
     );
 };
