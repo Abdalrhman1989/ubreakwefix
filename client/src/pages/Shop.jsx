@@ -553,15 +553,15 @@ const Shop = () => {
                 }
 
                 .card-image-wrapper {
-                    background: var(--bg-element); /* Slightly distinct from card bg */
+                    background: transparent; /* Removed gray background */
                     aspect-ratio: 1;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 24px;
+                    padding: 12px; /* Reduced padding for larger image */
                     position: relative;
                     overflow: hidden;
-                    border-bottom: 1px solid var(--border-light);
+                    border-bottom: none; /* Removed border */
                 }
 
                 .card-image-wrapper img {
@@ -570,6 +570,7 @@ const Shop = () => {
                     object-fit: contain;
                     transition: transform 0.5s ease;
                     mix-blend-mode: normal; 
+                    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); /* Add subtle shadow to image itself */
                 }
 
                 .product-card:hover .card-image-wrapper img {
