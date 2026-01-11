@@ -180,9 +180,10 @@ router.post('/admin/settings', (req, res) => {
     });
 });
 
-db.all("SELECT * FROM business_accounts", [], (err, rows) => {
-    res.json(rows || []);
-});
+router.get('/admin/requests/business', (req, res) => {
+    db.all("SELECT * FROM business_accounts", [], (err, rows) => {
+        res.json(rows || []);
+    });
 });
 
 // --- ADMIN CRUD (Brands, Models, Repairs, Products, Users) ---
