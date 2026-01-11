@@ -219,7 +219,7 @@ const Navbar = () => {
 
                 {/* MOBILE MENU OVERLAY */}
                 <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'open' : ''}`}>
-                    <div style={{ marginTop: '80px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                         <Link to="/" className="mobile-nav-link">{t('nav.home')}</Link>
                         <Link to="/reparationer" className="mobile-nav-link">{t('nav.repairs')}</Link>
                         <Link to="/shop" className="mobile-nav-link">Shop</Link>
