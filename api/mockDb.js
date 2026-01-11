@@ -324,6 +324,15 @@ module.exports = {
         }
     },
     get: (sql, params, callback) => {
+        if (sql.includes('COUNT(*)')) {
+            if (sql.includes('FROM brands')) return callback(null, { count: brands.length });
+            if (sql.includes('FROM models')) return callback(null, { count: models.length });
+            if (sql.includes('FROM repairs')) return callback(null, { count: repairs.length });
+            if (sql.includes('FROM bookings')) return callback(null, { count: bookings.length });
+            if (sql.includes('FROM users')) return callback(null, { count: users.length });
+            if (sql.includes('FROM shop_orders')) return callback(null, { count: shop_orders.length });
+        }
+
         if (sql.includes('FROM models') && sql.includes('WHERE models.id')) {
             const model = models.find(m => m.id == params[0]);
             if (model) {
@@ -347,6 +356,12 @@ module.exports = {
             const booking = bookings.find(b => b.id == params[0]);
             return callback(null, booking);
         }
+
+        // Settings fallback
+        if (sql.includes('FROM settings')) {
+            return callback(null, settings);
+        }
+
         callback(null, null);
     },
     run: (sql, params, callback) => {
