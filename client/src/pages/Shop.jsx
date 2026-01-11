@@ -185,6 +185,8 @@ const Shop = () => {
                 <Filter size={18} /> Filters
             </button>
 
+            <div className={`sidebar-backdrop ${sidebarOpen ? 'open' : ''}`} onClick={() => setSidebarOpen(false)}></div>
+
             <div className="shop-layout">
                 {/* SIDEBAR */}
                 <div className={`shop-sidebar ${sidebarOpen ? 'shop-sidebar-open' : ''}`}>
@@ -365,11 +367,45 @@ const Shop = () => {
                 
                 .mobile-filter-toggle { display: none; margin-bottom: 20px; width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
 
+                /* Backdrop for mobile sidebar */
+                .sidebar-backdrop {
+                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.5); z-index: 999;
+                    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+                }
+                .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
+
                 @media (max-width: 900px) {
-                    .shop-sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 280px; background: var(--bg-main); z-index: 1000; padding: 20px; transform: translateX(-100%); transition: transform 0.3s; border-right: 1px solid var(--border); overflow-y: auto; }
+                    .shop-container { padding: 80px 15px 30px; }
+                    .shop-layout { display: block; } /* Stack sidebar and main content */
+                    
+                    .shop-sidebar { 
+                        position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
+                        background: var(--bg-main); z-index: 1000; padding: 20px; 
+                        transform: translateX(-100%); transition: transform 0.3s ease-in-out; 
+                        border-right: 1px solid var(--border); overflow-y: auto; 
+                        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+                    }
                     .shop-sidebar-open { transform: translateX(0); }
-                    .mobile-filter-toggle { display: flex; }
+                    .mobile-filter-toggle { display: flex; sticky; top: 80px; z-index: 900; }
                     .shop-sidebar-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                    
+                    /* Grid adjustments for tablets/mobile */
+                    .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+                    
+                    /* Smaller fonts/buttons on mobile */
+                    .product-details { padding: 12px; }
+                    .product-details h3 { font-size: 0.95rem; }
+                    .product-price { font-size: 1rem; }
+                    .btn-add { padding: 6px 14px; font-size: 0.8rem; }
+                }
+
+                @media (max-width: 480px) {
+                    .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; } /* Force 2 columns on mobile */
+                    .product-card { border-radius: 8px; }
+                    .product-footer { flex-direction: column; align-items: stretch; gap: 8px; }
+                    .btn-add { justify-content: center; width: 100%; }
+                    .product-price { text-align: center; }
                 }
             `}</style>
         </div>
