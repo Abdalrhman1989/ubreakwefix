@@ -342,9 +342,10 @@ const Shop = () => {
                 .product-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
                 .spec-badge { font-size: 0.7rem; background: var(--bg-main); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); border: 1px solid var(--border); }
 
-                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; }
-                .product-price { font-weight: bold; font-size: 1.1rem; }
-                .btn-add { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; display: flex; alignItems: center; gap: 6px; font-size: 0.85rem; }
+                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; gap: 10px; }
+                .product-price { font-weight: bold; font-size: 1.1rem; white-space: nowrap; }
+                .btn-add { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; display: flex; alignItems: center; gap: 6px; font-size: 0.9rem; font-weight: 500; transition: background 0.2s; }
+                .btn-add:hover { opacity: 0.9; }
                 
                 .mobile-filter-toggle { display: none; margin-bottom: 20px; width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
 
