@@ -314,98 +314,91 @@ const Shop = () => {
             </div>
 
             <style>{`
-                .shop-container { padding: 80px 20px 40px; max-width: 1200px; margin: 0 auto; color: var(--text-main); }
+                .shop-container { padding: 80px 20px 40px; max-width: 1400px; margin: 0 auto; color: var(--text-main); }
                 .shop-layout { display: flex; gap: 30px; position: relative; }
-                .shop-sidebar { width: 250px; flex-shrink: 0; }
-                .shop-main { flex: 1; }
+                .shop-sidebar { width: 280px; flex-shrink: 0; background: var(--bg-surface); padding: 24px; border-radius: 16px; border: 1px solid var(--border-light); height: fit-content; position: sticky; top: 100px; }
+                .shop-main { flex: 1; min-width: 0; }
                 
-                .filter-section { margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-                .filter-section h4 { font-size: 0.95rem; margin-bottom: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }
+                .shop-sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+                .shop-sidebar-header h3 { font-size: 1.2rem; font-weight: 700; margin: 0; }
                 
-                .checkbox-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
-                .checkbox-item { display: flex; alignItems: center; gap: 8px; cursor: pointer; font-size: 0.9rem; }
-                .checkbox-item input { accent-color: var(--primary); }
+                .filter-section { margin-bottom: 30px; border-bottom: 1px solid var(--border-light); padding-bottom: 20px; }
+                .filter-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+                .filter-section h4 { font-size: 0.8rem; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+                
+                .checkbox-list { display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+                .checkbox-item { display: flex; alignItems: center; gap: 10px; cursor: pointer; font-size: 0.9rem; color: var(--text-main); transition: all 0.2s; padding: 4px 0; }
+                .checkbox-item:hover { color: var(--primary); transform: translateX(2px); }
+                .checkbox-item input { accent-color: var(--primary); width: 16px; height: 16px; margin: 0; cursor: pointer; }
 
-                .category-tree button { padding: 4px 8px; border-radius: 4px; transition: background 0.2s; }
-                .category-tree button:hover { background: var(--bg-card); }
-
-                .badge-filter { background: var(--primary); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; display: inline-flex; alignItems: center; }
-
-                .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-                .product-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.2s; }
-                .product-card:hover { transform: translateY(-4px); }
-                
-                .product-image-container { aspect-ratio: 1; overflow: hidden; background: #f0f0f0; }
-                .product-image { width: 100%; height: 100%; object-fit: cover; }
-                
-                .product-details { padding: 15px; display: flex; flex-direction: column; flex: 1; }
-                .product-category { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-                .product-details h3 { font-size: 1rem; margin-bottom: 8px; line-height: 1.4; flex: 1; }
-                
-                .product-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
-                .spec-badge { font-size: 0.7rem; background: var(--bg-main); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); border: 1px solid var(--border); }
-
-                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; gap: 15px; }
-                .product-price { font-weight: 700; font-size: 1.1rem; color: var(--text-main); white-space: nowrap; }
-                .btn-add { 
-                    background: var(--primary); 
-                    color: white; 
-                    border: none; 
-                    padding: 8px 20px; 
-                    border-radius: 50px; 
-                    display: flex; 
-                    alignItems: center; 
-                    gap: 8px; 
-                    font-size: 0.9rem; 
-                    font-weight: 600; 
-                    cursor: pointer; 
-                    transition: transform 0.2s, opacity 0.2s;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                .category-tree { display: flex; flex-direction: column; gap: 4px; }
+                .category-tree button { 
+                    padding: 8px 12px; border-radius: 8px; transition: all 0.2s; width: 100%; text-align: left;
+                    font-size: 0.95rem; color: var(--text-main); font-weight: 500;
                 }
-                .btn-add:hover { transform: translateY(-1px); opacity: 0.95; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+                .category-tree button:hover { background: var(--bg-element); color: var(--primary); padding-left: 16px; }
+
+                .badge-filter { background: var(--primary); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; display: inline-flex; alignItems: center; font-weight: 600; box-shadow: 0 2px 5px rgba(var(--primary-rgb), 0.2); }
+
+                .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+                .product-card { 
+                    background: var(--bg-card); border-radius: 20px; overflow: hidden; 
+                    border: 1px solid var(--border-light); display: flex; flex-direction: column; 
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-sm);
+                }
+                .product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); border-color: var(--primary); }
+                
+                .product-image-container { aspect-ratio: 1; overflow: hidden; background: #f8f9fa; position: relative; display: flex; align-items: center; justify-content: center; padding: 20px;}
+                .product-image { width: 100%; height: 100%; object-fit: contain; transition: transform 0.5s ease; mix-blend-mode: multiply; }
+                .product-card:hover .product-image { transform: scale(1.1); }
+                
+                .product-details { padding: 24px; display: flex; flex-direction: column; flex: 1; gap: 8px; }
+                .product-category { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em; }
+                .product-details h3 { font-size: 1.1rem; margin-bottom: 4px; line-height: 1.4; flex: 1; font-weight: 700; color: var(--text-main); }
+                
+                .product-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; min-height: 24px; }
+                .spec-badge { font-size: 0.7rem; background: var(--bg-element); padding: 4px 10px; border-radius: 6px; color: var(--text-muted); font-weight: 600; border: 1px solid var(--border-light); }
+
+                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-light); }
+                .product-price { font-weight: 800; font-size: 1.25rem; color: var(--text-main); letter-spacing: -0.02em; }
+                .btn-add { 
+                    background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 50px; 
+                    display: flex; alignItems: center; gap: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; 
+                    transition: all 0.2s; box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.25);
+                }
+                .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(var(--primary-rgb), 0.35); }
                 .btn-add:active { transform: translateY(0); }
                 
-                .mobile-filter-toggle { display: none; margin-bottom: 20px; width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
+                /* Responsive */
+                .mobile-filter-toggle { display: none; width: 100%; padding: 14px; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; cursor: pointer; align-items: center; justify-content: center; gap: 10px; font-weight: 700; box-shadow: var(--shadow-sm); color: var(--text-main); margin-bottom: 20px; transition: background 0.2s; }
+                .mobile-filter-toggle:active { background: var(--bg-element); }
 
-                /* Backdrop for mobile sidebar */
-                .sidebar-backdrop {
-                    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0,0,0,0.5); z-index: 999;
-                    opacity: 0; pointer-events: none; transition: opacity 0.3s;
-                }
-                .sidebar-backdrop.open { opacity: 1; pointer-events: auto; }
-
-                @media (max-width: 900px) {
-                    .shop-container { padding: 80px 15px 30px; }
-                    .shop-layout { display: block; } /* Stack sidebar and main content */
+                @media (max-width: 1024px) {
+                    .shop-container { padding: 60px 20px; max-width: 100%; }
+                    .shop-sidebar { display: none; } /* Use mobile drawer for tablet too OR stack? Let's use drawer */
+                    .mobile-filter-toggle { display: flex; }
                     
-                    .shop-sidebar { 
-                        position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
-                        background: var(--bg-main); z-index: 1000; padding: 20px; 
-                        transform: translateX(-100%); transition: transform 0.3s ease-in-out; 
-                        border-right: 1px solid var(--border); overflow-y: auto; 
-                        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+                    /* Mobile Sidebar Drawer Styling */
+                    .shop-sidebar.shop-sidebar-open { 
+                        display: block; position: fixed; top: 0; left: 0; height: 100vh; width: 300px;
+                        margin: 0; border-radius: 0; z-index: 1100; border: none; box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+                        overflow-y: auto; padding-top: 80px; /* Space for TopBar if needed, or close button */
                     }
-                    .shop-sidebar-open { transform: translateX(0); }
-                    .mobile-filter-toggle { display: flex; sticky; top: 80px; z-index: 900; }
-                    .shop-sidebar-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
-                    
-                    /* Grid adjustments for tablets/mobile */
-                    .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-                    
-                    /* Smaller fonts/buttons on mobile */
-                    .product-details { padding: 12px; }
-                    .product-details h3 { font-size: 0.95rem; }
-                    .product-price { font-size: 1rem; }
-                    .btn-add { padding: 6px 14px; font-size: 0.8rem; }
+                    .shop-sidebar-header { margin-top: 0; }
                 }
 
                 @media (max-width: 480px) {
-                    .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; } /* Force 2 columns on mobile */
-                    .product-card { border-radius: 8px; }
-                    .product-footer { flex-direction: column; align-items: stretch; gap: 8px; }
-                    .btn-add { justify-content: center; width: 100%; }
-                    .product-price { text-align: center; }
+                    .shop-container { padding: 20px 15px; }
+                    .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+                    .product-card { border-radius: 12px; }
+                    .product-image { padding: 10px; }
+                    .product-details { padding: 12px; gap: 4px; }
+                    .product-details h3 { font-size: 0.9rem; line-height: 1.3; margin-bottom: 0; }
+                    .product-specs { display: none; } /* Hide specs on mobile */
+                    .product-footer { flex-direction: column; gap: 10px; align-items: stretch; padding-top: 10px; }
+                    .product-price { text-align: center; font-size: 1rem; }
+                    .btn-add { padding: 8px; justify-content: center; width: 100%; font-size: 0.85rem; }
+                    .mobile-filter-toggle { position: sticky; top: 70px; z-index: 900; margin-bottom: 15px; }
                 }
             `}</style>
         </div>

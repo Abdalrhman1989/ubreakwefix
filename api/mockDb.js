@@ -66,7 +66,6 @@ const products = [
         stock_quantity: 50,
         image_url: "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&q=80&w=400",
         description: "Soft-touch silicone case with MagSafe support.",
-        condition: "New",
         specs: { brand: "Apple", model: ["iPhone 15 Pro"], type: "Cover", features: ["Silicone", "MagSafe"] }
     },
     {
@@ -77,7 +76,6 @@ const products = [
         stock_quantity: 30,
         image_url: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&q=80&w=400",
         description: "Crystal clear protection that shows off your device.",
-        condition: "New",
         specs: { brand: "Apple", model: ["iPhone 15 Pro Max"], type: "Cover", features: ["Transparent", "MagSafe"] }
     },
     {
@@ -88,7 +86,6 @@ const products = [
         stock_quantity: 25,
         image_url: "https://images.unsplash.com/photo-1614051680183-b7884f3cc770?auto=format&fit=crop&q=80&w=400",
         description: "Heavy duty drop protection.",
-        condition: "New",
         specs: { brand: "Samsung", model: ["Galaxy S24 Ultra"], type: "Cover", features: ["Rugged", "Shockproof"] }
     },
 
@@ -101,7 +98,6 @@ const products = [
         stock_quantity: 100,
         image_url: "https://images.unsplash.com/photo-1688636511175-9e6345638a5a?auto=format&fit=crop&q=80&w=400",
         description: "Keep your screen private from prying eyes.",
-        condition: "New",
         specs: { brand: "Apple", model: ["iPhone 15", "iPhone 15 Pro", "iPhone 15 Plus", "iPhone 15 Pro Max"], type: "Glass", features: ["Privacy", "9H Hardness"] }
     },
 
@@ -114,7 +110,6 @@ const products = [
         stock_quantity: 60,
         image_url: "https://plus.unsplash.com/premium_photo-1675716443562-b771d72a3da7?auto=format&fit=crop&q=80&w=400",
         description: "Compact fast charger for all devices.",
-        condition: "New",
         specs: { brand: "Universal", model: [], type: "Charger", features: ["Fast Charge", "GaN"] }
     },
     {
@@ -125,7 +120,6 @@ const products = [
         stock_quantity: 40,
         image_url: "https://images.unsplash.com/photo-1625510495886-0985532ed701?auto=format&fit=crop&q=80&w=400",
         description: "Snap and charge wirelessly.",
-        condition: "New",
         specs: { brand: "Apple", model: ["iPhone 12", "iPhone 13", "iPhone 14", "iPhone 15", "iPhone 16"], type: "Charger", features: ["MagSafe", "Wireless"] }
     },
 
@@ -138,8 +132,19 @@ const products = [
         stock_quantity: 15,
         image_url: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&q=80&w=400",
         description: "Turn your tablet into a laptop.",
-        condition: "New",
         specs: { brand: "Apple", model: ["iPad Pro 12.9"], type: "Keyboard", features: ["Bluetooth"] }
+    },
+
+    // --- GAMING (New) ---
+    {
+        id: 40,
+        name: "PS5 DualSense Controller",
+        category_id: 600,
+        price: 549,
+        stock_quantity: 20,
+        image_url: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&q=80&w=400",
+        description: "Next-gen gaming controller.",
+        specs: { brand: "Sony", model: ["PlayStation 5"], type: "Controller", features: ["Haptic Feedback"] }
     }
 ];
 
@@ -158,23 +163,18 @@ const rawData = {
                 "iPhone 12", "iPhone 12 mini", "iPhone 12 Pro", "iPhone 12 Pro Max",
                 "iPhone 11", "iPhone 11 Pro", "iPhone 11 Pro Max",
                 "iPhone XS", "iPhone XS Max", "iPhone XR", "iPhone X",
-                "iPhone 8", "iPhone 8 Plus", "iPhone 7", "iPhone 7 Plus",
-                "iPhone 6", "iPhone 6 Plus", "iPhone 6s", "iPhone 6s Plus",
-                "iPhone SE (1st generation)", "iPhone SE (2nd generation)", "iPhone SE (3rd generation)"
+                "iPhone 8", "iPhone 8 Plus", "iPhone 7", "iPhone 7 Plus"
             ]
         },
         {
             "name": "Samsung",
             "slug": "samsung",
-            "image": "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Samsung_wordmark.svg",
             "models": [
-                "Galaxy S24", "Galaxy S24+", "Galaxy S24 Ultra",
-                "Galaxy S23", "Galaxy S23+", "Galaxy S23 Ultra",
-                "Galaxy S22", "Galaxy S22+", "Galaxy S22 Ultra",
-                "Galaxy S21", "Galaxy S21+", "Galaxy S21 Ultra",
-                "Galaxy S20", "Galaxy S20+", "Galaxy S20 Ultra", "Galaxy S20 FE",
-                "Galaxy S10", "Galaxy S10+", "Galaxy S10e",
-                "Galaxy S9", "Galaxy S9+", "Galaxy S8", "Galaxy S8+",
+                "Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24",
+                "Galaxy S23 Ultra", "Galaxy S23+", "Galaxy S23",
+                "Galaxy S22 Ultra", "Galaxy S22+", "Galaxy S22",
+                "Galaxy S21 Ultra", "Galaxy S21+", "Galaxy S21",
                 "Galaxy Z Fold 6", "Galaxy Z Fold 5", "Galaxy Z Fold 4", "Galaxy Z Fold 3",
                 "Galaxy Z Flip 6", "Galaxy Z Flip 5", "Galaxy Z Flip 4", "Galaxy Z Flip 3",
                 "Galaxy A05", "Galaxy A05s", "Galaxy A14", "Galaxy A15",
