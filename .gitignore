@@ -1,2 +1,14 @@
+node_modules
+.DS_Store
+dist
+build
+.env
+.env.local
 .vercel
-.env*.local
+active_context.md
+storage.db
+test-results/
+playwright-report/
+client/node_modules
+client/test-results
+client/playwright-report

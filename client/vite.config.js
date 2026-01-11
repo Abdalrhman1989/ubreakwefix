@@ -8,5 +8,11 @@ export default defineConfig({
         proxy: {
             '/api': 'http://localhost:3001'
         }
+    },
+    test: {
+        globals: true,
+        environment: 'happy-dom',
+        setupFiles: './src/test/setup.js',
+        exclude: ['**/node_modules/**', '**/e2e/**'],
     }
 })

@@ -66,34 +66,34 @@ const Booking = () => {
 
             <form onSubmit={handleSubmit} style={{ background: 'white', padding: '30px', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
                 <div className="form-group">
-                    <label className="form-label">Fulde Navn</label>
-                    <input type="text" name="customerName" className="form-select" required onChange={handleChange} />
+                    <label htmlFor="customerName" className="form-label">Fulde Navn</label>
+                    <input id="customerName" type="text" name="customerName" className="form-select" required onChange={handleChange} />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                     <div className="form-group">
-                        <label className="form-label">Email</label>
-                        <input type="email" name="customerEmail" className="form-select" required onChange={handleChange} />
+                        <label htmlFor="customerEmail" className="form-label">Email</label>
+                        <input id="customerEmail" type="email" name="customerEmail" className="form-select" required onChange={handleChange} />
                     </div>
                     <div className="form-group">
-                        <label className="form-label">Telefon</label>
-                        <input type="tel" name="customerPhone" className="form-select" required onChange={handleChange} />
+                        <label htmlFor="customerPhone" className="form-label">Telefon</label>
+                        <input id="customerPhone" type="tel" name="customerPhone" className="form-select" required onChange={handleChange} />
                     </div>
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Hvilken enhed drejer det sig om? (Mærke & Model)</label>
-                    <input type="text" name="deviceModel" className="form-select" placeholder="F.eks. iPhone 13 Pro" required onChange={handleChange} />
+                    <label htmlFor="deviceModel" className="form-label">Hvilken enhed drejer det sig om? (Mærke & Model)</label>
+                    <input id="deviceModel" type="text" name="deviceModel" className="form-select" placeholder="F.eks. iPhone 13 Pro" required onChange={handleChange} />
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Beskriv problemet</label>
-                    <textarea name="problem" className="form-select" rows="4" placeholder="F.eks. Skærmen er sort..." required onChange={handleChange}></textarea>
+                    <label htmlFor="problem" className="form-label">Beskriv problemet</label>
+                    <textarea id="problem" name="problem" className="form-select" rows="4" placeholder="F.eks. Skærmen er sort..." required onChange={handleChange}></textarea>
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Ønsket dato</label>
-                    <input type="date" name="date" className="form-select" required onChange={handleChange} />
+                    <label htmlFor="date" className="form-label">Ønsket dato</label>
+                    <input id="date" type="date" name="date" className="form-select" required onChange={handleChange} />
                 </div>
 
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '15px', fontSize: '1.1rem' }} disabled={status === 'submitting'}>

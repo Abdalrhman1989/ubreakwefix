@@ -57,8 +57,9 @@ const Login = () => {
 
                     <form onSubmit={handleSubmit}>
                         <div style={{ marginBottom: '20px' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.email')}</label>
+                            <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.email')}</label>
                             <input
+                                id="email"
                                 type="email"
                                 name="email"
                                 value={formData.email}
@@ -68,8 +69,9 @@ const Login = () => {
                             />
                         </div>
                         <div style={{ marginBottom: '25px' }}>
-                            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.password')}</label>
+                            <label htmlFor="password" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.password')}</label>
                             <input
+                                id="password"
                                 type="password"
                                 name="password"
                                 value={formData.password}

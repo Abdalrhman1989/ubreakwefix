@@ -47,6 +47,7 @@ const BusinessSignup = () => {
                                 <Building size={18} className="icon" />
                                 <input
                                     type="text"
+                                    name="companyName"
                                     required
                                     placeholder="Firma ApS"
                                     className="input-field"
@@ -61,6 +62,7 @@ const BusinessSignup = () => {
                                 <Hash size={18} className="icon" />
                                 <input
                                     type="text"
+                                    name="cvr"
                                     required
                                     placeholder="12345678"
                                     className="input-field"
@@ -75,6 +77,7 @@ const BusinessSignup = () => {
                                 <Mail size={18} className="icon" />
                                 <input
                                     type="email"
+                                    name="email"
                                     required
                                     placeholder="kontakt@firma.dk"
                                     className="input-field"
@@ -89,6 +92,7 @@ const BusinessSignup = () => {
                                 <Phone size={18} className="icon" />
                                 <input
                                     type="tel"
+                                    name="phone"
                                     required
                                     placeholder="+45 12 34 56 78"
                                     className="input-field"
@@ -103,6 +107,7 @@ const BusinessSignup = () => {
                                 <MapPin size={18} className="icon" />
                                 <input
                                     type="text"
+                                    name="address"
                                     required
                                     placeholder="Industrivej 1"
                                     className="input-field"

@@ -24,17 +24,21 @@ const AdminModels = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Submitting Model Form...', formData);
         try {
             if (currentModel) {
                 await axios.put(`/api/admin/models/${currentModel.id}`, formData);
             } else {
-                await axios.post('/api/admin/models', formData);
+                const res = await axios.post('/api/admin/models', formData);
+                console.log('Model Created:', res.status, res.data);
             }
             setIsModalOpen(false);
             setCurrentModel(null);
             setFormData({ brand_id: '', name: '', family: '', image: '' });
+            console.log('Fetching models...');
             fetchModels();
         } catch (error) {
+            console.error('Error saving model:', error);
             alert('Error saving model');
         }
     };

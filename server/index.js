@@ -92,7 +92,7 @@ app.get('/api/models', (req, res) => {
         params.push(`%${search}%`);
     }
 
-    sql += " ORDER BY models.name LIMIT 20";
+    sql += " ORDER BY models.name LIMIT 1000";
 
     db.all(sql, params, (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });

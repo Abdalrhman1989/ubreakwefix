@@ -49,31 +49,31 @@ const Register = () => {
 
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '20px' }}>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.name')}</label>
-                            <input type="text" name="name" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                            <label htmlFor="name" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.name')}</label>
+                            <input id="name" type="text" name="name" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                         </div>
                         <div>
-                            <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.email')}</label>
-                            <input type="email" name="email" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                            <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.email')}</label>
+                            <input id="email" type="email" name="email" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.phone')}</label>
-                                <input type="tel" name="phone" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                                <label htmlFor="phone" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.phone')}</label>
+                                <input id="phone" type="tel" name="phone" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.address')}</label>
-                                <input type="text" name="address" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                                <label htmlFor="address" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.address')}</label>
+                                <input id="address" type="text" name="address" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                             </div>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.password')}</label>
-                                <input type="password" name="password" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                                <label htmlFor="password" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.password')}</label>
+                                <input id="password" type="password" name="password" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                             </div>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.confirmPassword')}</label>
-                                <input type="password" name="confirmPassword" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
+                                <label htmlFor="confirmPassword" style={{ display: 'block', marginBottom: '8px', color: 'var(--text-muted)' }}>{t('auth.confirmPassword')}</label>
+                                <input id="confirmPassword" type="password" name="confirmPassword" onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-medium)', background: 'var(--bg-input)', color: 'var(--text-main)' }} />
                             </div>
                         </div>
 
