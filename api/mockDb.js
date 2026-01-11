@@ -249,6 +249,10 @@ module.exports = {
 
             // CATEGORIES
             if (sql.includes('FROM categories')) {
+                if (sql.includes('WHERE id')) {
+                    const id = params[0];
+                    return callback(null, categories.find(c => c.id == id));
+                }
                 return callback(null, categories);
             }
 
@@ -417,6 +421,42 @@ module.exports = {
             const id = params[1];
             const order = shop_orders.find(o => o.id == id);
             if (order) order.status = status;
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('INSERT INTO categories')) {
+            // params: [name, description, image_url, parent_id]
+            const newCat = {
+                id: categories.length + 1,
+                name: params[0],
+                description: params[1],
+                image_url: params[2],
+                parent_id: params[3]
+            };
+            categories.push(newCat);
+            if (callback) callback.call({ lastID: newCat.id }, null);
+            return;
+        }
+
+        if (sql.includes('UPDATE categories SET name')) {
+            // params: [name, description, image_url, parent_id, id]
+            const id = params[4];
+            const cat = categories.find(c => c.id == id);
+            if (cat) {
+                cat.name = params[0];
+                cat.description = params[1];
+                cat.image_url = params[2];
+                cat.parent_id = params[3];
+            }
+            if (callback) callback.call({ changes: 1 }, null);
+            return;
+        }
+
+        if (sql.includes('DELETE FROM categories')) {
+            const id = params[0];
+            const idx = categories.findIndex(c => c.id == id);
+            if (idx !== -1) categories.splice(idx, 1);
             if (callback) callback.call({ changes: 1 }, null);
             return;
         }

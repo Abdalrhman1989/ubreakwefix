@@ -72,6 +72,26 @@ router.get('/categories', (req, res) => {
     });
 });
 
+router.post('/admin/categories', (req, res) => {
+    const { name, description, image_url, parent_id } = req.body;
+    db.run("INSERT INTO categories (name, description, image_url, parent_id) VALUES (?,?,?,?)", [name, description, image_url, parent_id], function (err) {
+        res.json({ id: this.lastID, name });
+    });
+});
+
+router.put('/admin/categories/:id', (req, res) => {
+    const { name, description, image_url, parent_id } = req.body;
+    db.run("UPDATE categories SET name = ?, description = ?, image_url = ?, parent_id = ? WHERE id = ?", [name, description, image_url, parent_id, req.params.id], function (err) {
+        res.json({ success: true });
+    });
+});
+
+router.delete('/admin/categories/:id', (req, res) => {
+    db.run("DELETE FROM categories WHERE id = ?", [req.params.id], function (err) {
+        res.json({ success: true });
+    });
+});
+
 router.post('/shop/orders', (req, res) => {
     // Mock order placement
     res.json({ id: Date.now(), message: 'Order placed successfully (Mock)' });
