@@ -298,8 +298,9 @@ const Shop = () => {
                                         </div>
                                         <div className="product-footer">
                                             <span className="product-price">{product.price} DKK</span>
-                                            <button onClick={() => addToCart(product)} className="btn-add" title="Add to Cart">
-                                                <ShoppingBag size={20} />
+                                            <button onClick={() => addToCart(product)} className="btn-add">
+                                                <ShoppingBag size={18} />
+                                                <span>Add to Cart</span>
                                             </button>
                                         </div>
                                     </div>
@@ -342,23 +343,25 @@ const Shop = () => {
                 .product-specs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
                 .spec-badge { font-size: 0.7rem; background: var(--bg-main); padding: 2px 6px; border-radius: 4px; color: var(--text-muted); border: 1px solid var(--border); }
 
-                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; }
-                .product-price { font-weight: bold; font-size: 1.15rem; color: var(--text-main); }
+                .product-footer { display: flex; justifyContent: space-between; alignItems: center; margin-top: auto; gap: 15px; }
+                .product-price { font-weight: 700; font-size: 1.1rem; color: var(--text-main); white-space: nowrap; }
                 .btn-add { 
-                    width: 40px; 
-                    height: 40px; 
-                    border-radius: 50%; 
                     background: var(--primary); 
                     color: white; 
                     border: none; 
+                    padding: 8px 20px; 
+                    border-radius: 50px; 
                     display: flex; 
                     alignItems: center; 
-                    justifyContent: center; 
+                    gap: 8px; 
+                    font-size: 0.9rem; 
+                    font-weight: 600; 
                     cursor: pointer; 
-                    transition: all 0.2s ease;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                    transition: transform 0.2s, opacity 0.2s;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 }
-                .btn-add:hover { transform: scale(1.05); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+                .btn-add:hover { transform: translateY(-1px); opacity: 0.95; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+                .btn-add:active { transform: translateY(0); }
                 
                 .mobile-filter-toggle { display: none; margin-bottom: 20px; width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; gap: 8px; font-weight: 500; }
 
