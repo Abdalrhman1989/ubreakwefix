@@ -12,6 +12,7 @@ const Navbar = () => {
     const { user } = useAuth();
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const location = useLocation();
 
     // Close mobile menu on route change
@@ -54,14 +55,74 @@ const Navbar = () => {
                     <Link to="/om-os" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.about')}</Link>
                     <Link to="/kontakt" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.contact')}</Link>
 
-                    {user && user.role === 'admin' && (
-                        <Link to="/admin" style={{ color: '#dc2626', fontWeight: 'bold', textDecoration: 'none' }} className="nav-link">Admin Panel</Link>
-                    )}
-
+                    {/* AUTHENTICATED USER DROPDOWN */}
                     {user ? (
-                        <Link to="/profile" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <User size={18} /> {t('nav.myAccount')}
-                        </Link>
+                        <div className="user-menu-container" style={{ position: 'relative' }}>
+                            <button
+                                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '8px',
+                                    background: 'var(--bg-element)', border: '1px solid var(--border-light)',
+                                    padding: '8px 12px', borderRadius: '30px', cursor: 'pointer',
+                                    color: 'var(--text-main)', fontWeight: '500', transition: 'all 0.2s'
+                                }}
+                            >
+                                <div style={{
+                                    width: '28px', height: '28px', borderRadius: '50%',
+                                    background: 'var(--primary)', color: 'white',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}>
+                                    <User size={16} />
+                                </div>
+                                <span style={{ fontSize: '0.9rem' }}>{user.name?.split(' ')[0] || 'Konto'}</span>
+                            </button>
+
+                            {/* DROPDOWN - Visible when open */}
+                            {isUserMenuOpen && (
+                                <div style={{
+                                    position: 'absolute', top: '120%', right: 0,
+                                    width: '220px', background: 'var(--bg-surface)',
+                                    border: '1px solid var(--border-light)', borderRadius: '12px',
+                                    boxShadow: 'var(--shadow-md)', overflow: 'hidden', zIndex: 1000,
+                                    backdropFilter: 'blur(10px)',
+                                }}>
+                                    <div style={{ padding: '15px', borderBottom: '1px solid var(--border-light)' }}>
+                                        <p style={{ fontWeight: 'bold', color: 'var(--text-main)', fontSize: '0.95rem' }}>{user.name}</p>
+                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user.email}</p>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', padding: '5px' }}>
+                                        {user.role === 'admin' && (
+                                            <Link
+                                                to="/admin"
+                                                onClick={() => setIsUserMenuOpen(false)}
+                                                style={{ padding: '10px', textDecoration: 'none', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '8px', transition: 'background 0.2s', fontSize: '0.9rem' }}
+                                                onMouseEnter={(e) => e.target.style.background = 'var(--bg-element)'}
+                                                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                                            >
+                                                <div style={{ width: '6px', height: '6px', background: '#dc2626', borderRadius: '50%' }}></div>
+                                                Admin Dashboard
+                                            </Link>
+                                        )}
+                                        <Link
+                                            to="/profile"
+                                            onClick={() => setIsUserMenuOpen(false)}
+                                            style={{ padding: '10px', textDecoration: 'none', color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '8px', transition: 'background 0.2s', fontSize: '0.9rem' }}
+                                            onMouseEnter={(e) => e.target.style.background = 'var(--bg-element)'}
+                                            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                                        >
+                                            <User size={16} /> Min Profil // My Profile
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
+                            {/* Backdrop to close */}
+                            {isUserMenuOpen && (
+                                <div
+                                    style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 999 }}
+                                    onClick={() => setIsUserMenuOpen(false)}
+                                />
+                            )}
+                        </div>
                     ) : (
                         <Link to="/login" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.2s' }} className="nav-link">{t('nav.login')}</Link>
                     )}
