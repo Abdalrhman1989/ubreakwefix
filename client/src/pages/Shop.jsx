@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Search, Filter, ChevronDown, ChevronRight, X, Heart, Star } from 'lucide-react';
+import { ShoppingBag, Search, Filter, ChevronDown, ChevronRight, X, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const Shop = () => {
@@ -150,7 +150,7 @@ const Shop = () => {
                         <Search size={18} className="search-icon" />
                         <input
                             type="text"
-                            placeholder="Search for products..."
+                            placeholder="Search products..."
                             value={filters.searchTerm}
                             onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
                         />
@@ -257,12 +257,24 @@ const Shop = () => {
                                             <Link to={`/shop/product/${product.id}`}>
                                                 <img src={product.image_url} alt={product.name} loading="lazy" />
                                             </Link>
-                                            {product.stock_quantity < 5 && product.stock_quantity > 0 && (
-                                                <span className="badge badge-low-stock">Low Stock</span>
-                                            )}
-                                            {product.stock_quantity === 0 && (
-                                                <span className="badge badge-out">Sold Out</span>
-                                            )}
+
+                                            {/* Status Badges */}
+                                            {product.stock_quantity === 0 ? (
+                                                <span className="badge badge-error">Sold Out</span>
+                                            ) : product.stock_quantity < 5 ? (
+                                                <span className="badge badge-warning">Low Stock</span>
+                                            ) : product.specs?.brand ? (
+                                                <span className="badge badge-neutral">{product.specs.brand}</span>
+                                            ) : null}
+
+                                            {/* Hover Action */}
+                                            <button
+                                                onClick={() => addToCart(product)}
+                                                className="quick-add-btn"
+                                                disabled={product.stock_quantity === 0}
+                                            >
+                                                Add to Cart
+                                            </button>
                                         </div>
 
                                         <div className="card-content">
@@ -270,7 +282,6 @@ const Shop = () => {
                                                 <span className="category-tag">
                                                     {categories.find(c => c.id === product.category_id)?.name || 'Accessory'}
                                                 </span>
-                                                {product.specs?.brand && <span className="brand-tag">{product.specs.brand}</span>}
                                             </div>
 
                                             <Link to={`/shop/product/${product.id}`} className="product-title">
@@ -278,16 +289,8 @@ const Shop = () => {
                                             </Link>
 
                                             <div className="card-footer">
-                                                <div className="price-wrapper">
-                                                    <span className="price">{product.price} DKK</span>
-                                                </div>
-                                                <button
-                                                    onClick={() => addToCart(product)}
-                                                    className="add-btn"
-                                                    disabled={product.stock_quantity === 0}
-                                                >
-                                                    <ShoppingBag size={18} />
-                                                </button>
+                                                <span className="price">{product.price} DKK</span>
+                                                <button className="heart-btn"><Heart size={18} /></button>
                                             </div>
                                         </div>
                                     </div>
@@ -299,32 +302,16 @@ const Shop = () => {
             </div>
 
             <style>{`
-                /* Modern Variables */
-                :root {
-                    --shop-bg: #F9FAFB;
-                    --card-bg: #FFFFFF;
-                    --primary: #2563EB;
-                    --primary-dark: #1D4ED8;
-                    --text-primary: #111827;
-                    --text-secondary: #6B7280;
-                    --border: #E5E7EB;
-                    --radius-lg: 16px;
-                    --radius-md: 12px;
-                    --radius-sm: 8px;
-                    --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-                    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05);
-                    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05);
-                    --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.08);
-                }
-
+                /* Uses Global Variables from index.css for Dark Mode Support */
+                
                 .shop-page {
-                    background-color: var(--shop-bg);
+                    background-color: var(--bg-body);
                     min-height: 100vh;
-                    font-family: 'Inter', sans-serif;
+                    padding-bottom: 60px;
                 }
 
                 .shop-container {
-                    max-width: 1400px;
+                    max-width: var(--container-width);
                     margin: 0 auto;
                     padding: 40px 24px;
                 }
@@ -333,100 +320,93 @@ const Shop = () => {
                 .shop-header {
                     display: flex;
                     justify-content: space-between;
-                    align-items: center;
+                    align-items: flex-end;
                     margin-bottom: 32px;
+                    gap: 20px;
                     flex-wrap: wrap;
-                    gap: 16px;
                 }
 
                 .header-left h1 {
-                    font-size: 2.25rem;
+                    font-size: 2.5rem;
                     font-weight: 800;
-                    color: var(--text-primary);
                     margin: 0;
-                    letter-spacing: -0.025em;
+                    color: var(--text-main);
+                    line-height: 1.1;
                 }
 
                 .product-count {
-                    color: var(--text-secondary);
-                    font-size: 0.95rem;
-                    margin-top: 4px;
+                    color: var(--text-muted);
+                    font-size: 0.9rem;
+                    margin-top: 8px;
                     display: block;
+                    font-weight: 500;
                 }
 
                 .shop-search {
                     position: relative;
-                    min-width: 300px;
+                    min-width: 320px;
+                    flex-shrink: 0;
                 }
 
                 .shop-search input {
                     width: 100%;
-                    padding: 12px 16px 12px 42px;
-                    border: 1px solid var(--border);
+                    padding: 14px 16px 14px 48px;
+                    border: 1px solid var(--border-light);
                     border-radius: 50px;
-                    background: white;
+                    background: var(--bg-surface);
+                    color: var(--text-main);
                     font-size: 0.95rem;
-                    transition: all 0.2s;
+                    transition: all 0.3s ease;
                     box-shadow: var(--shadow-sm);
                 }
 
                 .shop-search input:focus {
                     outline: none;
                     border-color: var(--primary);
-                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
                 }
 
                 .search-icon {
                     position: absolute;
-                    left: 14px;
+                    left: 16px;
                     top: 50%;
                     transform: translateY(-50%);
-                    color: var(--text-secondary);
+                    color: var(--text-muted);
                 }
 
                 /* Layout */
                 .shop-layout {
                     display: grid;
-                    grid-template-columns: 280px 1fr;
+                    grid-template-columns: 260px 1fr;
                     gap: 40px;
                     align-items: start;
                 }
 
                 /* Sidebar */
                 .shop-sidebar {
-                    background: white;
-                    padding: 24px;
-                    border-radius: var(--radius-lg);
-                    border: 1px solid var(--border);
                     position: sticky;
                     top: 24px;
-                    max-height: calc(100vh - 48px);
-                    overflow-y: auto;
-                    box-shadow: var(--shadow-sm);
+                    padding-right: 10px;
                 }
 
                 .filter-group {
                     margin-bottom: 32px;
                 }
 
-                .filter-group:last-child {
-                    margin-bottom: 0;
-                }
-
                 .filter-group h4 {
-                    font-size: 0.8rem;
+                    font-size: 0.75rem;
                     text-transform: uppercase;
-                    letter-spacing: 0.05em;
-                    color: var(--text-secondary);
-                    font-weight: 700;
+                    letter-spacing: 0.1em;
+                    color: var(--text-muted);
                     margin-bottom: 16px;
+                    font-weight: 700;
                 }
 
                 /* Category Nav */
                 .category-nav {
                     display: flex;
                     flex-direction: column;
-                    gap: 4px;
+                    gap: 2px;
                 }
 
                 .cat-link {
@@ -434,15 +414,16 @@ const Shop = () => {
                     border: none;
                     text-align: left;
                     font-size: 0.95rem;
-                    color: var(--text-primary);
+                    color: var(--text-main);
                     padding: 6px 0;
                     cursor: pointer;
-                    transition: color 0.15s;
+                    transition: color 0.2s;
+                    font-family: inherit;
                 }
 
                 .cat-link:hover, .cat-link.active {
                     color: var(--primary);
-                    font-weight: 500;
+                    font-weight: 600;
                 }
 
                 .cat-header {
@@ -454,7 +435,7 @@ const Shop = () => {
                 .cat-expand {
                     background: none;
                     border: none;
-                    color: var(--text-secondary);
+                    color: var(--text-muted);
                     cursor: pointer;
                     padding: 4px;
                 }
@@ -462,18 +443,17 @@ const Shop = () => {
                 .cat-children {
                     margin-left: 12px;
                     padding-left: 12px;
-                    border-left: 2px solid #F3F4F6;
+                    border-left: 1px solid var(--border-light);
                     margin-top: 4px;
                     display: flex;
                     flex-direction: column;
-                    gap: 4px;
                 }
 
                 /* Checkboxes */
                 .checkbox-list {
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
+                    gap: 12px;
                 }
 
                 .checkbox-item {
@@ -481,8 +461,9 @@ const Shop = () => {
                     align-items: center;
                     cursor: pointer;
                     font-size: 0.95rem;
-                    color: var(--text-primary);
+                    color: var(--text-main);
                     user-select: none;
+                    position: relative;
                 }
 
                 .checkbox-item input {
@@ -496,15 +477,16 @@ const Shop = () => {
                 .checkmark {
                     height: 18px;
                     width: 18px;
-                    background-color: white;
-                    border: 2px solid var(--border);
+                    background-color: transparent;
+                    border: 1.5px solid var(--border-medium);
                     border-radius: 4px;
-                    margin-right: 10px;
+                    margin-right: 12px;
                     transition: all 0.2s;
                     position: relative;
+                    flex-shrink: 0;
                 }
 
-                .checkbox-item:hover input ~ .checkmark {
+                .checkbox-item:hover .checkmark {
                     border-color: var(--primary);
                 }
 
@@ -518,7 +500,7 @@ const Shop = () => {
                     position: absolute;
                     display: none;
                     left: 5px;
-                    top: 2px;
+                    top: 1px;
                     width: 4px;
                     height: 9px;
                     border: solid white;
@@ -533,54 +515,59 @@ const Shop = () => {
                 .clear-filters-btn {
                     width: 100%;
                     padding: 10px;
-                    background: #F3F4F6;
+                    background: var(--bg-element);
                     border: none;
-                    border-radius: var(--radius-sm);
-                    color: var(--text-secondary);
+                    border-radius: var(--radius-md);
+                    color: var(--text-muted);
                     font-weight: 600;
                     cursor: pointer;
                     transition: all 0.2s;
                     margin-top: 10px;
+                    font-size: 0.9rem;
                 }
 
                 .clear-filters-btn:hover {
-                    background: #E5E7EB;
-                    color: var(--text-primary);
+                    background: var(--border-light);
+                    color: var(--text-main);
                 }
 
-                /* Product Grid */
+                /* Products */
                 .products-grid {
                     display: grid;
-                    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-                    gap: 24px;
+                    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                    gap: 32px;
                 }
 
                 .product-card {
-                    background: var(--card-bg);
-                    border-radius: var(--radius-lg);
-                    border: 1px solid var(--border);
-                    overflow: hidden;
                     display: flex;
                     flex-direction: column;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    position: relative;
-                }
-
-                .product-card:hover {
-                    transform: translateY(-6px);
-                    box-shadow: var(--shadow-hover);
-                    border-color: var(--primary);
+                    gap: 16px;
+                    group: 1; /* For group utilities approximation */
                 }
 
                 .card-image-wrapper {
+                    background: var(--bg-surface);
+                    border-radius: var(--radius-lg);
                     aspect-ratio: 1;
-                    padding: 24px;
-                    background: #F8FAFC;
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    padding: 32px;
                     position: relative;
                     overflow: hidden;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    border: 1px solid transparent;
+                }
+                
+                /* Dark Mode Border fix for cards */
+                [data-theme='dark'] .card-image-wrapper {
+                    border-color: var(--border-light);
+                    background: var(--bg-element);
+                }
+
+                .product-card:hover .card-image-wrapper {
+                    transform: translateY(-4px);
+                    box-shadow: var(--shadow-lg);
                 }
 
                 .card-image-wrapper img {
@@ -588,11 +575,45 @@ const Shop = () => {
                     height: 100%;
                     object-fit: contain;
                     transition: transform 0.5s ease;
-                    mix-blend-mode: multiply;
+                    /* In Dark Mode, images (often black) need invert or brightness adjustment? */
+                    /* Assuming transparent PNGs, might look odd on dark if black product. 
+                       Mix-blend-mode multiply works best on light. 
+                       For dark, we might need a subtle white glow or just normal blending. */
+                    mix-blend-mode: normal; 
                 }
 
                 .product-card:hover .card-image-wrapper img {
                     transform: scale(1.08);
+                }
+
+                /* Quick Add Button - Appears on Hover */
+                .quick-add-btn {
+                    position: absolute;
+                    bottom: 16px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(20px);
+                    background: var(--text-main); /* Black on light, White on dark */
+                    color: var(--bg-body);
+                    border: none;
+                    padding: 10px 24px;
+                    border-radius: 30px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    opacity: 0;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    cursor: pointer;
+                    white-space: nowrap;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                }
+
+                .product-card:hover .quick-add-btn {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+
+                .quick-add-btn:hover {
+                    background: var(--primary);
+                    color: white;
                 }
 
                 .badge {
@@ -600,62 +621,35 @@ const Shop = () => {
                     top: 12px;
                     left: 12px;
                     padding: 4px 10px;
-                    border-radius: 20px;
+                    border-radius: 6px;
                     font-size: 0.75rem;
                     font-weight: 700;
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                 }
 
-                .badge-low-stock {
-                    background: #FEF3C7;
-                    color: #D97706;
-                }
-
-                .badge-out {
-                    background: #FEE2E2;
-                    color: #DC2626;
-                }
+                .badge-neutral { background: var(--bg-element); color: var(--text-secondary); }
+                .badge-warning { background: #FEF3C7; color: #D97706; }
+                .badge-error { background: #FEE2E2; color: #DC2626; }
 
                 .card-content {
-                    padding: 20px;
                     display: flex;
                     flex-direction: column;
-                    flex: 1;
-                    gap: 8px;
-                }
-
-                .card-meta {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 0.75rem;
+                    gap: 6px;
                 }
 
                 .category-tag {
-                    color: var(--text-secondary);
-                    font-weight: 600;
-                    text-transform: uppercase;
-                }
-
-                .brand-tag {
-                    background: #F3F4F6;
-                    padding: 2px 8px;
-                    border-radius: 4px;
-                    color: var(--text-secondary);
+                    font-size: 0.8rem;
+                    color: var(--text-muted);
                     font-weight: 500;
                 }
 
-                .product-title {
-                    text-decoration: none;
-                    color: var(--text-primary);
-                }
-
                 .product-title h3 {
-                    margin: 0;
                     font-size: 1.1rem;
-                    line-height: 1.4;
                     font-weight: 700;
+                    color: var(--text-main);
+                    margin: 0;
+                    line-height: 1.4;
                     transition: color 0.2s;
                 }
 
@@ -663,53 +657,42 @@ const Shop = () => {
                     color: var(--primary);
                 }
 
+                .product-title { text-decoration: none; }
+
                 .card-footer {
-                    margin-top: auto;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    padding-top: 16px;
+                    margin-top: 4px;
                 }
 
                 .price {
-                    font-size: 1.25rem;
-                    font-weight: 800;
-                    color: var(--text-primary);
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: var(--text-main);
                 }
 
-                .add-btn {
-                    background: var(--primary);
-                    color: white;
+                .heart-btn {
+                    background: none;
                     border: none;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    color: var(--text-muted);
                     cursor: pointer;
-                    transition: all 0.2s;
-                    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+                    padding: 4px;
+                    transition: color 0.2s;
                 }
 
-                .add-btn:hover:not(:disabled) {
-                    background: var(--primary-dark);
-                    transform: scale(1.05);
+                .heart-btn:hover {
+                    color: #EF4444;
                 }
 
-                .add-btn:disabled {
-                    background: #E5E7EB;
-                    cursor: not-allowed;
-                    box-shadow: none;
-                }
-
-                /* Mobile Toggle */
+                /* Mobile Stuff */
                 .mobile-filter-btn {
                     display: none;
                     width: 100%;
                     padding: 14px;
-                    background: white;
-                    border: 1px solid var(--border);
+                    background: var(--bg-surface);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-light);
                     border-radius: var(--radius-md);
                     font-weight: 600;
                     align-items: center;
@@ -717,156 +700,101 @@ const Shop = () => {
                     gap: 8px;
                     margin-bottom: 24px;
                     cursor: pointer;
-                    color: var(--text-primary);
-                    box-shadow: var(--shadow-sm);
                 }
-
+                
                 .active-filter-badge {
                     display: inline-flex;
                     align-items: center;
                     gap: 8px;
-                    background: #DBEAFE;
-                    color: #1E40AF;
-                    padding: 6px 14px;
-                    border-radius: 20px;
-                    font-size: 0.85rem;
-                    font-weight: 600;
+                    background: var(--bg-element);
+                    color: var(--text-main);
+                    border: 1px solid var(--border-light);
+                    padding: 8px 16px;
+                    border-radius: 30px;
+                    font-size: 0.9rem;
+                    font-weight: 500;
                     margin-bottom: 24px;
                 }
 
                 .active-filter-badge button {
                     background: none;
                     border: none;
-                    color: inherit;
+                    color: var(--text-muted);
                     cursor: pointer;
                     display: flex;
                     padding: 0;
                 }
 
-                /* Mobile Sidebar Transition */
-                .sidebar-overlay {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background: rgba(0,0,0,0.5);
-                    z-index: 999;
-                    backdrop-filter: blur(2px);
-                }
-
                 .sidebar-header-mobile {
                     display: none;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 24px;
-                    padding-bottom: 16px;
-                    border-bottom: 1px solid var(--border);
-                }
-                
-                .empty-state {
-                    text-align: center;
-                    padding: 60px 0;
-                    color: var(--text-secondary);
-                }
-                
-                .empty-state svg {
-                    margin-bottom: 16px;
-                    color: var(--border);
-                }
-                
-                .empty-state button {
-                    margin-top: 16px;
-                    padding: 8px 16px;
-                    background: none;
-                    border: 1px solid var(--border);
-                    border-radius: 6px;
-                    cursor: pointer;
                 }
 
-                /* Responsive Breakpoints */
+                .sidebar-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 99;
+                    backdrop-filter: blur(4px);
+                }
+                
+                .loading-state, .empty-state {
+                    text-align: center;
+                    padding: 60px 0;
+                    color: var(--text-muted);
+                }
+
                 @media (max-width: 1024px) {
                     .shop-layout {
                         display: block;
                     }
-
                     .shop-sidebar {
                         position: fixed;
                         top: 0;
                         left: 0;
                         height: 100vh;
-                        width: 320px;
+                        width: 300px;
+                        background: var(--bg-surface);
                         z-index: 1000;
+                        padding: 24px;
                         transform: translateX(-100%);
                         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                        border-radius: 0;
-                        border: none;
-                        max-height: none;
+                        overflow-y: auto;
+                        box-shadow: 20px 0 40px rgba(0,0,0,0.1);
                     }
-
                     .shop-sidebar.open {
                         transform: translateX(0);
                     }
-
+                    .sidebar-header-mobile {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 24px;
+                        color: var(--text-main);
+                    }
+                    .sidebar-header-mobile button {
+                         background: none; border: none; color: var(--text-main); cursor: pointer;
+                    }
                     .mobile-filter-btn {
                         display: flex;
                     }
-
-                    .sidebar-header-mobile {
-                        display: flex;
-                    }
-                    
-                    .products-grid {
-                         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                    }
                 }
-
+                
                 @media (max-width: 640px) {
-                    .shop-container {
-                        padding: 24px 16px;
-                    }
-                    
-                    .shop-header {
-                        flex-direction: column;
-                        align-items: flex-start;
-                        gap: 12px;
-                    }
-                    
-                    .shop-search {
-                        width: 100%;
-                    }
-
                     .products-grid {
-                        grid-template-columns: 1fr;
-                        gap: 16px;
+                         grid-template-columns: 1fr;
                     }
-                    
                     .product-card {
                         flex-direction: row;
-                        height: 140px;
+                        align-items: center;
+                        gap: 16px;
                     }
-                    
                     .card-image-wrapper {
+                        height: 120px;
                         width: 120px;
-                        height: 100%;
-                        padding: 12px;
-                    }
-                    
-                    .card-content {
                         padding: 16px;
                     }
-                    
-                    .product-title h3 {
-                        font-size: 1rem;
-                    }
-                    
-                    .price {
-                        font-size: 1.1rem;
-                    }
-                    
-                    .add-btn {
-                        width: 36px;
-                        height: 36px;
+                    .quick-add-btn {
+                        display: none; /* Hide on mobile, use a static button if needed or card click */
                     }
                 }
             `}</style>
