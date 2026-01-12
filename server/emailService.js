@@ -143,5 +143,24 @@ module.exports = {
     sendStatusUpdate,
     sendNewApplicationNotification,
     sendBusinessApprovalEmail,
-    sendBusinessRejectionEmail
+    sendBusinessRejectionEmail,
+    sendContactMessage
+};
+
+const sendContactMessage = async ({ name, email, subject, message }) => {
+    const emailSubject = `Ny Besked fra Kontaktformular: ${subject}`;
+    const html = `
+        <h1>Ny besked fra ${name}</h1>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Emne:</strong> ${subject}</p>
+        
+        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>Besked:</h3>
+            <p style="white-space: pre-wrap;">${message}</p>
+        </div>
+
+        <p><small>Sendt fra ubreakwefix.dk</small></p>
+    `;
+    // Send to support
+    return sendEmail('support@ubreakwefix.dk', emailSubject, html);
 };

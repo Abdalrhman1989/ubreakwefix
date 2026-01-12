@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const db = require('./database');
-const { sendBookingConfirmation, sendStatusUpdate, sendNewApplicationNotification, sendBusinessApprovalEmail } = require('./emailService');
+const { sendBookingConfirmation, sendStatusUpdate, sendNewApplicationNotification, sendBusinessApprovalEmail, sendContactMessage } = require('./emailService');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,6 +13,17 @@ app.use(express.json());
 // API Routes
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date(), env: process.env.NODE_ENV });
+});
+
+app.post('/api/contact', async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    try {
+        await sendContactMessage({ name, email, subject, message });
+        res.json({ success: true, message: 'Message sent successfully' });
+    } catch (err) {
+        console.error("Contact API Error:", err);
+        res.status(500).json({ error: 'Failed to send message' });
+    }
 });
 
 app.post('/api/auth/register', async (req, res) => {
