@@ -101,8 +101,8 @@ const Contact = () => {
                                     <div>
                                         <div style={{ fontWeight: '600', marginBottom: '4px' }}>Adresse</div>
                                         <div style={{ color: 'var(--text-muted)' }}>
-                                            Rugvang 36, 18<br />
-                                            5210 Odense V
+                                            Skibhusvej 109<br />
+                                            5000 Odense C
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +151,8 @@ const Contact = () => {
                         </div>
 
                         {/* Map */}
-                        <div style={{ borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', height: '300px' }}>
+                        {/* Map */}
+                        <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', height: '350px', border: '1px solid var(--border-light)' }}>
                             <MapSection />
                         </div>
                     </div>
