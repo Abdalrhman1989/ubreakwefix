@@ -4,12 +4,13 @@ const path = require('path');
 
 class DatabaseAdapter {
     constructor() {
-        this.isPostgres = !!process.env.DATABASE_URL;
+        const connString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+        this.isPostgres = !!connString;
 
         if (this.isPostgres) {
-            console.log("Initializing PostgreSQL Adapter...", process.env.DATABASE_URL.split('@')[1]); // Log host only
+            console.log("Initializing PostgreSQL Adapter...", connString.split('@')[1]); // Log host only
             this.pool = new Pool({
-                connectionString: process.env.DATABASE_URL,
+                connectionString: connString,
                 ssl: { rejectUnauthorized: false }
             });
         } else {
