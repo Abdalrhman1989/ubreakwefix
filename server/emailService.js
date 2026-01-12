@@ -138,17 +138,8 @@ const sendBusinessRejectionEmail = async (email, companyName) => {
     return sendEmail(email, subject, html);
 };
 
-module.exports = {
-    sendBookingConfirmation,
-    sendStatusUpdate,
-    sendNewApplicationNotification,
-    sendBusinessApprovalEmail,
-    sendBusinessRejectionEmail,
-    sendContactMessage
-};
-
-const sendContactMessage = async ({ name, email, subject, message }) => {
-    const emailSubject = `Ny Besked fra Kontaktformular: ${subject}`;
+const sendContactMessage = async (name, email, subject, message) => {
+    const emailSubject = `Kontaktformular: ${subject}`;
     const html = `
         <h1>Ny besked fra ${name}</h1>
         <p><strong>Email:</strong> ${email}</p>
@@ -163,4 +154,13 @@ const sendContactMessage = async ({ name, email, subject, message }) => {
     `;
     // Send to support
     return sendEmail('support@ubreakwefix.dk', emailSubject, html);
+};
+
+module.exports = {
+    sendBookingConfirmation,
+    sendStatusUpdate,
+    sendNewApplicationNotification,
+    sendBusinessApprovalEmail,
+    sendBusinessRejectionEmail,
+    sendContactMessage
 };
