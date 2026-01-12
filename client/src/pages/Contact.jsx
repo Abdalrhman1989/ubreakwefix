@@ -15,11 +15,10 @@ const Contact = () => {
                 {/* Hero Header */}
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                     <h1 className="title-hero" style={{ fontSize: '3rem', marginBottom: '16px' }}>
-                        Kontakt & Booking
+                        Kontakt Os
                     </h1>
                     <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-                        Har du spørgsmål eller vil du booke tid til en reparation?
-                        Vi står klar til at hjælpe dig i butikken eller online.
+                        Har du spørgsmål eller vil du booke tid? Vi står klar til at hjælpe.
                     </p>
                 </div>
 
@@ -151,6 +150,34 @@ const Contact = () => {
                         </div>
 
                         {/* Map */}
+                        {/* Reviews Card */}
+                        <div className="card-float" style={{ padding: '24px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', gap: '2px', background: '#eab308', padding: '4px 8px', borderRadius: '4px' }}>
+                                    {[1, 2, 3, 4, 5].map(i => (
+                                        <div key={i} style={{ width: '16px', height: '16px', background: 'white', clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }}></div>
+                                    ))}
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-main)' }}>4.9 / 5</span>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>113 anmeldelser</span>
+                                </div>
+                            </div>
+
+                            <a
+                                href="https://dk.trustpilot.com/review/ubreakwefix.dk?utm_medium=trustbox&utm_source=TrustBoxReviewCollector"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn"
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                                    textDecoration: 'none', background: '#00b67a', color: 'white', width: '100%'
+                                }}
+                            >
+                                Læs anmeldelser på Trustpilot
+                            </a>
+                        </div>
+
                         {/* Map */}
                         <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-lg)', height: '350px', border: '1px solid var(--border-light)' }}>
                             <MapSection />
