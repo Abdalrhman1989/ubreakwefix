@@ -6,11 +6,13 @@ const AdminDashboard = () => {
     const [stats, setStats] = useState({ brands: 0, models: 0, repairs: 0, bookings: 0 });
     const [revenueData, setRevenueData] = useState([]);
     const [recentActivity, setRecentActivity] = useState([]);
+    const [bookings, setBookings] = useState([]);
 
     useEffect(() => {
         axios.get('/api/admin/stats').then(res => setStats(res.data));
         axios.get('/api/admin/analytics/revenue').then(res => setRevenueData(res.data));
         axios.get('/api/admin/analytics/activity').then(res => setRecentActivity(res.data));
+        axios.get('/api/admin/bookings').then(res => setBookings(res.data));
     }, []);
 
     const cards = [
@@ -112,6 +114,50 @@ const AdminDashboard = () => {
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/models'}>Manage Models</button>
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/users'}>Manage Users</button>
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/shop-orders'}>View Orders</button>
+                </div>
+            </div>
+
+            {/* Recent Bookings */}
+            <div className="card-glass" style={{ marginTop: '24px', padding: '24px', borderRadius: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+                    <div style={{ padding: '8px', background: 'rgba(99, 102, 241, 0.1)', borderRadius: '8px', color: '#6366F1' }}>
+                        <Calendar size={20} />
+                    </div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>In-Store Bookings (Pay at Shop)</h3>
+                </div>
+                <div className="table-container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Device</th>
+                                <th>Problem</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {bookings.slice(0, 5).map(booking => (
+                                <tr key={booking.id}>
+                                    <td>{booking.booking_date}</td>
+                                    <td>
+                                        <div>{booking.customer_name}</div>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{booking.customer_phone}</div>
+                                    </td>
+                                    <td>{booking.device_model}</td>
+                                    <td>{booking.problem}</td>
+                                    <td>
+                                        <span className={`status-badge ${booking.status?.toLowerCase() || 'pending'}`}>{booking.status || 'Pending'}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                            {bookings.length === 0 && (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: 'var(--text-muted)' }}>No bookings found</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

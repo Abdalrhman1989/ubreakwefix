@@ -1,6 +1,10 @@
+// Force restart
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+// path already declared above
+const axios = require('axios');
 const db = require('./database');
 const { sendBookingConfirmation, sendStatusUpdate, sendNewApplicationNotification, sendBusinessApprovalEmail, sendContactMessage } = require('./emailService');
 
@@ -645,6 +649,108 @@ app.put('/api/users/:id/password', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+});
+
+
+// Quickpay Integration
+app.post('/api/payment/link', async (req, res) => {
+    const { amount, orderId, text_on_statement } = req.body; // amount in DKK
+
+    if (!process.env.QUICKPAY_API_KEY) {
+        console.error("Missing QUICKPAY_API_KEY");
+        return res.status(500).json({ error: 'Server misconfiguration: No API Key' });
+    }
+
+    try {
+        // Quickpay requires API Key as the password (empty username), ie ":API_KEY"
+        const authHeader = 'Basic ' + Buffer.from(':' + process.env.QUICKPAY_API_KEY).toString('base64');
+        const uniqueOrderId = `ORD-${orderId}-${Date.now()}`; // Ensure uniqueness
+
+        // 1. Create Payment
+        const createRes = await axios.post('https://api.quickpay.net/payments', {
+            currency: 'DKK',
+            order_id: uniqueOrderId,
+            text_on_statement: text_on_statement || 'UBreakWeFix'
+        }, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept-Version': 'v10'
+            }
+        });
+
+        const paymentId = createRes.data.id;
+
+        // 2. Create Payment Link
+        // Amount must be in øre (multiply by 100)
+        const linkRes = await axios.put(`https://api.quickpay.net/payments/${paymentId}/link`, {
+            amount: Math.round(amount * 100),
+            continue_url: 'http://localhost:5173/checkout/success', // Update to production URL
+            cancel_url: 'http://localhost:5173/checkout'
+        }, {
+            headers: {
+                'Authorization': authHeader,
+                'Accept-Version': 'v10'
+            }
+        });
+
+        res.json({ url: linkRes.data.url, paymentId: paymentId });
+    } catch (err) {
+        console.error("Quickpay Detailed Error:", {
+            message: err.message,
+            status: err.response?.status,
+            data: err.response?.data,
+            headers: err.response?.headers
+        });
+
+        // Send more specific error to client for debugging
+        const errorMessage = err.response?.data?.message || err.message;
+        const errorValidation = JSON.stringify(err.response?.data?.errors || {});
+        res.status(500).json({
+            error: `Payment Provider Error: ${errorMessage} ${errorValidation !== '{}' ? errorValidation : ''}`,
+            details: err.response?.data
+        });
+    }
+});
+
+// Shipmondo Integration
+app.get('/api/shipping/products', async (req, res) => {
+    // Return mocked shipping products for now
+    res.json([
+        { id: 'gls_shop', name: 'GLS Parcel Shop', price: 49, carrier: 'gls' },
+        { id: 'gls_home', name: 'GLS Home Delivery', price: 69, carrier: 'gls' },
+        { id: 'postnord_shop', name: 'PostNord Parcel Shop', price: 45, carrier: 'pdk' }
+    ]);
+
+    // In production, we would proxy to Shipmondo:
+    // try {
+    //     const authHeader = 'Basic ' + Buffer.from(process.env.SHIPMONDO_USER + ':' + process.env.SHIPMONDO_KEY).toString('base64');
+    //     const response = await axios.get('https://app.shipmondo.com/api/public/v3/sales_orders/shipping_products', { ... });
+    //     res.json(response.data);
+    // } catch ...
+});
+
+app.post('/api/shipping/droppoints', async (req, res) => {
+    const { zipcode, carrier } = req.body;
+
+    // Mocked Drop Points for Demo
+    const mockPoints = [
+        { id: '1', name: 'Nærkøb Odense', address: 'Skibhusvej 1', zip: zipcode, city: 'Odense C' },
+        { id: '2', name: 'Coop 365', address: 'Skibhusvej 100', zip: zipcode, city: 'Odense C' },
+        { id: '3', name: 'Føtex Food', address: 'Vesterbro 20', zip: zipcode, city: 'Odense C' }
+    ];
+
+    res.json(mockPoints);
+
+    /* Real implementation would be:
+    try {
+        const authHeader = 'Basic ' + Buffer.from(process.env.SHIPMONDO_USER + ':' + process.env.SHIPMONDO_KEY).toString('base64');
+        const response = await axios.get('https://app.shipmondo.com/api/public/v3/service_points', {
+            params: { carrier_code: carrier, zip_code: zipcode, country_code: 'DK' },
+            headers: { 'Authorization': authHeader }
+        });
+        res.json(response.data);
+    } catch ...
+    */
 });
 
 if (require.main === module) {

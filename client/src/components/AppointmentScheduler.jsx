@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useLanguage } from '../context/LanguageContext';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ChevronRight } from 'lucide-react';
 
 const AppointmentScheduler = () => {
+    const { t } = useLanguage();
     const [step, setStep] = useState(1); // 1: Date/Time, 2: Details, 3: Success
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
@@ -35,7 +37,7 @@ const AppointmentScheduler = () => {
             setStep(3);
         } catch (err) {
             console.error(err);
-            alert('Der skete en fejl. Prøv igen.');
+            alert(t('contactPage.form.error'));
         } finally {
             setLoading(false);
         }
@@ -45,12 +47,12 @@ const AppointmentScheduler = () => {
         return (
             <div style={{ textAlign: 'center', padding: '40px' }}>
                 <CheckCircle size={64} color="var(--primary)" style={{ margin: '0 auto 20px' }} />
-                <h3>Tak for din booking!</h3>
+                <h3>{t('contactPage.scheduler.successTitle')}</h3>
                 <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>
-                    Vi glæder os til at se dig d. <strong>{date}</strong> kl. <strong>{time}</strong>.
+                    {t('contactPage.scheduler.successText')} <strong>{date}</strong> kl. <strong>{time}</strong>.
                 </p>
                 <button onClick={() => { setStep(1); setDate(''); setTime(''); }} className="btn btn-outline">
-                    Book en ny tid
+                    {t('contactPage.scheduler.bookNew')}
                 </button>
             </div>
         );
@@ -60,14 +62,14 @@ const AppointmentScheduler = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Progress */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '10px' }}>
-                <span style={{ color: step >= 1 ? 'var(--primary)' : 'inherit', fontWeight: step >= 1 ? 'bold' : 'normal' }}>1. Tidspunkt</span>
+                <span style={{ color: step >= 1 ? 'var(--primary)' : 'inherit', fontWeight: step >= 1 ? 'bold' : 'normal' }}>{t('contactPage.scheduler.step1')}</span>
                 <ChevronRight size={14} />
-                <span style={{ color: step >= 2 ? 'var(--primary)' : 'inherit', fontWeight: step >= 2 ? 'bold' : 'normal' }}>2. Kontaktoplysninger</span>
+                <span style={{ color: step >= 2 ? 'var(--primary)' : 'inherit', fontWeight: step >= 2 ? 'bold' : 'normal' }}>{t('contactPage.scheduler.step2')}</span>
             </div>
 
             {step === 1 && (
                 <div className="fade-in">
-                    <label style={{ display: 'block', marginBottom: '10px', fontWeight: '500' }}>Vælg Dato</label>
+                    <label style={{ display: 'block', marginBottom: '10px', fontWeight: '500' }}>{t('contactPage.scheduler.selectDate')}</label>
                     <input
                         type="date"
                         className="input-field"
@@ -77,7 +79,7 @@ const AppointmentScheduler = () => {
                         onChange={(e) => setDate(e.target.value)}
                     />
 
-                    <label style={{ display: 'block', marginBottom: '10px', fontWeight: '500' }}>Vælg Tidspunkt</label>
+                    <label style={{ display: 'block', marginBottom: '10px', fontWeight: '500' }}>{t('contactPage.scheduler.selectTime')}</label>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: '10px' }}>
                         {timeSlots.map(slot => (
                             <button
@@ -104,7 +106,7 @@ const AppointmentScheduler = () => {
                             disabled={!date || !time}
                             onClick={() => setStep(2)}
                         >
-                            Næste
+                            {t('contactPage.scheduler.next')}
                         </button>
                     </div>
                 </div>
@@ -119,40 +121,40 @@ const AppointmentScheduler = () => {
                     </div>
 
                     <div>
-                        <label>Navn</label>
+                        <label>{t('contactPage.scheduler.detailsName')}</label>
                         <div className="input-with-icon">
                             <User size={18} />
-                            <input type="text" placeholder="Navn" value={details.name} onChange={e => setDetails({ ...details, name: e.target.value })} />
+                            <input type="text" placeholder={t('contactPage.scheduler.detailsName')} value={details.name} onChange={e => setDetails({ ...details, name: e.target.value })} />
                         </div>
                     </div>
                     <div>
-                        <label>Email</label>
+                        <label>{t('contactPage.scheduler.detailsEmail')}</label>
                         <div className="input-with-icon">
                             <Mail size={18} />
-                            <input type="email" placeholder="Email" value={details.email} onChange={e => setDetails({ ...details, email: e.target.value })} />
+                            <input type="email" placeholder={t('contactPage.scheduler.detailsEmail')} value={details.email} onChange={e => setDetails({ ...details, email: e.target.value })} />
                         </div>
                     </div>
                     <div>
-                        <label>Telefon</label>
+                        <label>{t('contactPage.scheduler.detailsPhone')}</label>
                         <div className="input-with-icon">
                             <Phone size={18} />
-                            <input type="tel" placeholder="Telefon" value={details.phone} onChange={e => setDetails({ ...details, phone: e.target.value })} />
+                            <input type="tel" placeholder={t('contactPage.scheduler.detailsPhone')} value={details.phone} onChange={e => setDetails({ ...details, phone: e.target.value })} />
                         </div>
                     </div>
                     <div>
-                        <label>Årsag (valgfri)</label>
-                        <input type="text" className="input-field" placeholder="F.eks. Skærmskift iPhone 13" value={details.reason} onChange={e => setDetails({ ...details, reason: e.target.value })} style={{ width: '100%', padding: '12px' }} />
+                        <label>{t('contactPage.scheduler.detailsReason')}</label>
+                        <input type="text" className="input-field" placeholder={t('contactPage.scheduler.detailsReasonPlaceholder')} value={details.reason} onChange={e => setDetails({ ...details, reason: e.target.value })} style={{ width: '100%', padding: '12px' }} />
                     </div>
 
                     <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-                        <button className="btn btn-outline" onClick={() => setStep(1)} style={{ flex: 1 }}>Tilbage</button>
+                        <button className="btn btn-outline" onClick={() => setStep(1)} style={{ flex: 1 }}>{t('contactPage.scheduler.back')}</button>
                         <button
                             className="btn btn-primary"
                             disabled={!details.name || !details.email || !details.phone || loading}
                             onClick={handleBook}
                             style={{ flex: 2 }}
                         >
-                            {loading ? 'Booker...' : 'Bekræft Booking'}
+                            {loading ? t('contactPage.scheduler.booking') : t('contactPage.scheduler.confirm')}
                         </button>
                     </div>
                 </div>
@@ -162,3 +164,4 @@ const AppointmentScheduler = () => {
 };
 
 export default AppointmentScheduler;
+

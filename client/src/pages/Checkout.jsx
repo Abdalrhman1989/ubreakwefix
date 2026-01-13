@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Trash2, ShieldCheck, CreditCard, ChevronLeft, User, Mail, Phone, MapPin, FileText, Home } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Trash2, ShieldCheck, CreditCard, ChevronLeft, User, Mail, Phone, MapPin, FileText, Home, Truck } from 'lucide-react';
 import axios from 'axios';
 
 const Checkout = () => {
@@ -10,6 +10,16 @@ const Checkout = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [step, setStep] = useState(1); // 1: Details & Review, 2: Success
+
+    const location = useLocation();
+
+    // Check for success URL
+    useEffect(() => {
+        if (location.pathname === '/checkout/success') {
+            clearCart();
+            setStep(2);
+        }
+    }, [location]);
 
     // Form Data State
     const [formData, setFormData] = useState({
@@ -39,7 +49,38 @@ const Checkout = () => {
         }
     }, [user]);
 
-    const total = getCartTotal();
+    const [shippingOptions, setShippingOptions] = useState([]);
+    const [selectedShipping, setSelectedShipping] = useState(null);
+    const [dropPoints, setDropPoints] = useState([]);
+    const [selectedDropPoint, setSelectedDropPoint] = useState(null);
+
+    // Fetch Shipping Options
+    useEffect(() => {
+        axios.get('/api/shipping/products')
+            .then(res => {
+                setShippingOptions(res.data);
+                // Default to first option
+                if (res.data.length > 0) setSelectedShipping(res.data[0]);
+            })
+            .catch(err => console.error("Failed to load shipping", err));
+    }, []);
+
+    // Fetch Drop Points if Drop Point carrier selected
+    useEffect(() => {
+        if (selectedShipping && selectedShipping.id.includes('shop') && formData.postalCode.length === 4) {
+            axios.post('/api/shipping/droppoints', { zipcode: formData.postalCode, carrier: selectedShipping.carrier })
+                .then(res => {
+                    setDropPoints(res.data);
+                    if (res.data.length > 0) setSelectedDropPoint(res.data[0]);
+                })
+                .catch(err => console.error("Failed to fetch drop points", err));
+        } else {
+            setDropPoints([]);
+            setSelectedDropPoint(null);
+        }
+    }, [selectedShipping, formData.postalCode]);
+
+    const total = getCartTotal() + (selectedShipping ? selectedShipping.price : 0);
     const subtotal = Math.round(total * 0.8);
     const vat = total - subtotal;
 
@@ -49,39 +90,48 @@ const Checkout = () => {
         setIsSubmitting(true);
 
         try {
-            // Create a booking request for EACH item in the cart
-            const bookingPromises = cart.map(item => {
-                // Combine address details into one string for the backend if it doesn't support separate fields yet
-                // Or append to the problem description to ensure the admin sees it
-                const fullAddress = `${formData.address}, ${formData.postalCode} ${formData.city}`;
-                const notesStr = formData.notes ? `\nNotes: ${formData.notes}` : '';
-                const addressStr = `\nAddress: ${fullAddress}`;
+            // Prepare Order Data
+            const orderData = {
+                userId: user ? user.id : null,
+                customerName: formData.name,
+                customerEmail: formData.email,
+                customerPhone: formData.phone,
+                totalAmount: total,
+                items: cart.map(item => ({
+                    ...item,
+                    orderNotes: formData.notes,
+                    address: `${formData.address}, ${formData.postalCode} ${formData.city}`,
+                    shipping: selectedShipping ? {
+                        id: selectedShipping.id,
+                        name: selectedShipping.name,
+                        price: selectedShipping.price,
+                        pickupPoint: selectedDropPoint
+                    } : null
+                }))
+            };
 
-                // We append address and notes to the 'problem' field as a temporary measure to ensure 
-                // shop owners see this info in the current backend implementation.
-                const enhancedProblemDescription = `${item.repairName}${addressStr}${notesStr}`;
+            // 1. Create Shop Order (Single Record)
+            const orderRes = await axios.post('/api/shop/orders', orderData);
+            const orderId = orderRes.data.id;
 
-                const bookingData = {
-                    userId: user ? user.id : null,
-                    customerName: formData.name,
-                    customerEmail: formData.email,
-                    customerPhone: formData.phone,
-                    deviceModel: item.modelName,
-                    problem: enhancedProblemDescription,
-                    date: new Date().toISOString().split('T')[0], // Default to today
-                };
-                return axios.post('/api/bookings', bookingData);
+            // 2. Initiate Payment
+            const paymentRes = await axios.post('/api/payment/link', {
+                amount: total,
+                orderId: orderId,
+                text_on_statement: 'UBreakWeFix'
             });
 
-            await Promise.all(bookingPromises);
+            // 3. Redirect to Quickpay
+            if (paymentRes.data.url) {
+                window.location.href = paymentRes.data.url;
+            } else {
+                throw new Error('No payment URL received');
+            }
 
-            // Clear cart and show success
-            clearCart();
-            setStep(2);
         } catch (err) {
             console.error("Checkout Failed:", err);
-            setError('Something went wrong processing your order. Please try again.');
-        } finally {
+            const msg = err.response?.data?.error || err.response?.data?.details || err.message || 'Something went wrong processing your order.';
+            setError(`Payment Failed: ${msg}. Please try again.`);
             setIsSubmitting(false);
         }
     };
@@ -94,8 +144,8 @@ const Checkout = () => {
                 </div>
                 <h1 style={{ marginBottom: '15px', fontSize: '2.5rem', fontWeight: '800' }}>Order Confirmed!</h1>
                 <p style={{ color: '#6B7280', marginBottom: '40px', fontSize: '1.2rem', maxWidth: '500px', margin: '0 auto 40px' }}>
-                    Thank you for your order, <strong>{formData.name}</strong>. <br />
-                    We have received your repair request.
+                    Thank you for your payment.<br />
+                    We have received your order and payment.
                 </p>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
                     <button onClick={() => navigate('/')} className="btn btn-outline">Back to Home</button>
@@ -129,10 +179,10 @@ const Checkout = () => {
                     </div>
                 )}
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.5fr) minmax(0, 1fr)', gap: '40px', alignItems: 'start' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'start' }}>
 
                     {/* LEFT COLUMN: FORM */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ flex: '1 1 500px', display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '0' }}>
 
                         {/* 1. Contact Info */}
                         <div className="card-glass" style={{ padding: '30px', background: 'var(--bg-surface)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
@@ -148,6 +198,7 @@ const Checkout = () => {
                                         <input
                                             required
                                             type="text"
+                                            name="name"
                                             placeholder="John Doe"
                                             className="input-field"
                                             value={formData.name}
@@ -164,6 +215,7 @@ const Checkout = () => {
                                             <input
                                                 required
                                                 type="email"
+                                                name="email"
                                                 placeholder="john@example.com"
                                                 className="input-field"
                                                 value={formData.email}
@@ -178,6 +230,7 @@ const Checkout = () => {
                                             <input
                                                 required
                                                 type="tel"
+                                                name="phone"
                                                 placeholder="+45 12 34 56 78"
                                                 className="input-field"
                                                 value={formData.phone}
@@ -202,6 +255,7 @@ const Checkout = () => {
                                         <Home size={18} className="icon" />
                                         <input
                                             type="text"
+                                            name="address"
                                             placeholder="Street name and number"
                                             className="input-field"
                                             value={formData.address}
@@ -215,6 +269,7 @@ const Checkout = () => {
                                         <label className="form-label">Postal Code</label>
                                         <input
                                             type="text"
+                                            name="postalCode"
                                             placeholder="1234"
                                             className="input-field"
                                             value={formData.postalCode}
@@ -225,6 +280,7 @@ const Checkout = () => {
                                         <label className="form-label">City</label>
                                         <input
                                             type="text"
+                                            name="city"
                                             placeholder="Copenhagen"
                                             className="input-field"
                                             value={formData.city}
@@ -248,10 +304,71 @@ const Checkout = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* 3. Shipping Method */}
+                        <div className="card-glass" style={{ padding: '30px', background: 'var(--bg-surface)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-sm)' }}>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-main)' }}>
+                                <Truck className="text-primary" size={20} color="var(--primary)" /> Shipping Method
+                            </h3>
+
+                            <div style={{ display: 'grid', gap: '15px' }}>
+                                {shippingOptions.map(option => (
+                                    <label
+                                        key={option.id}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            padding: '15px',
+                                            border: selectedShipping?.id === option.id ? '2px solid var(--primary)' : '1px solid var(--border-light)',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            background: selectedShipping?.id === option.id ? 'var(--bg-primary-light)' : 'var(--bg-input)'
+                                        }}
+                                        onClick={() => setSelectedShipping(option)}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="shipping"
+                                            checked={selectedShipping?.id === option.id}
+                                            onChange={() => setSelectedShipping(option)}
+                                            style={{ marginRight: '12px' }}
+                                        />
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>{option.name}</div>
+                                        </div>
+                                        <div style={{ fontWeight: '600', color: 'var(--text-main)' }}>
+                                            kr {option.price}
+                                        </div>
+                                    </label>
+                                ))}
+                            </div>
+
+                            {/* Drop Point Selector */}
+                            {dropPoints.length > 0 && (
+                                <div style={{ marginTop: '20px' }}>
+                                    <label className="form-label">Select Pickup Point</label>
+                                    <select
+                                        className="input-field"
+                                        style={{ width: '100%' }}
+                                        onChange={(e) => {
+                                            const point = dropPoints.find(p => p.id === e.target.value);
+                                            setSelectedDropPoint(point);
+                                        }}
+                                        value={selectedDropPoint?.id || ''}
+                                    >
+                                        {dropPoints.map(point => (
+                                            <option key={point.id} value={point.id}>
+                                                {point.name} - {point.address}, {point.zip} {point.city}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* RIGHT COLUMN: SUMMARY */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'sticky', top: '20px' }}>
+                    <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: '24px', position: 'sticky', top: '20px', minWidth: '0' }}>
                         <div className="card-glass" style={{ padding: '30px', background: 'var(--bg-surface)', border: '1px solid var(--border-light)', boxShadow: 'var(--shadow-lg)' }}>
                             <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Order Summary</h3>
 
@@ -282,6 +399,10 @@ const Checkout = () => {
                                     <span>kr {subtotal}</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: 'var(--text-muted)' }}>
+                                    <span>Shipping</span>
+                                    <span>kr {selectedShipping ? selectedShipping.price : 0}</span>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: 'var(--text-muted)' }}>
                                     <span>VAT (25%)</span>
                                     <span>kr {vat}</span>
                                 </div>
@@ -293,8 +414,6 @@ const Checkout = () => {
 
                             <button
                                 type="submit"
-                                // The button is outside the form, so we use onClick to trigger form submission if we can't link validation easily,
-                                // BUT the form ID key is better. 
                                 onClick={handleSubmit}
                                 disabled={isSubmitting}
                                 className="btn btn-primary"
@@ -308,7 +427,7 @@ const Checkout = () => {
                             </button>
 
                             <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                                Payment is collected upon device pickup.
+                                Secure online payment via Quickpay.
                             </p>
                         </div>
 
@@ -323,7 +442,6 @@ const Checkout = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };

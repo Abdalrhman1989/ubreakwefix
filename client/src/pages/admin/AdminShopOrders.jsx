@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Search, Eye, ShoppingBag, X, Printer, Truck, CheckCircle, Clock } from 'lucide-react';
+import { Package, Search, Eye, ShoppingCart, X, Printer, Truck, CheckCircle, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 
 const AdminShopOrders = () => {
@@ -117,7 +117,7 @@ const AdminShopOrders = () => {
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <div>
-                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Shop Orders</h1>
+                    <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px' }}>Online Shop Orders (Paid via Quickpay)</h1>
                     <p style={{ color: 'var(--text-muted)' }}>Manage and view customer purchases</p>
                 </div>
                 <div style={{ position: 'relative' }}>

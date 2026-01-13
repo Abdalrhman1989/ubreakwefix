@@ -77,6 +77,7 @@ function App() {
                                 <Route path="/" element={<Home />} />
                                 <Route path="/reparation/:modelId" element={<RepairPage />} />
                                 <Route path="/checkout" element={<Checkout />} />
+                                <Route path="/checkout/success" element={<Checkout />} />
                                 <Route path="/book" element={<Booking />} />
                                 <Route path="/reparationer" element={<RepairsIndex />} />
                                 <Route path="/om-os" element={<About />} />

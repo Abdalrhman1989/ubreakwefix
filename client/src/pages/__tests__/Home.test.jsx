@@ -21,6 +21,7 @@ vi.mock('../../components/home/CTA', () => ({ default: () => <div data-testid="c
 vi.mock('../../components/home/TrustSection', () => ({ default: () => <div data-testid="trust">TrustSection</div> }));
 vi.mock('../../components/MapSection', () => ({ default: () => <div data-testid="map">MapSection</div> }));
 vi.mock('../../components/home/ServiceCards', () => ({ default: () => <div data-testid="service-cards">ServiceCards</div> }));
+vi.mock('../../components/home/BookingSection', () => ({ default: () => <div data-testid="booking-section">BookingSection</div> }));
 
 describe('Home Page', () => {
     it('renders home page content successfully', () => {

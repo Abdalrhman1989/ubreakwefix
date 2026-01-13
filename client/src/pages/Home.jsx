@@ -8,7 +8,8 @@ import CTA from '../components/home/CTA';
 import TrustSection from '../components/home/TrustSection';
 import MapSection from '../components/MapSection';
 import ServiceCards from '../components/home/ServiceCards';
-
+import Reviews from '../components/home/Reviews';
+import BookingSection from '../components/home/BookingSection';
 import { useLanguage } from '../context/LanguageContext';
 
 const Home = () => {
@@ -104,11 +105,50 @@ const Home = () => {
 
             {/* CTA */}
             <div style={{ paddingBottom: '100px' }}>
+                {/* BOOKING SECTION */}
+                <BookingSection />
+
                 <CTA />
             </div>
 
-            {/* MAP SECTION */}
-            <MapSection />
+
+            {/* SPLIT SECTION: REVIEWS & MAP */}
+            <div style={{ background: 'var(--bg-surface)', padding: '100px 0' }}>
+                <div className="container">
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+                        gap: '40px',
+                        alignItems: 'start'
+                    }}>
+                        {/* Left: Reviews */}
+                        <div style={{ paddingRight: '20px' }}>
+                            <Reviews embedded={true} />
+                        </div>
+
+                        {/* Right: Map */}
+                        <div style={{ height: '100%', minHeight: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)' }}>
+                            <div style={{ width: '100%', height: '100%', minHeight: '500px', position: 'relative' }}>
+                                <MapSection />
+                                {/* Overlay Card */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: '20px',
+                                    left: '20px',
+                                    background: 'white',
+                                    padding: '15px 20px',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                                    zIndex: 10
+                                }}>
+                                    <h4 style={{ margin: '0 0 5px 0', fontSize: '0.95rem', fontWeight: 'bold' }}>UBreak WeFix</h4>
+                                    <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748B' }}>Skibhusvej 109, Odense C</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {/* TRUST */}
             <TrustSection />

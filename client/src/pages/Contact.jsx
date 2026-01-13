@@ -15,10 +15,10 @@ const Contact = () => {
                 {/* Hero Header */}
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                     <h1 className="title-hero" style={{ fontSize: '3rem', marginBottom: '16px' }}>
-                        Kontakt Os
+                        {t('contactPage.title')}
                     </h1>
                     <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '600px', margin: '0 auto' }}>
-                        Har du spørgsmål eller vil du booke tid? Vi står klar til at hjælpe.
+                        {t('contactPage.subtitle')}
                     </p>
                 </div>
 
@@ -42,7 +42,7 @@ const Contact = () => {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                <MessageCircle size={18} /> Send Besked
+                                <MessageCircle size={18} /> {t('contactPage.tabMessage')}
                             </button>
                             <button
                                 onClick={() => setActiveTab('appointment')}
@@ -58,7 +58,7 @@ const Contact = () => {
                                     transition: 'all 0.2s'
                                 }}
                             >
-                                <Calendar size={18} /> Book Tid
+                                <Calendar size={18} /> {t('contactPage.tabBook')}
                             </button>
                         </div>
 
@@ -66,17 +66,17 @@ const Contact = () => {
                         <div className="card-float" style={{ minHeight: '500px' }}>
                             {activeTab === 'message' ? (
                                 <div className="fade-in">
-                                    <h2 style={{ marginBottom: '20px' }}>Send os en besked</h2>
+                                    <h2 style={{ marginBottom: '20px' }}>{t('contactPage.messageTitle')}</h2>
                                     <p style={{ color: 'var(--text-muted)', marginBottom: '30px' }}>
-                                        Udfyld formularen herunder, så vender vi tilbage til dig hurtigst muligt (oftest inden for 24 timer).
+                                        {t('contactPage.messageSubtitle')}
                                     </p>
                                     <ContactForm />
                                 </div>
                             ) : (
                                 <div className="fade-in">
-                                    <h2 style={{ marginBottom: '20px' }}>Book et butiksbesøg</h2>
+                                    <h2 style={{ marginBottom: '20px' }}>{t('contactPage.bookTitle')}</h2>
                                     <p style={{ color: 'var(--text-muted)', marginBottom: '30px' }}>
-                                        Vælg hvornår det passer dig at komme forbi. Så sørger vi for at have tid til dig.
+                                        {t('contactPage.bookSubtitle')}
                                     </p>
                                     <AppointmentScheduler />
                                 </div>
@@ -89,7 +89,7 @@ const Contact = () => {
                         {/* Info Card */}
                         <div className="card-float">
                             <h3 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <MapPin className="text-primary" /> Find Os
+                                <MapPin className="text-primary" /> {t('contactPage.findUs')}
                             </h3>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -98,7 +98,7 @@ const Contact = () => {
                                         <MapPin size={20} className="text-primary" />
                                     </div>
                                     <div>
-                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>Adresse</div>
+                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>{t('contactPage.address')}</div>
                                         <div style={{ color: 'var(--text-muted)' }}>
                                             Skibhusvej 109<br />
                                             5000 Odense C
@@ -111,7 +111,7 @@ const Contact = () => {
                                         <Phone size={20} className="text-primary" />
                                     </div>
                                     <div>
-                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>Telefon</div>
+                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>{t('contactPage.phone')}</div>
                                         <div style={{ color: 'var(--text-muted)' }}>+45 93 88 52 10</div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@ const Contact = () => {
                                         <Mail size={20} className="text-primary" />
                                     </div>
                                     <div>
-                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>Email</div>
+                                        <div style={{ fontWeight: '600', marginBottom: '4px' }}>{t('contactPage.email')}</div>
                                         <div style={{ color: 'var(--text-muted)' }}>kontakt@ubreakwefix.dk</div>
                                     </div>
                                 </div>
@@ -131,25 +131,24 @@ const Contact = () => {
                                         <Clock size={20} className="text-primary" />
                                     </div>
                                     <div style={{ width: '100%' }}>
-                                        <div style={{ fontWeight: '600', marginBottom: '8px' }}>Åbningstider</div>
+                                        <div style={{ fontWeight: '600', marginBottom: '8px' }}>{t('contactPage.hours')}</div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', color: 'var(--text-muted)' }}>
-                                            <span>Mandag - Fredag</span>
+                                            <span>{t('contactPage.monFri')}</span>
                                             <span>10:00 - 18:00</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)' }}>
-                                            <span>Lørdag</span>
+                                            <span>{t('contactPage.sat')}</span>
                                             <span>10:00 - 16:00</span>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', color: '#ef4444', fontSize: '0.9rem' }}>
-                                            <span>Søndag</span>
-                                            <span>Lukket</span>
+                                            <span>{t('contactPage.sun')}</span>
+                                            <span>{t('contactPage.closed')}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Map */}
                         {/* Reviews Card */}
                         <div className="card-float" style={{ padding: '24px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '20px' }}>
@@ -160,7 +159,7 @@ const Contact = () => {
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                                     <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--text-main)' }}>4.9 / 5</span>
-                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>113 anmeldelser</span>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>113 {t('contactPage.reviews')}</span>
                                 </div>
                             </div>
 
@@ -174,7 +173,7 @@ const Contact = () => {
                                     textDecoration: 'none', background: '#00b67a', color: 'white', width: '100%'
                                 }}
                             >
-                                Læs anmeldelser på Trustpilot
+                                {t('contactPage.readTrustpilot')}
                             </a>
                         </div>
 
@@ -190,3 +189,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

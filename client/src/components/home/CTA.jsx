@@ -21,9 +21,9 @@ const CTA = () => {
                     alignItems: 'center',
                     justifyContent: 'center'
                 }}>
-                    <h2 style={{ fontSize: '3rem', marginBottom: '20px', color: 'white' }}>Klar til at få fikset din enhed?</h2>
+                    <h2 style={{ fontSize: '3rem', marginBottom: '20px', color: 'white' }}>{t('cta.title')}</h2>
                     <p style={{ fontSize: '1.25rem', opacity: 0.9, marginBottom: '40px', maxWidth: '600px' }}>
-                        Book tid online nu og spar 10% på din reparation. Vi står klar i butikken.
+                        {t('cta.subtitle')}
                     </p>
                     <Link to="/reparationer" className="btn btn-primary" style={{
                         background: 'white',

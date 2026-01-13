@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
-
-const faqs = [
-    { q: 'Hvor lang tid tager en skærmreparation?', a: 'En typisk skærmreparation på iPhone tager ca. 30-45 minutter. Samsung og andre mærker kan tage op til 60 minutter.' },
-    { q: 'Mister jeg min garanti ved reparation?', a: 'Vi bruger originale dele, så i mange tilfælde bevares garantien. Vi giver altid vores egen 24 måneders garanti på udført arbejde.' },
-    { q: 'Skal jeg bestille tid?', a: 'Det er ikke nødvendigt, men vi anbefaler det for at undgå ventetid. Vi tager også imod walk-ins.' },
-    { q: 'Hvad hvis I ikke kan reparere min telefon?', a: 'Så betaler du ingenting! Vi kører efter princippet "No Cure, No Pay".' },
-];
+import { useLanguage } from '../../context/LanguageContext';
 
 const FAQ = () => {
+    const { t } = useLanguage();
     const [openIndex, setOpenIndex] = useState(0);
+
+    const faqs = [
+        { q: t('faq.q1'), a: t('faq.a1') },
+        { q: t('faq.q2'), a: t('faq.a2') },
+        { q: t('faq.q3'), a: t('faq.a3') },
+        { q: t('faq.q4'), a: t('faq.a4') },
+    ];
 
     return (
         <section style={{ padding: '80px 0', background: 'var(--bg-surface)', transition: 'background 0.3s' }}>
             <div className="container" style={{ maxWidth: '800px' }}>
-                <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '60px', color: 'var(--text-main)' }}>Ofte stillede spørgsmål</h2>
+                <h2 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '60px', color: 'var(--text-main)' }}>{t('faq.title')}</h2>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {faqs.map((item, i) => (

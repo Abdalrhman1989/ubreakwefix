@@ -15,6 +15,10 @@ export const LanguageProvider = ({ children }) => {
     };
 
     const t = (key) => {
+        if (!key || typeof key !== 'string') {
+            console.warn('LanguageContext: t called with invalid key:', key);
+            return key || '';
+        }
         const keys = key.split('.');
         let value = translations[language];
 
