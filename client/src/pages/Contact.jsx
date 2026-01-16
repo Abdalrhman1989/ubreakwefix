@@ -249,14 +249,14 @@ const Contact = () => {
                             </div>
                         </div>
 
-                        {/* Map */}
-                        <div style={{ borderRadius: '16px', boxShadow: 'var(--shadow-lg)', border: '1px solid var(--border-light)', overflow: 'hidden' }}>
-                            <MapSection />
-                        </div>
                     </div>
                 </div>
             </div>
+
+            {/* Full Width Map Section */}
+            <MapSection />
         </div>
+        </div >
     );
 };
 
