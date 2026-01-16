@@ -293,6 +293,21 @@ rawData.brands.forEach(b => {
     });
 });
 
+// MANUAL INJECTION: Motherboard Repair (Special Case)
+const specialBrandId = 9000;
+const specialModelId = 9999;
+const specialRepairId = 99999;
+
+brands.push({ id: specialBrandId, name: "Specialized", image: "/images/motherboard-repair-bg.png" });
+models.push({ id: specialModelId, brand_id: specialBrandId, name: "Bundkort / Logic Board", image: "/images/motherboard-repair-bg.png" });
+repairs.push({
+    id: specialRepairId,
+    model_id: specialModelId,
+    name: "Mikrolodning Diagnose",
+    price: 0,
+    description: "Gratis fejlsøgning på komponentniveau. Vi vender tilbage med en pris."
+});
+
 const users = [
     { id: 1, name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', address: 'Admin HQ', phone: '00000000' },
     { id: 2, name: 'Business User', email: 'business@example.com', password: 'business123', role: 'business', address: 'Business Ave', phone: '11111111' },

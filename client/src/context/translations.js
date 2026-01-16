@@ -221,6 +221,36 @@ export const translations = {
             },
             cta: "Start Konfiguration"
         },
+        motherboard: {
+            title: "Professionel Bundkort Reparation",
+            subtitle: "Vi er eksperter i mikro-lodning og avanceret fejlsøgning på komponentniveau. Giv ikke op på din enhed før du har talt med os.",
+            chipLevel: "Chip-niveau Reparation",
+            chipLevelDesc: "Udskiftning af IC-chips, herunder Audio, Power og Touch IC.",
+            liquidDamage: "Væskeskade",
+            liquidDamageDesc: "Avanceret ultralydsrensning og reparation af korrosionsskader.",
+            dataRecovery: "Data Gendannelse",
+            dataRecoveryDesc: "Vi redder dine billeder og filer, selv fra døde enheder.",
+            cta: "Læs mere om Mikrolodning",
+            microsolderingPage: {
+                title: "Avanceret Mikrolodning",
+                subtitle: "Vi bringer døde enheder til live med præcisionsarbejde.",
+                startDiagnostic: "Start Diagnose Sag",
+                steps: {
+                    title: "Sådan fungerer det",
+                    step1: "Indlevering",
+                    step1Desc: "Vi modtager din enhed og registrerer sagen.",
+                    step2: "Diagnose",
+                    step2Desc: "Vores teknikere fejlsøger på komponentniveau.",
+                    step3: "Tilbud",
+                    step3Desc: "Du modtager et uforpligtende tilbud på reparation."
+                },
+                trust: {
+                    certified: "Certificerede Teknikere",
+                    equipment: "Lab-Grade Udstyr",
+                    guarantee: "No Cure No Pay"
+                }
+            }
+        },
 
         contactPage: {
             title: "Kontakt Os",
@@ -1381,6 +1411,36 @@ export const translations = {
                 desc: "Fast, quiet, and reliable. Perfect for study, office work, and web."
             },
             cta: "Start Configuration"
+        },
+        motherboard: {
+            title: "Advanced Motherboard Repairs",
+            subtitle: "We specialize in component-level repairs using state-of-the-art microsoldering equipment.",
+            chipLevel: "Chip-Level Repair",
+            chipLevelDesc: "Replacing damaged ICs, capacitors, and tiny components.",
+            liquidDamage: "Liquid Damage Treatment",
+            liquidDamageDesc: "Deep cleaning and board reconstruction after water damage.",
+            dataRecovery: "Data Recovery",
+            dataRecoveryDesc: "Retrieving precious data from dead or damaged devices.",
+            cta: "Learn more about Microsoldering",
+            microsolderingPage: {
+                title: "Advanced Microsoldering",
+                subtitle: "We bring dead devices back to life with precision work.",
+                startDiagnostic: "Start Diagnostic Case",
+                steps: {
+                    title: "How it Works",
+                    step1: "Drop-off",
+                    step1Desc: "We receive your device and register the case.",
+                    step2: "Diagnosis",
+                    step2Desc: "Our technicians troubleshoot at component level.",
+                    step3: "Quote",
+                    step3Desc: "You receive a no-obligation repair quote."
+                },
+                trust: {
+                    certified: "Certified Technicians",
+                    equipment: "Lab-Grade Equipment",
+                    guarantee: "No Cure No Pay"
+                }
+            }
         },
         contactPage: {
             title: "Contact Us",

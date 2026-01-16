@@ -19,6 +19,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import SellDevice from './pages/SellDevice';
 import SellScreen from './pages/SellScreen';
+import Microsoldering from './pages/Microsoldering';
 import TopBar from './components/TopBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -112,6 +113,7 @@ function App() {
                                     <Route path="/blog/:slug" element={<BlogPost />} />
                                     <Route path="/saelg-enhed" element={<SellDevice />} />
                                     <Route path="/saelg-skaerm" element={<SellScreen />} />
+                                    <Route path="/microsoldering" element={<Microsoldering />} />
 
                                     <Route path="/login" element={<Login />} />
                                     <Route path="/register" element={<Register />} />

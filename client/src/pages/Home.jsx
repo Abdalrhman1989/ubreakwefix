@@ -15,6 +15,7 @@ import Reviews from '../components/home/Reviews';
 import BookingSection from '../components/home/BookingSection';
 import SustainabilitySection from '../components/home/SustainabilitySection';
 import WalkInService from '../components/home/WalkInService';
+import MotherboardRepairSection from '../components/home/MotherboardRepairSection';
 
 import { useLanguage } from '../context/LanguageContext';
 
@@ -214,6 +215,9 @@ const Home = () => {
 
                 </div>
             </div>
+
+            {/* Motherboard Repair Section */}
+            <MotherboardRepairSection />
 
             {/* FEATURES */}
             <Features />
