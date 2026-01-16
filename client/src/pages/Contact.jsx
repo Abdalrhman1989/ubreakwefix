@@ -256,7 +256,6 @@ const Contact = () => {
             {/* Full Width Map Section */}
             <MapSection />
         </div>
-        </div >
     );
 };
 
