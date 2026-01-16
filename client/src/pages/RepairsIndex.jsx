@@ -1,11 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Smartphone, Tablet, Watch } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Smartphone, Tablet, Watch, HelpCircle } from 'lucide-react';
 import SearchBox from '../components/SearchBox';
 import { useLanguage } from '../context/LanguageContext';
-
 import { Helmet } from 'react-helmet-async';
+import FindModelModal from '../components/FindModelModal';
 
 const RepairsIndex = () => {
     const { t } = useLanguage();
@@ -13,6 +14,7 @@ const RepairsIndex = () => {
     const [selectedBrand, setSelectedBrand] = useState(null);
     const [selectedFamily, setSelectedFamily] = useState(null);
     const [models, setModels] = useState([]);
+    const [showFindModel, setShowFindModel] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -35,69 +37,12 @@ const RepairsIndex = () => {
             .catch(err => console.error(err));
     }, []);
 
-    // Sync state with URL params
-    useEffect(() => {
-        // Check for slug or ID (backwards compatibility)
-        const brandSlugOrId = searchParams.get('brand');
-        const familyName = searchParams.get('family');
-
-        if (brandSlugOrId) {
-            console.log('DEBUG: Params brand=', brandSlugOrId);
-            console.log('DEBUG: Brands available=', brands);
-
-            // Find brand object by slug (preferred) or ID
-            const brand = brands.find(b =>
-                (b.slug && b.slug === brandSlugOrId) ||
-                b.id.toString() === brandSlugOrId
-            );
-            console.log('DEBUG: Found brand=', brand);
-
-            if (brand) {
-                if (selectedBrand?.id !== brand.id) {
-                    setSelectedBrand(brand);
-                    // Fetch models for this brand
-                    axios.get(`/api/brands/${brand.id}/models`)
-                        .then(res => setModels(sortModels(res.data)))
-                        .catch(err => console.error(err));
-                }
-            } else {
-                // Invalid slug/brand
-                setSelectedBrand(null);
-                setModels([]);
-            }
-        } else {
-            setSelectedBrand(null);
-            setModels([]);
-        }
-
-        if (familyName) {
-            // Set family object (needs models to be loaded first presumably, or we derive it)
-            // We can just set the name for filtering if the object isn't strictly needed for logic, 
-            // but we need the object for the icon in the header maybe?
-            // For now let's just use the name for filtering since getFamilies derives the objects from models.
-        } else {
-            setSelectedFamily(null);
-        }
-    }, [searchParams, brands]); // Re-run when brands load
-
-    // Update selected family object when models/params change
-    useEffect(() => {
-        const familyName = searchParams.get('family');
-        if (familyName && models.length > 0) {
-            const availableFamilies = getFamilies(models);
-            const family = availableFamilies.find(f => f.name === familyName);
-            if (family) setSelectedFamily(family);
-        } else if (!familyName) {
-            setSelectedFamily(null);
-        }
-    }, [searchParams, models]);
-
+    // Helper: Sort Models
     const sortModels = (modelsList) => {
         return modelsList.sort((a, b) => {
             const getNum = (str) => {
                 // Handling iPhone X variants as generation 10
                 if (str.includes('iPhone X')) return 10;
-
                 const match = str.match(/(\d+)/);
                 return match ? parseInt(match[0], 10) : 0;
             };
@@ -108,17 +53,12 @@ const RepairsIndex = () => {
             if (numA !== numB) {
                 return numB - numA; // Descending numeric (Newest first)
             }
-
-            // If generations are equal (e.g. 15 Pro vs 15), sort alphabetically descending
-            // This usually places Pro/Max/Ultra (longer/later letters) before standard models
+            // If generations are equal, sort alphabetically descending
             return b.name.localeCompare(a.name);
         });
     };
 
-    // fetchModels is no longer needed directly, handled by useEffect effects
-    // Keeping sortModels helper
-    // const fetchModels = (brand) => { ... } - REMOVED
-
+    // Helper: Get Families
     const getFamilies = (models) => {
         if (!models) return [];
         const familiesMap = new Map();
@@ -138,6 +78,54 @@ const RepairsIndex = () => {
 
         return Array.from(familiesMap.values());
     };
+
+    // Sync state with URL params
+    useEffect(() => {
+        const brandSlugOrId = searchParams.get('brand');
+        const familyName = searchParams.get('family');
+
+        if (brandSlugOrId) {
+            // Find brand object by slug (preferred) or ID
+            const brand = brands.find(b =>
+                (b.slug && b.slug === brandSlugOrId) ||
+                b.id.toString() === brandSlugOrId
+            );
+
+            if (brand) {
+                if (selectedBrand?.id !== brand.id) {
+                    setSelectedBrand(brand);
+                    // Fetch models for this brand
+                    axios.get(`/api/brands/${brand.id}/models`)
+                        .then(res => setModels(sortModels(res.data)))
+                        .catch(err => console.error(err));
+                }
+            } else {
+                setSelectedBrand(null);
+                setModels([]);
+            }
+        } else {
+            setSelectedBrand(null);
+            setModels([]);
+        }
+
+        if (familyName) {
+            // Logic handled in next effect
+        } else {
+            setSelectedFamily(null);
+        }
+    }, [searchParams, brands]);
+
+    // Update selected family object when models/params change
+    useEffect(() => {
+        const familyName = searchParams.get('family');
+        if (familyName && models.length > 0) {
+            const availableFamilies = getFamilies(models);
+            const family = availableFamilies.find(f => f.name === familyName);
+            if (family) setSelectedFamily(family);
+        } else if (!familyName) {
+            setSelectedFamily(null);
+        }
+    }, [searchParams, models]);
 
     const families = selectedBrand ? getFamilies(models) : [];
     const showFamilies = selectedBrand && families.length > 0 && !selectedFamily;
@@ -194,11 +182,12 @@ const RepairsIndex = () => {
         });
     }
 
-    // Check for thin/empty content
     const shouldNoIndex = selectedBrand && displayedModels.length === 0;
 
     return (
         <div style={{ background: 'var(--bg-body)', minHeight: '100vh', padding: '40px 0' }}>
+            <FindModelModal isOpen={showFindModel} onClose={() => setShowFindModel(false)} />
+
             <Helmet>
                 <title>{seo.title}</title>
                 <meta name="description" content={seo.desc} />
@@ -208,6 +197,7 @@ const RepairsIndex = () => {
                     {JSON.stringify(structuredData)}
                 </script>
             </Helmet>
+
             <div className="container">
 
                 {/* Header Section */}
@@ -219,8 +209,41 @@ const RepairsIndex = () => {
                     <p style={{ fontSize: '1.2rem', color: 'var(--text-muted)', marginBottom: '40px' }}>
                         {t('repairs.subtitle')}
                     </p>
-                    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '600px', margin: '0 auto', position: 'relative' }}>
                         <SearchBox />
+
+                        <button
+                            onClick={() => setShowFindModel(true)}
+                            style={{
+                                marginTop: '20px',
+                                background: 'var(--bg-card)',
+                                border: '1px solid var(--border-color)',
+                                color: 'var(--text-main)',
+                                fontSize: '0.9rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                padding: '10px 20px',
+                                borderRadius: '100px',
+                                transition: 'all 0.2s',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                            }}
+                            onMouseEnter={e => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = 'var(--primary)';
+                                e.currentTarget.style.color = 'var(--primary)';
+                            }}
+                            onMouseLeave={e => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = 'var(--border-color)';
+                                e.currentTarget.style.color = 'var(--text-main)';
+                            }}
+                        >
+                            <HelpCircle size={18} className="text-primary" />
+                            <span>Kan du ikke finde din model? Find den her</span>
+                        </button>
                     </div>
                 </div>
 
