@@ -109,6 +109,9 @@ const Contact = () => {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
                         {/* Info Card */}
                         <div className="card-float">
+                            <div style={{ marginBottom: '24px', borderRadius: '12px', overflow: 'hidden' }}>
+                                <img src="/images/storefront.jpg" alt="UBreak WeFix Storefront" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                            </div>
                             <h3 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <MapPin className="text-primary" /> {t('contactPage.findUs')}
                             </h3>

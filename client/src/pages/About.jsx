@@ -270,7 +270,7 @@ const About = () => {
                                  User said "do not remove what i have". The original had an image. I'll keep it. 
                              */}
                             <img
-                                src="/hero-3d.png"
+                                src="/images/storefront.jpg"
                                 alt="Innovation and Repair"
                                 style={{ width: '100%', display: 'block' }}
                             />
