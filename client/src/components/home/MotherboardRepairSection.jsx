@@ -135,7 +135,7 @@ const MotherboardRepairSection = () => {
                         }}>
                             <Cpu size={30} />
                         </div>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>{t('motherboard.chipLevel')}</h3>
+                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#fff' }}>{t('motherboard.chipLevel')}</h3>
                         <p style={{ color: '#94a3b8', lineHeight: '1.6' }}>
                             {t('motherboard.chipLevelDesc')}
                         </p>
@@ -165,7 +165,7 @@ const MotherboardRepairSection = () => {
                         }}>
                             <Droplets size={30} />
                         </div>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>{t('motherboard.liquidDamage')}</h3>
+                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#fff' }}>{t('motherboard.liquidDamage')}</h3>
                         <p style={{ color: '#94a3b8', lineHeight: '1.6' }}>
                             {t('motherboard.liquidDamageDesc')}
                         </p>
@@ -195,7 +195,7 @@ const MotherboardRepairSection = () => {
                         }}>
                             <HardDrive size={30} />
                         </div>
-                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px' }}>{t('motherboard.dataRecovery')}</h3>
+                        <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: '#fff' }}>{t('motherboard.dataRecovery')}</h3>
                         <p style={{ color: '#94a3b8', lineHeight: '1.6' }}>
                             {t('motherboard.dataRecoveryDesc')}
                         </p>
