@@ -17,7 +17,7 @@ export const CartProvider = ({ children }) => {
             // Avoid duplicates of exact same repair for same device
             // Note: For shop products we might want quantity instead of strict duplicate prevention?
             // For now, keeping logic but adding uniqueId.
-            const uniqueId = Date.now() + Math.random().toString(36).substr(2, 9);
+            const uniqueId = item.uniqueId || (Date.now() + Math.random().toString(36).substr(2, 9));
             const newItem = { ...item, uniqueId };
 
             // For Repairs: Prevent duplicate logic (id + modelId)

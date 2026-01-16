@@ -1,3 +1,5 @@
+// @vitest-environment happy-dom
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -35,7 +37,7 @@ describe('SearchBox Component', () => {
 
     it('updates input value on change', () => {
         renderSearchBox();
-        const input = screen.getByPlaceholderText(/Indtast venligst dit mærke og model/i);
+        const input = screen.getByPlaceholderText(/Search model/i);
         fireEvent.change(input, { target: { value: 'iPhone' } });
         expect(input.value).toBe('iPhone');
     });
@@ -43,7 +45,7 @@ describe('SearchBox Component', () => {
     it('triggers search API after debounce', async () => {
         axios.get.mockResolvedValue({ data: [{ id: 1, brand_name: 'Apple', name: 'iPhone 13' }] });
         renderSearchBox();
-        const input = screen.getByPlaceholderText(/Indtast venligst dit mærke og model/i);
+        const input = screen.getByPlaceholderText(/Search model/i);
         fireEvent.change(input, { target: { value: 'iPhone' } });
 
         // Wait for debounce (real time)
@@ -62,7 +64,7 @@ describe('SearchBox Component', () => {
         axios.get.mockResolvedValue({ data: mockResults });
 
         renderSearchBox();
-        const input = screen.getByPlaceholderText(/Indtast venligst dit mærke og model/i);
+        const input = screen.getByPlaceholderText(/Search model/i);
         fireEvent.change(input, { target: { value: 'Phone' } });
 
         await new Promise(resolve => setTimeout(resolve, 350));
@@ -78,7 +80,7 @@ describe('SearchBox Component', () => {
         axios.get.mockResolvedValue({ data: mockResults });
 
         renderSearchBox();
-        const input = screen.getByPlaceholderText(/Indtast venligst dit mærke og model/i);
+        const input = screen.getByPlaceholderText(/Search model/i);
         fireEvent.change(input, { target: { value: 'iPhone' } });
 
         await new Promise(resolve => setTimeout(resolve, 350));

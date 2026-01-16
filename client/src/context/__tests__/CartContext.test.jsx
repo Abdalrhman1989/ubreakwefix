@@ -1,3 +1,5 @@
+// @vitest-environment happy-dom
+import React from 'react';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, renderHook, act } from '@testing-library/react';
 import { CartProvider, useCart } from '../CartContext';
@@ -10,8 +12,8 @@ const TestComponent = () => {
         <div>
             <div data-testid="cart-length">{cart.length}</div>
             <div data-testid="cart-total">{getCartTotal()}</div>
-            <button onClick={() => addToCart({ id: 1, modelId: 'm1', price: 100, uniqueId: 'u1' })}>Add Item 1</button>
-            <button onClick={() => addToCart({ id: 1, modelId: 'm1', price: 100, uniqueId: 'u2' })}>Add Duplicate Item 1</button>
+            <button onClick={() => addToCart({ id: 1, modelId: 'm1', price: 100, uniqueId: 'u1', isRepair: true })}>Add Item 1</button>
+            <button onClick={() => addToCart({ id: 1, modelId: 'm1', price: 100, uniqueId: 'u2', isRepair: true })}>Add Duplicate Item 1</button>
             <button onClick={() => addToCart({ id: 2, modelId: 'm2', price: 200, uniqueId: 'u3' })}>Add Item 2</button>
             <button onClick={() => removeFromCart('u1')}>Remove Item 1</button>
             <button onClick={clearCart}>Clear Cart</button>

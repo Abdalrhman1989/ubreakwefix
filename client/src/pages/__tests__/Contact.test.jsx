@@ -14,14 +14,20 @@ vi.mock('../../components/MapSection', () => ({
     default: () => <div data-testid="map-section">Map</div>
 }));
 
+import { HelmetProvider } from 'react-helmet-async';
+
 describe('Contact Page', () => {
     it('renders contact information correctly', () => {
-        render(<Contact />);
+        render(
+            <HelmetProvider context={{}}>
+                <Contact />
+            </HelmetProvider>
+        );
 
         expect(screen.getByText('contactPage.title')).toBeInTheDocument();
         expect(screen.getByText('contactPage.subtitle')).toBeInTheDocument();
         expect(screen.getByText(/Skibhusvej 109/)).toBeInTheDocument();
-        expect(screen.getByText('kontakt@ubreakwefix.dk')).toBeInTheDocument();
+        expect(screen.getByText(/support@ubreakwefix.dk/)).toBeInTheDocument();
         expect(screen.getByTestId('map-section')).toBeInTheDocument();
     });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Shop from '../Shop';
 import axios from 'axios';
 
@@ -10,6 +11,14 @@ vi.mock('../../context/CartContext', () => ({
     useCart: () => ({
         addToCart: vi.fn()
     })
+}));
+
+vi.mock('../../context/LanguageContext', () => ({
+    __esModule: true,
+    useLanguage: () => ({
+        t: (key) => key
+    }),
+    LanguageProvider: ({ children }) => <div>{children}</div>
 }));
 
 // Mock Data
@@ -65,17 +74,21 @@ describe('Shop Component', () => {
         vi.clearAllMocks();
     });
 
+
+
     const renderShop = () => {
         return render(
-            <BrowserRouter>
-                <Shop />
-            </BrowserRouter>
+            <HelmetProvider>
+                <BrowserRouter>
+                    <Shop />
+                </BrowserRouter>
+            </HelmetProvider>
         );
     };
 
     it('renders products after loading', async () => {
         renderShop();
-        expect(screen.getByText('Loading products...')).toBeInTheDocument();
+        expect(screen.getByText('shop.loading')).toBeInTheDocument();
 
         await waitFor(() => {
             expect(screen.getByText('iPhone 13')).toBeInTheDocument();
@@ -83,14 +96,14 @@ describe('Shop Component', () => {
             expect(screen.getByText('Case')).toBeInTheDocument();
         });
 
-        expect(screen.queryByText('Loading products...')).not.toBeInTheDocument();
+        expect(screen.queryByText('shop.loading')).not.toBeInTheDocument();
     });
 
     it('filters products by search term', async () => {
         renderShop();
         await waitFor(() => expect(screen.getByText('iPhone 13')).toBeInTheDocument());
 
-        const searchInput = screen.getByPlaceholderText('Search products...');
+        const searchInput = screen.getByPlaceholderText('shop.searchPlaceholder');
         fireEvent.change(searchInput, { target: { value: 'Samsung' } });
 
         await waitFor(() => {
@@ -122,11 +135,11 @@ describe('Shop Component', () => {
         renderShop();
         await waitFor(() => expect(screen.getByText('iPhone 13')).toBeInTheDocument());
 
-        const searchInput = screen.getByPlaceholderText('Search products...');
+        const searchInput = screen.getByPlaceholderText('shop.searchPlaceholder');
         fireEvent.change(searchInput, { target: { value: 'NonExistentProductXYZ' } });
 
         await waitFor(() => {
-            expect(screen.getByText('No products found matching your criteria.')).toBeInTheDocument();
+            expect(screen.getByText('shop.noProducts')).toBeInTheDocument();
         });
     });
 
@@ -134,6 +147,6 @@ describe('Shop Component', () => {
         renderShop();
         await waitFor(() => expect(screen.getByText('Case')).toBeInTheDocument());
 
-        expect(screen.getByText('Sold Out')).toBeInTheDocument();
+        expect(screen.getByText('shop.soldOut')).toBeInTheDocument();
     });
 });

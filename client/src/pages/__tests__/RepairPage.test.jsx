@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import RepairPage from '../RepairPage';
 import axios from 'axios';
 
@@ -26,13 +27,17 @@ describe('RepairPage', () => {
         vi.clearAllMocks();
     });
 
+
+
     const renderRepairPage = (modelId) => {
         return render(
-            <MemoryRouter initialEntries={[`/reparation/${modelId}`]}>
-                <Routes>
-                    <Route path="/reparation/:modelId" element={<RepairPage />} />
-                </Routes>
-            </MemoryRouter>
+            <HelmetProvider context={{}}>
+                <MemoryRouter initialEntries={[`/reparation/${modelId}`]}>
+                    <Routes>
+                        <Route path="/reparation/:modelId" element={<RepairPage />} />
+                    </Routes>
+                </MemoryRouter>
+            </HelmetProvider>
         );
     };
 
