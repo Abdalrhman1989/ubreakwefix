@@ -2,7 +2,7 @@ import React from 'react';
 
 const Logo = ({ size = 40, theme = 'light' }) => {
     // Adjust visual size for dark mode to compensate for potential image padding
-    const visualSize = theme === 'dark' ? size * 1.25 : size;
+    const visualSize = theme === 'dark' ? size * 1.7 : size;
 
     return (
         <img

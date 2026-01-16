@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 const ContactForm = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -17,7 +17,7 @@ const ContactForm = () => {
         e.preventDefault();
         setStatus('loading');
         try {
-            await axios.post('http://localhost:3001/api/contact', formData);
+            await axios.post('http://localhost:3001/api/contact', { ...formData, language });
             setStatus('success');
             setFormData({ name: '', email: '', subject: '', message: '' });
         } catch (err) {

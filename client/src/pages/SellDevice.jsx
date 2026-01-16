@@ -9,6 +9,8 @@ const SellDevice = () => {
     // Data Loading
     const [brands, setBrands] = useState([]);
     const [models, setModels] = useState([]);
+    const [conditions, setConditions] = useState([]);
+    const [storageOptions, setStorageOptions] = useState([]);
 
     // Form Selection
     const [selectedBrand, setSelectedBrand] = useState(null);
@@ -25,12 +27,19 @@ const SellDevice = () => {
     });
 
     const [estimatedPrice, setEstimatedPrice] = useState(0);
+    const [matrix, setMatrix] = useState({}); // New Matrix state
 
     // Initial Load - Fetch Brands
     useEffect(() => {
         fetch('/api/brands')
             .then(res => res.json())
             .then(data => setBrands(data))
+            .catch(err => console.error(err));
+
+        // Fetch global conditions (still needed for labels)
+        fetch('/api/conditions')
+            .then(res => res.json())
+            .then(data => setConditions(data))
             .catch(err => console.error(err));
     }, []);
 
@@ -44,30 +53,40 @@ const SellDevice = () => {
         }
     }, [selectedBrand]);
 
-    // calculate price whenever params change (MOCK LOGIC)
+    // Fetch Storage & Matrix when Model changes
+    useEffect(() => {
+        if (selectedModel) {
+            Promise.all([
+                fetch(`/api/models/${selectedModel.id}/storage`),
+                fetch(`/api/models/${selectedModel.id}/matrix`)
+            ])
+                .then(async ([storageRes, matrixRes]) => {
+                    const storageData = await storageRes.json();
+                    const matrixData = await matrixRes.json();
+
+                    setStorageOptions(storageData);
+
+                    // Build Lookup Map
+                    const map = {};
+                    matrixData.forEach(row => {
+                        map[`${row.storage_label}::${row.condition_label}`] = row.price;
+                    });
+                    setMatrix(map);
+                })
+                .catch(err => console.error(err));
+
+            setSelectedCapacity(''); // Reset selection
+        }
+    }, [selectedModel]);
+
+    // Calculate Price (Matrix Lookup)
     useEffect(() => {
         if (selectedModel && selectedCapacity && selectedCondition) {
-            // Dummy logic: Base 500 + random model value + capacity * 2 + condition multiplier
-            let base = 500;
-            if (selectedModel.name.includes('Pro')) base += 1000;
-            if (selectedModel.name.includes('Max')) base += 500;
-            if (selectedModel.name.includes('Samsung')) base -= 200; // Just example logic
-
-            let capVal = 0;
-            if (selectedCapacity === '64GB') capVal = 100;
-            if (selectedCapacity === '128GB') capVal = 300;
-            if (selectedCapacity === '256GB') capVal = 500;
-            if (selectedCapacity === '512GB') capVal = 800;
-            if (selectedCapacity === '1TB') capVal = 1200;
-
-            let condMult = 1;
-            if (selectedCondition === 'Meget god ✨🙂') condMult = 0.9;
-            if (selectedCondition === 'Brugt 🙂') condMult = 0.7;
-            if (selectedCondition === 'Fejlbehæftet😔⚠️') condMult = 0.3;
-
-            setEstimatedPrice(Math.floor((base + capVal) * condMult));
+            const key = `${selectedCapacity}::${selectedCondition}`;
+            const price = matrix[key] || 0;
+            setEstimatedPrice(price);
         }
-    }, [selectedModel, selectedCapacity, selectedCondition]);
+    }, [selectedModel, selectedCapacity, selectedCondition, matrix]);
 
     const handleNext = () => {
         setStep(prev => prev + 1);
@@ -173,16 +192,20 @@ const SellDevice = () => {
                                         <div style={{ marginBottom: '30px' }}>
                                             <label style={{ display: 'block', marginBottom: '12px', fontWeight: '600' }}>Kapacitet</label>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                                                {['32GB', '64GB', '128GB', '256GB', '512GB', '1TB'].map(cap => (
-                                                    <button key={cap} onClick={() => setSelectedCapacity(cap)} style={{
-                                                        padding: '12px 24px', borderRadius: '12px', border: '1px solid var(--border-light)',
-                                                        background: selectedCapacity === cap ? 'var(--primary)' : 'transparent',
-                                                        color: selectedCapacity === cap ? 'white' : 'var(--text-main)',
-                                                        cursor: 'pointer', fontWeight: '500'
-                                                    }}>
-                                                        {cap}
-                                                    </button>
-                                                ))}
+                                                {storageOptions.length > 0 ? (
+                                                    storageOptions.map(opt => (
+                                                        <button key={opt.id} onClick={() => setSelectedCapacity(opt.storage)} style={{
+                                                            padding: '12px 24px', borderRadius: '12px', border: '1px solid var(--border-light)',
+                                                            background: selectedCapacity === opt.storage ? 'var(--primary)' : 'transparent',
+                                                            color: selectedCapacity === opt.storage ? 'white' : 'var(--text-main)',
+                                                            cursor: 'pointer', fontWeight: '500'
+                                                        }}>
+                                                            {opt.storage}
+                                                        </button>
+                                                    ))
+                                                ) : (
+                                                    <div style={{ color: 'var(--text-muted)' }}>No storage options configured for this model.</div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -226,14 +249,9 @@ const SellDevice = () => {
                                         <p style={{ color: 'var(--text-muted)', marginBottom: '30px' }}>Er du usikker på enhedens tilstand?</p>
 
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(1, 1fr)', gap: '15px', marginBottom: '40px' }}>
-                                            {[
-                                                { label: 'Som ny 😍', desc: 'Ingen ridser eller brugsspor. Ser ud som ny.' },
-                                                { label: 'Meget god ✨🙂', desc: 'Minimal slitage. Få usynlige ridser.' },
-                                                { label: 'Brugt 🙂', desc: 'Synlige ridser, men ingen revner i skærm/glas.' },
-                                                { label: 'Fejlbehæftet😔⚠️', desc: 'Knust skærm, bagside eller andre defekter.' }
-                                            ].map(opt => (
+                                            {conditions.map(opt => (
                                                 <div
-                                                    key={opt.label}
+                                                    key={opt.id}
                                                     onClick={() => setSelectedCondition(opt.label)}
                                                     style={{
                                                         padding: '20px', borderRadius: '16px', border: `2px solid ${selectedCondition === opt.label ? 'var(--primary)' : 'var(--border-light)'}`,
@@ -246,7 +264,7 @@ const SellDevice = () => {
                                                     </div>
                                                     <div>
                                                         <h3 style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{opt.label}</h3>
-                                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{opt.desc}</p>
+                                                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{opt.description}</p>
                                                     </div>
                                                 </div>
                                             ))}

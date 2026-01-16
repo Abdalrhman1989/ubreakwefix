@@ -139,14 +139,16 @@ class DatabaseAdapter {
             `CREATE TABLE IF NOT EXISTS brands (
                 id ${pk},
                 name ${text} NOT NULL UNIQUE,
+                slug ${text},
                 image ${text}
             )`,
             `CREATE TABLE IF NOT EXISTS models (
                 id ${pk},
-                brand_id ${int},
-                name ${text} NOT NULL,
-                family ${text},
+                brand_id INTEGER,
+                name ${text},
                 image ${text},
+                family ${text},
+                buyback_price ${real},
                 FOREIGN KEY(brand_id) REFERENCES brands(id)
             )`,
             `CREATE TABLE IF NOT EXISTS repairs (
@@ -201,6 +203,28 @@ class DatabaseAdapter {
                 items_json ${text},
                 created_at ${date},
                 FOREIGN KEY(user_id) REFERENCES users(id)
+            )`,
+            `CREATE TABLE IF NOT EXISTS conditions (
+                id ${pk},
+                label ${text} NOT NULL,
+                multiplier ${real} NOT NULL,
+                description ${text}
+            )`,
+            `CREATE TABLE IF NOT EXISTS model_storage_pricing (
+                id ${pk},
+                model_id ${int},
+                storage ${text} NOT NULL,
+                adjustment ${real} DEFAULT 0,
+                FOREIGN KEY(model_id) REFERENCES models(id) ON DELETE CASCADE
+            )`,
+            `CREATE TABLE IF NOT EXISTS price_matrix (
+                id ${pk},
+                model_id ${int},
+                storage_label ${text},
+                condition_label ${text},
+                price ${real},
+                FOREIGN KEY(model_id) REFERENCES models(id) ON DELETE CASCADE,
+                UNIQUE(model_id, storage_label, condition_label)
             )`
         ];
 
@@ -217,6 +241,31 @@ class DatabaseAdapter {
         try { await this.run("ALTER TABLE products ADD COLUMN storage TEXT"); } catch (e) { }
         try { await this.run("ALTER TABLE products ADD COLUMN color TEXT"); } catch (e) { }
         try { await this.run("ALTER TABLE categories ADD COLUMN parent_id INTEGER"); } catch (e) { }
+
+        // Migrations for Brands Slugs
+        try { await this.run("ALTER TABLE brands ADD COLUMN slug TEXT"); } catch (e) { }
+        try { await this.run("UPDATE brands SET slug = LOWER(name) WHERE slug IS NULL"); } catch (e) { }
+
+        // Migrations for Sell Features
+        try { await this.run("ALTER TABLE sell_device_requests ADD COLUMN estimated_price REAL"); } catch (e) { }
+        try { await this.run("ALTER TABLE sell_device_requests ADD COLUMN final_offer_price REAL"); } catch (e) { }
+        try { await this.run("ALTER TABLE sell_device_requests ADD COLUMN status TEXT DEFAULT 'Pending'"); } catch (e) { }
+        try { await this.run("ALTER TABLE sell_device_requests ADD COLUMN admin_notes TEXT"); } catch (e) { }
+
+        try { await this.run("ALTER TABLE sell_screen_requests ADD COLUMN status TEXT DEFAULT 'Pending'"); } catch (e) { }
+        try { await this.run("ALTER TABLE sell_screen_requests ADD COLUMN admin_offer REAL"); } catch (e) { }
+        try { await this.run("ALTER TABLE sell_screen_requests ADD COLUMN admin_notes TEXT"); } catch (e) { }
+
+        // Migration for Buyback Pricing
+        try { await this.run("ALTER TABLE models ADD COLUMN buyback_price REAL"); } catch (e) { }
+
+        // Migrations for Checkout/Shipping
+        try { await this.run("ALTER TABLE shop_orders ADD COLUMN service_method TEXT"); } catch (e) { }
+        try { await this.run("ALTER TABLE shop_orders ADD COLUMN return_label_url TEXT"); } catch (e) { }
+        try { await this.run("ALTER TABLE shop_orders ADD COLUMN pkg_no TEXT"); } catch (e) { }
+        try { await this.run("ALTER TABLE shop_orders ADD COLUMN booking_date TEXT"); } catch (e) { }
+        try { await this.run("ALTER TABLE shop_orders ADD COLUMN booking_time TEXT"); } catch (e) { }
+
 
         await this.seed();
     }
@@ -254,12 +303,12 @@ class DatabaseAdapter {
         if (Number(brandRow.count) === 0) {
             console.log("Seeding Brands/Models...");
             const brands = [
-                { name: 'Apple', image: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
-                { name: 'Samsung', image: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' }
+                { name: 'Apple', slug: 'apple', image: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg' },
+                { name: 'Samsung', slug: 'samsung', image: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg' }
             ];
 
             for (const b of brands) {
-                const bRes = await this.run("INSERT INTO brands (name, image) VALUES (?, ?)", [b.name, b.image]);
+                const bRes = await this.run("INSERT INTO brands (name, slug, image) VALUES (?, ?, ?)", [b.name, b.slug, b.image]);
                 const brandId = bRes.id;
 
                 const models = [
@@ -272,6 +321,47 @@ class DatabaseAdapter {
                     await this.run("INSERT INTO models (brand_id, name) VALUES (?, ?)", [brandId, m]);
                 }
             }
+        }
+
+        const condRow = await this.get("SELECT count(*) as count FROM conditions");
+        if (Number(condRow.count) === 0) {
+            console.log("Seeding Conditions...");
+            const conditions = [
+                { label: 'Som ny 😍', multiplier: 1.0, description: 'Ingen ridser eller skrammer. Batteri 95%+' },
+                { label: 'Meget god ✨🙂', multiplier: 0.8, description: 'Meget få ridser. Batteri 85%+' },
+                { label: 'Brugt 🙂', multiplier: 0.5, description: 'Synlige ridser. Batteri 80%+' },
+                { label: 'Fejlbehæftet😔⚠️', multiplier: 0.2, description: 'Knust skærm eller andre fejl.' }
+            ];
+            for (const c of conditions) {
+                await this.run("INSERT INTO conditions (label, multiplier, description) VALUES (?, ?, ?)", [c.label, c.multiplier, c.description]);
+            }
+        }
+
+        // Seeding Storage and Matrix
+        try {
+            const storRow = await this.get("SELECT count(*) as count FROM model_storage_pricing");
+            if (Number(storRow.count) === 0) {
+                console.log("Seeding Storage & Matrix...");
+                const models = await this.all("SELECT * FROM models");
+                const conditions = await this.all("SELECT * FROM conditions");
+
+                for (const m of models) {
+                    const storages = ['64GB', '128GB', '256GB'];
+                    for (let i = 0; i < storages.length; i++) {
+                        const s = storages[i];
+                        await this.run("INSERT INTO model_storage_pricing (model_id, storage, adjustment) VALUES (?, ?, ?)", [m.id, s, i * 200]);
+
+                        for (const c of conditions) {
+                            // Base price 1000 + adjustment + condition multiplier effect (simplified)
+                            const price = Math.round((1000 + (i * 200)) * c.multiplier);
+                            await this.run("INSERT INTO price_matrix (model_id, storage_label, condition_label, price) VALUES (?, ?, ?, ?)",
+                                [m.id, s, c.label, price]);
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Seeding Storage Failed:", e);
         }
     }
 }

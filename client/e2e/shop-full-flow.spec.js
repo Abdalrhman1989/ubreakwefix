@@ -55,7 +55,7 @@ test.describe('Full Shop to Admin Order Flow', () => {
         // 2. ADMIN VERIFICATION FLOW
         console.log('Step 3: Admin verifies order');
         await page.goto('/login');
-        await page.locator('input[name="email"]').fill('admin@ubreakwefix.dk');
+        await page.locator('input[name="email"]').fill('admin@example.com');
         await page.locator('input[name="password"]').fill('admin123'); // Assuming test db credentials
         await page.locator('button[type="submit"]').click();
 

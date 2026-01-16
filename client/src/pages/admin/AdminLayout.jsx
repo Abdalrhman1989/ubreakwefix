@@ -45,6 +45,7 @@ const AdminLayout = () => {
         { path: '/admin/users', icon: <Users size={20} />, label: 'Users' },
         { path: '/admin/settings', icon: <Settings size={20} />, label: 'Settings' },
         { path: '/admin/profile', icon: <User size={20} />, label: 'Profile' },
+        { path: '/admin/pricing', icon: <Layers size={20} />, label: 'Pricing Engine' },
     ];
 
     return (

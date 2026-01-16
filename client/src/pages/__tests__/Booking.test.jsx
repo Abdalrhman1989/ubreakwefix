@@ -38,9 +38,9 @@ describe('Booking Page', () => {
 
     it('renders the booking form successfully', () => {
         renderBooking();
-        expect(screen.getByText('Book Reparation')).toBeInTheDocument();
-        expect(screen.getByLabelText('Fulde Navn')).toBeInTheDocument();
-        expect(screen.getByLabelText('Email')).toBeInTheDocument();
+        expect(screen.getByRole('heading', { name: /Book.*Reparation/i })).toBeInTheDocument();
+        expect(screen.getByLabelText('Navn')).toBeInTheDocument();
+        expect(screen.getAllByLabelText(/Email/i)[0]).toBeInTheDocument(); // Email might appear multiple times or be ambiguous
         expect(screen.getByText('Bekræft Booking')).toBeInTheDocument();
     });
 
@@ -48,12 +48,12 @@ describe('Booking Page', () => {
         renderBooking();
 
         // Fill form
-        fireEvent.change(screen.getByLabelText('Fulde Navn'), { target: { value: 'Test User' } });
-        fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@booking.com' } });
+        fireEvent.change(screen.getByLabelText('Navn'), { target: { value: 'Test User' } });
+        fireEvent.change(screen.getAllByLabelText(/Email/i)[0], { target: { value: 'test@booking.com' } });
         fireEvent.change(screen.getByLabelText('Telefon'), { target: { value: '12345678' } });
-        fireEvent.change(screen.getByLabelText('Hvilken enhed drejer det sig om? (Mærke & Model)'), { target: { value: 'iPhone 15' } });
-        fireEvent.change(screen.getByLabelText('Beskriv problemet'), { target: { value: 'Broken screen' } });
-        fireEvent.change(screen.getByLabelText('Ønsket dato'), { target: { value: '2025-01-01' } });
+        fireEvent.change(screen.getByLabelText('Enhed'), { target: { value: 'iPhone 15' } });
+        fireEvent.change(screen.getByLabelText('Beskrivelse'), { target: { value: 'Broken screen' } });
+        fireEvent.change(screen.getByLabelText('Ønsket Dato'), { target: { value: '2025-01-01' } });
 
         // Submit
         fireEvent.click(screen.getByText('Bekræft Booking'));
@@ -67,7 +67,7 @@ describe('Booking Page', () => {
         });
 
         // Check success state
-        expect(screen.getByText('Tak for din bestilling!')).toBeInTheDocument();
+        expect(screen.getByText('Booking Bekræftet!')).toBeInTheDocument();
     });
 
     it('displays error execution on API failure', async () => {
@@ -75,12 +75,12 @@ describe('Booking Page', () => {
         renderBooking();
 
         // Form requires all fields
-        fireEvent.change(screen.getByLabelText('Fulde Navn'), { target: { value: 'Test User' } });
-        fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@error.com' } });
+        fireEvent.change(screen.getByLabelText('Navn'), { target: { value: 'Test User' } });
+        fireEvent.change(screen.getAllByLabelText(/Email/i)[0], { target: { value: 'test@error.com' } });
         fireEvent.change(screen.getByLabelText('Telefon'), { target: { value: '12345678' } });
-        fireEvent.change(screen.getByLabelText('Hvilken enhed drejer det sig om? (Mærke & Model)'), { target: { value: 'Test Device' } });
-        fireEvent.change(screen.getByLabelText('Beskriv problemet'), { target: { value: 'Test Problem' } });
-        fireEvent.change(screen.getByLabelText('Ønsket dato'), { target: { value: '2025-01-01' } });
+        fireEvent.change(screen.getByLabelText('Enhed'), { target: { value: 'Test Device' } });
+        fireEvent.change(screen.getByLabelText('Beskrivelse'), { target: { value: 'Test Problem' } });
+        fireEvent.change(screen.getByLabelText('Ønsket Dato'), { target: { value: '2025-01-01' } });
 
         fireEvent.click(screen.getByText('Bekræft Booking'));
 

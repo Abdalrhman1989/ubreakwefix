@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Search, Filter, ChevronDown, ChevronRight, X, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
+import { Helmet } from 'react-helmet-async';
 
 const Shop = () => {
     const [allProducts, setAllProducts] = useState([]);
@@ -10,6 +12,7 @@ const Shop = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
+    const { t } = useLanguage();
 
     const [filters, setFilters] = useState({
         categoryId: null,
@@ -141,16 +144,20 @@ const Shop = () => {
             <div className="shop-container">
                 {/* Header Section */}
                 <div className="shop-header">
+                    <Helmet>
+                        <title>{t('seo.shop.title')}</title>
+                        <meta name="description" content={t('seo.shop.desc')} />
+                    </Helmet>
                     <div className="header-left">
-                        <h1>Shop</h1>
-                        <span className="product-count">{products.length} Products</span>
+                        <h1>{t('shop.title')}</h1>
+                        <span className="product-count">{products.length} {t('shop.products')}</span>
                     </div>
 
                     <div className="shop-search">
                         <Search size={18} className="search-icon" />
                         <input
                             type="text"
-                            placeholder="Search products..."
+                            placeholder={t('shop.searchPlaceholder')}
                             value={filters.searchTerm}
                             onChange={(e) => setFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
                         />
@@ -159,13 +166,13 @@ const Shop = () => {
 
                 {/* Mobile Filter Toggle */}
                 <button className="mobile-filter-btn" onClick={() => setSidebarOpen(true)}>
-                    <Filter size={18} /> Show Filters
+                    <Filter size={18} /> {t('shop.showFilters')}
                 </button>
 
                 {/* Active Filters Badge */}
                 {filters.categoryId && (
                     <div className="active-filter-badge">
-                        Category: {categories.find(c => c.id === filters.categoryId)?.name}
+                        {t('shop.category')}: {categories.find(c => c.id === filters.categoryId)?.name}
                         <button onClick={() => setFilters(prev => ({ ...prev, categoryId: null }))}><X size={12} /></button>
                     </div>
                 )}
@@ -174,18 +181,18 @@ const Shop = () => {
                     {/* Sidebar */}
                     <aside className={`shop-sidebar ${sidebarOpen ? 'open' : ''}`}>
                         <div className="sidebar-header-mobile">
-                            <h3>Filters</h3>
+                            <h3>{t('shop.filters')}</h3>
                             <button onClick={() => setSidebarOpen(false)}><X size={20} /></button>
                         </div>
 
                         <div className="filter-group">
-                            <h4>Categories</h4>
+                            <h4>{t('shop.products')}</h4>
                             <nav className="category-nav">
                                 <button
                                     className={`cat-link ${!filters.categoryId ? 'active' : ''}`}
                                     onClick={() => setFilters(prev => ({ ...prev, categoryId: null }))}
                                 >
-                                    All Categories
+                                    {t('shop.allCategories')}
                                 </button>
                                 {categories.filter(c => !c.parent_id).map(cat => (
                                     <CategoryItem key={cat.id} cat={cat} />
@@ -194,8 +201,8 @@ const Shop = () => {
                         </div>
 
                         <div className="filter-group">
-                            <h4>Brands</h4>
-                            {availableOptions.brands.length === 0 ? <span className="empty-msg">No brands</span> : (
+                            <h4>{t('shop.brands')}</h4>
+                            {availableOptions.brands.length === 0 ? <span className="empty-msg">{t('shop.noBrands')}</span> : (
                                 <div className="checkbox-list">
                                     {availableOptions.brands.map(brand => (
                                         <label key={brand} className="checkbox-item">
@@ -213,8 +220,8 @@ const Shop = () => {
                         </div>
 
                         <div className="filter-group">
-                            <h4>Features</h4>
-                            {availableOptions.features.length === 0 ? <span className="empty-msg">No features</span> : (
+                            <h4>{t('shop.features')}</h4>
+                            {availableOptions.features.length === 0 ? <span className="empty-msg">{t('shop.noFeatures')}</span> : (
                                 <div className="checkbox-list">
                                     {availableOptions.features.map(feature => (
                                         <label key={feature} className="checkbox-item">
@@ -232,7 +239,7 @@ const Shop = () => {
                         </div>
 
                         {(filters.brands.length > 0 || filters.features.length > 0) && (
-                            <button onClick={clearFilters} className="clear-filters-btn">Clear All Filters</button>
+                            <button onClick={clearFilters} className="clear-filters-btn">{t('shop.clearAllFilters')}</button>
                         )}
                     </aside>
 
@@ -242,12 +249,12 @@ const Shop = () => {
                     {/* Product Grid */}
                     <main className="shop-main">
                         {loading ? (
-                            <div className="loading-state">Loading products...</div>
+                            <div className="loading-state">{t('shop.loading')}</div>
                         ) : products.length === 0 ? (
                             <div className="empty-state">
                                 <ShoppingBag size={48} />
-                                <p>No products found matching your criteria.</p>
-                                <button onClick={clearFilters}>Clear Filters</button>
+                                <p>{t('shop.noProducts')}</p>
+                                <button onClick={clearFilters}>{t('shop.clearFilters')}</button>
                             </div>
                         ) : (
                             <div className="products-grid">
@@ -258,9 +265,9 @@ const Shop = () => {
 
                                             {/* Status Badges */}
                                             {product.stock_quantity === 0 ? (
-                                                <span className="badge badge-error">Sold Out</span>
+                                                <span className="badge badge-error">{t('shop.soldOut')}</span>
                                             ) : product.stock_quantity < 5 ? (
-                                                <span className="badge badge-warning">Low Stock</span>
+                                                <span className="badge badge-warning">{t('shop.lowStock')}</span>
                                             ) : product.specs?.brand ? (
                                                 <span className="badge badge-neutral">{product.specs.brand}</span>
                                             ) : null}
@@ -285,7 +292,7 @@ const Shop = () => {
                                                     disabled={product.stock_quantity === 0}
                                                 >
                                                     <ShoppingBag size={16} />
-                                                    Add
+                                                    {t('shop.add')}
                                                 </button>
                                             </div>
                                         </div>

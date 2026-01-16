@@ -41,7 +41,15 @@ vi.mock('../../context/AuthContext', () => ({
 describe('Checkout Page', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        axios.post.mockResolvedValue({ data: { success: true } });
+        // Return id for order creation and url for payment link
+        axios.post.mockResolvedValue({ data: { success: true, id: 'order-123', url: 'https://payment.url' } });
+        axios.get.mockResolvedValue({ data: [] });
+
+        // Mock window.location
+        Object.defineProperty(window, 'location', {
+            value: { href: '' },
+            writable: true
+        });
     });
 
     const renderCheckout = () => {
@@ -89,11 +97,12 @@ describe('Checkout Page', () => {
         fireEvent.click(submitBtn);
 
         await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledTimes(1); // 1 items in cart = 1 booking call
-            expect(mockClearCart).toHaveBeenCalled();
+            // Should be called twice: 1. Create Order, 2. Get Payment Link
+            expect(axios.post).toHaveBeenCalledTimes(2);
         });
 
-        expect(screen.getByText('Order Confirmed!')).toBeInTheDocument();
+        // Verify redirection to payment
+        expect(window.location.href).toBe('https://payment.url');
     });
 
     it('displays error message on API failure', async () => {
@@ -109,7 +118,7 @@ describe('Checkout Page', () => {
         fireEvent.click(submitBtn);
 
         await waitFor(() => {
-            expect(screen.getByText('Something went wrong processing your order. Please try again.')).toBeInTheDocument();
+            expect(screen.getByText('Payment Failed: API Error. Please try again.')).toBeInTheDocument();
         });
 
         expect(mockClearCart).not.toHaveBeenCalled();

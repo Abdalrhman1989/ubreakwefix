@@ -166,7 +166,7 @@ test.describe('System Integration "The Loop"', () => {
         await page.getByRole('button', { name: /Settings|My Details|Mine oplysninger|Indstillinger/i }).click();
         const newName = `User Updated ${timestamp}`;
         // The input label is "Full Name"
-        await page.fill('input:below(:text("Full Name"))', newName);
+        await page.getByLabel('Full Name').fill(newName);
 
         // Handle dialog before clicking save
         page.on('dialog', async dialog => {
@@ -177,6 +177,10 @@ test.describe('System Integration "The Loop"', () => {
 
         // Wait for update (reload might happen)
         await page.waitForTimeout(1000);
+
+        // Verify User sees the change locally first
+        await expect(page.locator('h1').filter({ hasText: newName })).toBeVisible();
+
         await page.getByRole('button', { name: /Logout|Log ud/i }).click();
 
         // Part B: Admin Verifies & Updates

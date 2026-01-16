@@ -7,7 +7,11 @@ const AdminModels = () => {
     const [brands, setBrands] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentModel, setCurrentModel] = useState(null);
-    const [formData, setFormData] = useState({ brand_id: '', name: '', family: '', image: '' });
+    const [formData, setFormData] = useState({ brand_id: '', name: '', family: '', image: '', buyback_price: '' });
+
+    // Storage Management State removed (moved to AdminPricing)
+
+    // Storage handlers removed
 
     const fetchModels = () => {
         axios.get('/api/models').then(res => setModels(res.data));
@@ -52,13 +56,19 @@ const AdminModels = () => {
 
     const openEdit = (model) => {
         setCurrentModel(model);
-        setFormData({ brand_id: model.brand_id, name: model.name, family: model.family || '', image: model.image });
+        setFormData({
+            brand_id: model.brand_id,
+            name: model.name,
+            family: model.family || '',
+            image: model.image,
+            buyback_price: model.buyback_price || ''
+        });
         setIsModalOpen(true);
     };
 
     const openAdd = () => {
         setCurrentModel(null);
-        setFormData({ brand_id: brands[0]?.id || '', name: '', family: '', image: '' });
+        setFormData({ brand_id: brands[0]?.id || '', name: '', family: '', image: '', buyback_price: '' });
         setIsModalOpen(true);
     };
 
@@ -194,6 +204,8 @@ const AdminModels = () => {
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
+
+                            {/* Buyback Price Input Removed */}
                             <div style={{ marginBottom: '30px' }}>
                                 <label style={{ display: 'block', fontSize: '0.9rem', fontWeight: '500', marginBottom: '8px', color: '#374151' }}>Image URL (Optional)</label>
                                 <input
@@ -214,6 +226,7 @@ const AdminModels = () => {
                     </div>
                 </div>
             )}
+            {/* Storage Modal Removed */}
         </div>
     );
 };

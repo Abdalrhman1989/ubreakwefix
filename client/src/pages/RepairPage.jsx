@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import Stepper from '../components/Stepper';
 import { Check, Smartphone, Battery, Zap, ChevronRight, Speaker, Mic } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const RepairPage = () => {
     const { modelId } = useParams();
@@ -13,6 +14,8 @@ const RepairPage = () => {
     const { t } = useLanguage();
 
     const [model, setModel] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
     const [repairs, setRepairs] = useState([]);
 
     // Icon mapper based on name
@@ -26,8 +29,18 @@ const RepairPage = () => {
     };
 
     useEffect(() => {
-        axios.get(`/api/models/${modelId}`).then(res => setModel(res.data));
-        axios.get(`/api/models/${modelId}/repairs`).then(res => setRepairs(res.data));
+        setLoading(true);
+        axios.get(`/api/models/${modelId}`)
+            .then(res => {
+                if (res.data) setModel(res.data);
+                else setError(true);
+            })
+            .catch(() => setError(true))
+            .finally(() => setLoading(false));
+
+        axios.get(`/api/models/${modelId}/repairs`)
+            .then(res => setRepairs(res.data))
+            .catch(err => console.error(err));
     }, [modelId]);
 
     const handleAdd = (repair) => {
@@ -41,16 +54,72 @@ const RepairPage = () => {
         });
     };
 
-    if (!model) return <div className="container" style={{ padding: '100px' }}>Loading...</div>;
+    if (loading) return <div className="container" style={{ padding: '100px' }}>Loading...</div>;
+
+    if (error || !model) return (
+        <div className="container" style={{ padding: '100px', textAlign: 'center' }}>
+            <Helmet>
+                <title>Model ikke fundet | UBreak WeFix</title>
+                <meta name="robots" content="noindex, follow" />
+            </Helmet>
+            <h2>Model ikke fundet</h2>
+            <Link to="/reparationer" className="btn btn-primary" style={{ marginTop: '20px', textDecoration: 'none' }}>
+                Gå til oversigt
+            </Link>
+        </div>
+    );
+
+    const seoTitle = model ? t('seo.repairPage.title').replace('{model}', `${model.brand_name} ${model.name}`) : '';
+    const seoDesc = model ? t('seo.repairPage.desc').replace('{model}', `${model.brand_name} ${model.name}`) : '';
+    const canonicalUrl = model ? `https://ubreakwefix.dk/reparation/${model.id}` : '';
+
+    const structuredData = model ? {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": `${model.brand_name} ${model.name}`,
+        "image": model.image,
+        "description": seoDesc,
+        "brand": {
+            "@type": "Brand",
+            "name": model.brand_name
+        },
+        "offers": repairs.map(r => ({
+            "@type": "Offer",
+            "name": r.name,
+            "price": r.price,
+            "priceCurrency": "DKK",
+            "availability": "https://schema.org/InStock"
+        }))
+    } : null;
 
     return (
         <div style={{ background: 'var(--bg-body)', minHeight: '100vh', paddingBottom: '100px' }}>
+            {model && (
+                <Helmet>
+                    <title>{seoTitle}</title>
+                    <meta name="description" content={seoDesc} />
+                    <link rel="canonical" href={canonicalUrl} />
+                    <script type="application/ld+json">
+                        {JSON.stringify(structuredData)}
+                    </script>
+                </Helmet>
+            )}
 
             <div className="container" style={{ paddingTop: '40px' }}>
                 <Stepper currentStep={2} />
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
-                    <button onClick={() => navigate('/')} style={{ background: 'var(--bg-element)', border: '1px solid var(--border-light)', padding: '10px 15px', borderRadius: '50%', cursor: 'pointer', color: 'var(--text-main)', fontSize: '1.2rem' }}>←</button>
+                    <Link
+                        to={`/reparationer?brand=${model.brand_slug || model.brand_id}`}
+                        style={{
+                            background: 'var(--bg-element)', border: '1px solid var(--border-light)',
+                            padding: '10px 15px', borderRadius: '50%', cursor: 'pointer',
+                            color: 'var(--text-main)', fontSize: '1.2rem', textDecoration: 'none',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        }}
+                    >
+                        ←
+                    </Link>
                     <div style={{ background: 'white', padding: '10px', borderRadius: '8px', boxShadow: 'var(--shadow-sm)' }}>
                         <img src={model.image || "https://placehold.co/100x100"} style={{ width: '60px', height: '80px', objectFit: 'contain' }} />
                     </div>
@@ -121,6 +190,28 @@ const RepairPage = () => {
                                 <button onClick={() => navigate('/checkout')} className="btn btn-primary" style={{ width: '100%', height: '56px', fontSize: '1.1rem', borderRadius: '12px' }}>
                                     Gå til kassen
                                 </button>
+
+                                <button
+                                    onClick={() => {
+                                        const deviceModel = `${model.brand_name} ${model.name}`;
+                                        const problemUpdates = cart.map(c => c.repairName).join(', ');
+                                        navigate('/book', {
+                                            state: {
+                                                deviceModel: deviceModel,
+                                                problem: problemUpdates ? `Valgte reparationer: ${problemUpdates}` : ''
+                                            }
+                                        });
+                                    }}
+                                    className="btn"
+                                    style={{
+                                        width: '100%', height: '56px', fontSize: '1.1rem', borderRadius: '12px',
+                                        marginTop: '15px', background: 'var(--bg-element)', border: '1px solid var(--border-light)',
+                                        color: 'var(--text-main)', fontWeight: '600'
+                                    }}
+                                >
+                                    📅 Book Tid i Butik
+                                </button>
+
                                 <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                                     Betal i butikken efter reparation
                                 </div>
@@ -130,7 +221,7 @@ const RepairPage = () => {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

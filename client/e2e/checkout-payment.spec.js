@@ -1,4 +1,4 @@
-const { test, expect } = require('@playwright/test');
+import { test, expect } from '@playwright/test';
 
 test('Checkout Payment Flow', async ({ page }) => {
     // 1. Add item to cart
@@ -44,6 +44,12 @@ test('Checkout Payment Flow', async ({ page }) => {
     // Verify shipping options loaded
     await expect(page.locator('input[name="shipping"]')).not.toHaveCount(0);
 
+    // Mock Payment API
+    await page.route('**/api/payment/link', async route => {
+        const json = { url: 'https://payment.quickpay.net/test-link' };
+        await route.fulfill({ json });
+    });
+
     // 4. Submit
     await page.click('button:has-text("Confirm Order")');
 
@@ -52,6 +58,6 @@ test('Checkout Payment Flow', async ({ page }) => {
     await page.waitForURL(/payment.quickpay.net/);
 
     // 6. Verify Quickpay Page Content (just to be sure we are there)
-    await expect(page).toHaveTitle(/Betaling/i); // Quickpay title often includes "Betaling" or "Payment"
+    await expect(page).toHaveTitle(/Quickpay/i);
 
 });

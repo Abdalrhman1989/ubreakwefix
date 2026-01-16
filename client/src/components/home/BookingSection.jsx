@@ -77,7 +77,8 @@ const BookingSection = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                     gap: '40px',
-                    background: 'white',
+                    gap: '40px',
+                    background: 'var(--bg-surface)',
                     borderRadius: '24px',
                     padding: '40px',
                     boxShadow: 'var(--shadow-lg)'
@@ -99,7 +100,7 @@ const BookingSection = () => {
                         {/* Calendar Grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '10px', marginBottom: '30px' }}>
                             {weekDays.map((d, i) => (
-                                <div key={i} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '0.9rem', color: '#94a3b8' }}>{d}</div>
+                                <div key={i} style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-muted)' }}>{d}</div>
                             ))}
                             {calendarDays.map((day, i) => (
                                 <div key={i}
@@ -112,9 +113,10 @@ const BookingSection = () => {
                                         borderRadius: '12px',
                                         cursor: 'pointer',
                                         background: isSameDay(day, selectedDate) ? 'var(--primary)' : 'transparent',
-                                        color: isSameDay(day, selectedDate) ? 'white' : (isSameMonth(day, monthStart) ? 'var(--text-main)' : '#cbd5e1'),
+                                        color: isSameDay(day, selectedDate) ? 'white' : (isSameMonth(day, monthStart) ? 'var(--text-main)' : 'var(--text-muted)'),
                                         fontWeight: isToday(day) ? 'bold' : 'normal',
-                                        border: isToday(day) && !isSameDay(day, selectedDate) ? '1px solid var(--primary)' : 'none'
+                                        border: isToday(day) && !isSameDay(day, selectedDate) ? '1px solid var(--primary)' : 'none',
+                                        opacity: isSameMonth(day, monthStart) ? 1 : 0.5
                                     }}>
                                     {format(day, 'd')}
                                 </div>
@@ -128,11 +130,10 @@ const BookingSection = () => {
                                 <button key={time}
                                     onClick={() => setSelectedTime(time)}
                                     style={{
-                                        padding: '8px',
                                         borderRadius: '8px',
-                                        border: selectedTime === time ? '2px solid var(--primary)' : '1px solid #e2e8f0',
-                                        background: selectedTime === time ? 'rgba(37, 99, 235, 0.1)' : 'white',
-                                        color: selectedTime === time ? 'var(--primary)' : '#64748b',
+                                        border: selectedTime === time ? '2px solid var(--primary)' : '1px solid var(--border-light)',
+                                        background: selectedTime === time ? 'rgba(37, 99, 235, 0.1)' : 'var(--bg-element)',
+                                        color: selectedTime === time ? 'var(--primary)' : 'var(--text-muted)',
                                         cursor: 'pointer',
                                         fontWeight: '600',
                                         fontSize: '0.9rem'
@@ -144,7 +145,7 @@ const BookingSection = () => {
                     </div>
 
                     {/* Right: Form */}
-                    <div style={{ paddingLeft: '20px', borderLeft: '1px solid #f1f5f9' }}>
+                    <div style={{ paddingLeft: '20px', borderLeft: '1px solid var(--border-light)' }}>
                         <h3 style={{ fontSize: '1.5rem', marginBottom: '25px' }}>{t('booking.yourDetails')}</h3>
 
                         {!success ? (
@@ -172,11 +173,11 @@ const BookingSection = () => {
                                     <textarea required rows="3" style={inputStyle} value={form.problem} onChange={e => setForm({ ...form, problem: e.target.value })} />
                                 </div>
 
-                                <div style={{ marginTop: '10px', padding: '15px', background: '#f8fafc', borderRadius: '12px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem', marginBottom: '5px' }}>
+                                <div style={{ marginTop: '10px', padding: '15px', background: 'var(--bg-element)', borderRadius: '12px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '5px' }}>
                                         <Calendar size={16} /> <span>{format(selectedDate, 'PPP', { locale })}</span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '0.9rem' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                                         <Clock size={16} /> <span>{selectedTime || '--:--'}</span>
                                     </div>
                                 </div>
@@ -189,7 +190,7 @@ const BookingSection = () => {
                             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', color: '#10b981' }}>
                                 <CheckCircle size={64} style={{ marginBottom: '20px' }} />
                                 <h3 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Excellent!</h3>
-                                <p style={{ color: '#64748b' }}>{t('booking.success')}</p>
+                                <p style={{ color: 'var(--text-muted)' }}>{t('booking.success')}</p>
                                 <button onClick={() => setSuccess(false)} className="btn btn-secondary" style={{ marginTop: '30px' }}>Book Another</button>
                             </div>
                         )}
@@ -202,7 +203,7 @@ const BookingSection = () => {
 };
 
 const navBtnStyle = {
-    background: '#f1f5f9',
+    background: 'var(--bg-element)',
     border: 'none',
     width: '36px',
     height: '36px',
@@ -211,18 +212,19 @@ const navBtnStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    color: '#64748b'
+    color: 'var(--text-muted)'
 };
 
 const inputStyle = {
     width: '100%',
     padding: '12px 16px',
     borderRadius: '10px',
-    border: '1px solid #e2e8f0',
+    border: '1px solid var(--border-light)',
     fontSize: '0.95rem',
     outline: 'none',
     transition: 'border-color 0.2s',
-    background: '#fcfcfc'
+    background: 'var(--bg-body)',
+    color: 'var(--text-main)'
 };
 
 const labelStyle = {
@@ -230,7 +232,7 @@ const labelStyle = {
     marginBottom: '8px',
     fontSize: '0.9rem',
     fontWeight: '600',
-    color: '#334155'
+    color: 'var(--text-main)'
 };
 
 export default BookingSection;

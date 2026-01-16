@@ -25,11 +25,13 @@ const AdminUsers = () => {
         fetchUsers();
     }, []);
 
+    const [error, setError] = useState(null);
+
     const fetchUsers = () => {
         setLoading(true);
         axios.get('/api/admin/users')
             .then(res => setUsers(res.data))
-            .catch(err => console.error(err))
+            .catch(err => setError(err.message))
             .finally(() => setLoading(false));
     };
 
@@ -178,6 +180,7 @@ const AdminUsers = () => {
             </div>
 
             {/* TABLE */}
+            {error && <div style={{ padding: '20px', color: 'red', background: '#fee', marginBottom: '20px', borderRadius: '8px' }}>Error: {error}</div>}
             <div className="card-glass" style={{ overflowX: 'auto', background: 'var(--bg-surface)', border: '1px solid var(--border-light)' }}>
                 <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse' }}>
                     <thead style={{ background: 'var(--bg-element)', borderBottom: '1px solid var(--border-light)' }}>

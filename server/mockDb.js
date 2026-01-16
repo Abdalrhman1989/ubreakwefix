@@ -123,17 +123,19 @@ const rawData = {
 const brands = [];
 const models = [];
 const repairs = [];
+const model_storage_pricing = [];
+const price_matrix = [];
 let brandIdCounter = 1;
 let modelIdCounter = 1;
 let repairIdCounter = 1;
 
 rawData.brands.forEach(b => {
     const brandId = brandIdCounter++;
-    brands.push({ id: brandId, name: b.name, image: b.image });
+    brands.push({ id: brandId, name: b.name, slug: b.slug, image: b.image });
 
     b.models.forEach(m => {
         const modelId = modelIdCounter++;
-        models.push({ id: modelId, brand_id: brandId, name: m, image: null });
+        models.push({ id: modelId, brand_id: brandId, name: m, image: null, buyback_price: 1000 });
 
         // Add repairs for each model
         const repairTypes = [
@@ -148,6 +150,24 @@ rawData.brands.forEach(b => {
 
         repairTypes.forEach(r => {
             repairs.push({ id: repairIdCounter++, model_id: modelId, ...r });
+        });
+
+        // Add storage options
+        ['64GB', '128GB', '256GB'].forEach((storage, idx) => {
+            const storageId = (modelId * 100) + idx;
+            model_storage_pricing.push({ id: storageId, model_id: modelId, storage, adjustment: idx * 200 });
+        });
+
+        // Add matrix prices
+        ['64GB', '128GB', '256GB'].forEach(storage => {
+            ['Som ny', 'God', 'Slidt', 'Defekt'].forEach(condition => {
+                price_matrix.push({
+                    model_id: modelId,
+                    storage_label: storage,
+                    condition_label: condition,
+                    price: 1500 // Dummy price
+                });
+            });
         });
     });
 });
@@ -183,13 +203,28 @@ module.exports = {
                 }
                 if (sql.includes('JOIN brands')) {
                     // For 'SELECT models.*, brands.name...' without where
-                    return callback(null, models.slice(0, 20).map(m => ({ ...m, brand_name: brands.find(b => b.id === m.brand_id)?.name })));
+                    return callback(null, models.slice(0, 20).map(m => {
+                        const b = brands.find(b => b.id === m.brand_id);
+                        return { ...m, brand_name: b?.name, brand_slug: b?.slug };
+                    }));
                 }
                 return callback(null, models);
             }
             if (sql.includes('FROM repairs')) {
                 const modelId = params[0];
                 return callback(null, repairs.filter(r => r.model_id == modelId));
+            }
+            if (sql.includes('FROM repairs')) {
+                const modelId = params[0];
+                return callback(null, repairs.filter(r => r.model_id == modelId));
+            }
+            if (sql.includes('FROM model_storage_pricing')) {
+                const modelId = params[0];
+                return callback(null, model_storage_pricing.filter(r => r.model_id == modelId));
+            }
+            if (sql.includes('FROM price_matrix')) {
+                const modelId = params[0];
+                return callback(null, price_matrix.filter(r => r.model_id == modelId));
             }
             callback(null, []);
         } catch (e) {
@@ -201,7 +236,7 @@ module.exports = {
             const model = models.find(m => m.id == params[0]);
             if (model) {
                 const brand = brands.find(b => b.id === model.brand_id);
-                return callback(null, { ...model, brand_name: brand?.name });
+                return callback(null, { ...model, brand_name: brand?.name, brand_slug: brand?.slug });
             }
         }
         callback(null, null);

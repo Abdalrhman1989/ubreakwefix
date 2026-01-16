@@ -89,7 +89,7 @@ const AdminSettings = () => {
 
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <label style={{ marginBottom: '8px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <Mail size={16} /> Support Email
                                 </label>
                                 <input
@@ -102,7 +102,7 @@ const AdminSettings = () => {
                                 />
                             </div>
                             <div>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <label style={{ marginBottom: '8px', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <Phone size={16} /> Support Phone
                                 </label>
                                 <input

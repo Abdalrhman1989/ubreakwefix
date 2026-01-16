@@ -23,23 +23,37 @@ const TrustSection = () => {
         <div style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border-light)', borderBottom: '1px solid var(--border-light)' }}>
             <div className="container">
                 {/* Review Stats Section */}
+                {/* Review Stats Section */}
+                {/* Review Trust Bar */}
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '40px',
-                    padding: '40px 0 20px',
+                    padding: '40px 0 30px',
                     borderBottom: '1px solid rgba(0,0,0,0.05)',
-                    flexWrap: 'wrap'
+                    alignItems: 'center'
                 }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <span style={{ display: 'block', fontSize: '1.2rem', fontWeight: 'bold', color: '#00b67a' }}>{t('trust.trustpilot')}</span>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('trust.reviews')}</span>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <span style={{ display: 'block', fontSize: '1.2rem', fontWeight: 'bold', color: '#4285F4' }}>{t('trust.google')}</span>
-                        <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{t('trust.reviews')}</span>
+                    {/* Reviews Group */}
+                    <div style={{ display: 'flex', gap: '40px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {/* Trustpilot */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src="/icons/tp.svg" alt="Trustpilot" className="trustpilot-logo" style={{ height: '32px', width: 'auto' }} />
+                            <div style={{ textAlign: 'left', lineHeight: '1.2' }}>
+                                <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#00b67a' }}>4.9/5</div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Trustpilot</div>
+                            </div>
+                        </div>
+
+                        {/* Google */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <img src="/icons/google.svg" alt="Google" style={{ width: '26px', height: '26px' }} />
+                            <div style={{ textAlign: 'left', lineHeight: '1.2' }}>
+                                <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#4285F4' }}>4.8/5</div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Google</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
 
                 <div style={{
                     display: 'flex',

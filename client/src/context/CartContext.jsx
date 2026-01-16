@@ -15,9 +15,21 @@ export const CartProvider = ({ children }) => {
     const addToCart = (item) => {
         setCart(current => {
             // Avoid duplicates of exact same repair for same device
-            const exists = current.find(i => i.id === item.id && i.modelId === item.modelId);
-            if (exists) return current;
-            return [...current, item];
+            // Note: For shop products we might want quantity instead of strict duplicate prevention?
+            // For now, keeping logic but adding uniqueId.
+            const uniqueId = Date.now() + Math.random().toString(36).substr(2, 9);
+            const newItem = { ...item, uniqueId };
+
+            // For Repairs: Prevent duplicate logic (id + modelId)
+            if (item.isRepair || item.repairName) {
+                const exists = current.find(i => i.id === item.id && i.modelId === item.modelId);
+                // If exists, maybe we should update it? Or just ignore? The original code ignored.
+                if (exists) return current;
+            }
+
+            // For Shop Products: Ideally handle quantity, but for now just add as new line item or implement quantity later.
+            // The prompt "remove from cart" implies line items.
+            return [...current, newItem];
         });
     };
 

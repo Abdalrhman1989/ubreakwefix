@@ -213,8 +213,18 @@ db.serialize(() => {
     )`);
 
     // Create Admin
-    db.run("INSERT INTO users (name, email, password, phone, address, role) VALUES (?, ?, ?, ?, ?, ?)",
-        ['Admin User', 'admin@example.com', 'admin123', '00000000', 'Admin HQ', 'admin']);
+    // Create Users
+    const users = [
+        ['Admin User', 'admin@example.com', 'admin123', '00000000', 'Admin HQ', 'admin'],
+        ['Business Owner', 'business@example.com', 'business123', '11111111', 'Business St', 'business'],
+        ['Normal User', 'user@example.com', 'user123', '22222222', 'User Ln', 'user']
+    ];
+
+    const userStmt = db.prepare("INSERT INTO users (name, email, password, phone, address, role) VALUES (?, ?, ?, ?, ?, ?)");
+    users.forEach(user => {
+        userStmt.run(user);
+    });
+    userStmt.finalize();
 
     // Prepare Statements
     const stmtBrand = db.prepare("INSERT INTO brands (name, image) VALUES (?, ?)");

@@ -16,8 +16,11 @@ import {
     Shield,
     Camera,
     ChevronRight,
-    Search
+    Search,
+    Wrench,
+    Smartphone
 } from 'lucide-react';
+import OrderCard from '../components/profile/OrderCard';
 
 const Profile = () => {
     const { user, logout } = useAuth();
@@ -38,7 +41,8 @@ const Profile = () => {
     // Sidebar Navigation Items
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'orders', label: t('auth.myOrders') || 'Orders', icon: ShoppingBag },
+        { id: 'repairs', label: 'My Repairs', icon: Wrench },
+        { id: 'orders', label: 'Shop Orders', icon: ShoppingBag },
         { id: 'settings', label: t('auth.myDetails') || 'Settings', icon: Settings },
         { id: 'address', label: t('auth.address') || 'Addresses', icon: MapPin },
     ];
@@ -48,12 +52,19 @@ const Profile = () => {
 
     useEffect(() => {
         if (user?.id) {
-            axios.get(`/api/user/bookings/${user.id}`)
-                .then(res => setOrders(res.data))
+            axios.get(`/api/user/bookings/${user.id}?t=${Date.now()}`)
+                .then(res => {
+                    console.log("Fetched Orders:", res.data); // Debug
+                    setOrders(res.data);
+                })
                 .catch(err => console.error("Failed to fetch orders"))
                 .finally(() => setLoadingOrders(false));
         }
     }, [user]);
+
+    // Filter orders based on type
+    const repairs = orders.filter(o => o.type === 'repair');
+    const shopOrders = orders.filter(o => o.type === 'shop');
 
     return (
         <div style={{ background: 'var(--bg-body)', minHeight: '90vh', paddingTop: '80px', paddingBottom: '60px' }}>
@@ -157,7 +168,8 @@ const Profile = () => {
                     {/* MAIN CONTENT AREA */}
                     <div style={{ minHeight: '500px' }}>
                         {activeTab === 'dashboard' && <DashboardSection user={user} orders={orders} loading={loadingOrders} />}
-                        {activeTab === 'orders' && <OrdersSection orders={orders} loading={loadingOrders} />}
+                        {activeTab === 'repairs' && <OrdersSection title="My Repairs" orders={repairs} loading={loadingOrders} emptyLabel="You have no repairs yet." />}
+                        {activeTab === 'orders' && <OrdersSection title="Shop Orders" orders={shopOrders} loading={loadingOrders} emptyLabel="You haven't bought anything yet." />}
                         {activeTab === 'settings' && <SettingsSection user={user} />}
                         {activeTab === 'address' && <AddressSection user={user} />}
                     </div>
@@ -173,12 +185,110 @@ const DashboardSection = ({ user, orders, loading }) => {
     // Calculate stats
     const totalOrders = orders.length;
     const pendingRepairs = orders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled').length;
+    const totalSpent = orders
+        .filter(o => o.status === 'completed' || o.status === 'Completed')
+        .reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0);
+
+    // SMART: Eco Impact Calculation (approx 175g e-waste per phone saved)
+    const repairCount = orders.filter(o => o.type === 'repair').length;
+    const wasteSaved = (repairCount * 0.175).toFixed(2); // in kg
+
+    // SMART: Loyalty Tier Calculation
+    let tier = 'Member';
+    let nextTier = 'Silver';
+    let progress = 0;
+    let nextTierAmount = 1500;
+    const silverThreshold = 1500;
+    const goldThreshold = 5000;
+
+    if (totalSpent >= goldThreshold) {
+        tier = 'Gold';
+        nextTier = 'Platinum'; // Max tier
+        progress = 100;
+        nextTierAmount = 0;
+    } else if (totalSpent >= silverThreshold) {
+        tier = 'Silver';
+        nextTier = 'Gold';
+        progress = ((totalSpent - silverThreshold) / (goldThreshold - silverThreshold)) * 100;
+        nextTierAmount = goldThreshold;
+    } else {
+        progress = (totalSpent / silverThreshold) * 100;
+    }
+
+    // SMART: Time-aware greeting
+    const hour = new Date().getHours();
+    const timeGreeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
 
     // Find most recent active repair
     const activeRepair = orders.find(o => o.status !== 'Completed' && o.status !== 'Cancelled' && o.status !== 'Rejected');
 
+    // SMART: Extract unique devices from history WITH Warranty Check
+    const uniqueDevices = orders
+        .filter(o => o.type === 'repair')
+        .reduce((acc, curr) => {
+            const model = curr.device_model;
+            if (model && model !== 'Mail-in Repair' && model !== 'Shop Order') {
+                if (!acc[model]) acc[model] = { count: 0, lastRepairDate: null };
+                acc[model].count++;
+                // Track latest repair for warranty
+                if (!acc[model].lastRepairDate || new Date(curr.created_at) > new Date(acc[model].lastRepairDate)) {
+                    acc[model].lastRepairDate = curr.created_at;
+                }
+            }
+            return acc;
+        }, {});
+
+    const myDevices = Object.entries(uniqueDevices).map(([name, data]) => {
+        // Calculate warranty (2 years)
+        const repairDate = new Date(data.lastRepairDate);
+        const warrantyEnd = new Date(repairDate);
+        warrantyEnd.setFullYear(warrantyEnd.getFullYear() + 2);
+        const now = new Date();
+        const warrantyActive = now < warrantyEnd;
+        const daysLeft = Math.ceil((warrantyEnd - now) / (1000 * 60 * 60 * 24));
+
+        return {
+            name,
+            count: data.count,
+            warrantyActive,
+            daysLeft
+        };
+    });
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 5px' }}>
+                <div>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>{timeGreeting}, {user.name.split(' ')[0]}</h2>
+                    <p style={{ color: 'var(--text-muted)' }}>Here is your repair overview.</p>
+                </div>
+                {/* Loyalty Badge */}
+                <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>My Status</div>
+                    <div style={{
+                        background: tier === 'Gold' ? 'linear-gradient(135deg, #fbbf24, #d97706)' : tier === 'Silver' ? 'linear-gradient(135deg, #9ca3af, #4b5563)' : '#e5e7eb',
+                        color: tier === 'Member' ? 'black' : 'white',
+                        padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem',
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                    }}>
+                        {tier} Member
+                    </div>
+                </div>
+            </div>
+
+            {/* Loyalty Progress Bar Feature */}
+            {tier !== 'Gold' && (
+                <div style={{ background: 'var(--bg-element)', padding: '15px 20px', borderRadius: '12px', fontSize: '0.9rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <span>Spend <strong>{(nextTierAmount - totalSpent).toFixed(0)} DKK</strong> more to unlock <strong>{nextTier}</strong></span>
+                        <span>{Math.round(progress)}%</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'var(--border-light)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ width: `${progress}%`, background: 'var(--primary)', height: '100%', transition: 'width 0.5s ease' }}></div>
+                    </div>
+                </div>
+            )}
 
             {/* LIVE STATUS CARD */}
             {activeRepair && (
@@ -227,12 +337,83 @@ const DashboardSection = ({ user, orders, loading }) => {
                 </div>
             )}
 
-            {/* Stats Grid */}
+            {/* Stats Grid including Eco Impact */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
                 <StatCard icon={Package} label="Total Orders" value={totalOrders} color="var(--primary)" />
+                <StatCard icon={CreditCard} label="Total Spent" value={`${totalSpent} DKK`} color="#10b981" />
                 <StatCard icon={Clock} label="Pending Repairs" value={pendingRepairs} color="#f59e0b" />
-                <StatCard icon={CreditCard} label="Saved Cards" value="1" color="#10b981" />
+
+                {/* ECO CARD */}
+                <div className="card-glass" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{
+                        width: '50px', height: '50px', borderRadius: '12px', background: '#ecfdf5',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#059669'
+                    }}>
+                        <Shield size={24} />
+                    </div>
+                    <div>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Nature Hero</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#059669' }}>{wasteSaved} kg</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>e-waste saved</div>
+                    </div>
+                </div>
             </div>
+
+            {/* MY DEVICES (Smart Section) */}
+            {myDevices.length > 0 && (
+                <div className="card-glass" style={{ padding: '25px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <h3 style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <Smartphone size={20} className="text-primary" /> My Devices
+                        </h3>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Auto-detected from history</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '15px' }}>
+                        {myDevices.map((device, idx) => (
+                            <div key={idx} style={{
+                                background: 'var(--bg-body)', padding: '15px', borderRadius: '12px',
+                                border: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', gap: '15px'
+                            }}>
+                                <div style={{
+                                    width: '40px', height: '40px', borderRadius: '50%', background: '#eff6ff',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: '#3b82f6'
+                                }}>
+                                    <Smartphone size={20} />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontWeight: '600', fontSize: '0.95rem' }}>{device.name}</div>
+                                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                                        Repaired {device.count} time{device.count !== 1 ? 's' : ''}
+                                    </div>
+                                    {device.warrantyActive && (
+                                        <div style={{
+                                            display: 'inline-flex', alignItems: 'center', gap: '4px',
+                                            background: '#dcfce7', color: '#166534',
+                                            padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold'
+                                        }}>
+                                            <Shield size={10} /> Warranty ({device.daysLeft} days)
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Dynamic Recommendation */}
+                    {myDevices.some(d => d.name.toLowerCase().includes('iphone')) && (
+                        <div style={{ marginTop: '20px', padding: '15px', background: 'var(--bg-element)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                            <ShoppingBag size={20} color="var(--primary)" />
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Protect your iPhone</div>
+                                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Get screen protectors and cases for your device.</div>
+                            </div>
+                            <a href="/shop?category=Accessories" className="btn btn-outline" style={{ padding: '6px 12px', fontSize: '0.85rem' }}>View Shop</a>
+                        </div>
+                    )}
+                </div>
+            )}
+
 
             {/* Banner */}
             {!activeRepair && (
@@ -254,68 +435,23 @@ const DashboardSection = ({ user, orders, loading }) => {
     );
 };
 
-const OrdersSection = ({ orders, loading }) => {
+const OrdersSection = ({ orders, loading, title, emptyLabel }) => {
     return (
-        <div className="card-glass" style={{ padding: '30px', minHeight: '400px' }}>
-            <h3 style={{ marginBottom: '25px' }}>My Orders & Repairs</h3>
+        <div style={{ padding: '0px' }}>
+            <h3 style={{ marginBottom: '25px', paddingLeft: '20px', paddingTop: '20px' }}>{title || 'My Orders'}</h3>
 
             {loading ? (
                 <div style={{ textAlign: 'center', padding: '40px' }}>Loading orders...</div>
             ) : orders.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    {orders.map(order => {
-                        let statusColor = '#f59e0b'; // Default Pending (Yellow)
-                        let bg = '#fffbeb';
-
-                        if (order.status === 'In Progress' || order.status === 'Diagnosing') {
-                            statusColor = '#3b82f6'; // Blue
-                            bg = '#eff6ff';
-                        } else if (order.status === 'Completed') {
-                            statusColor = '#22c55e'; // Green
-                            bg = '#f0fdf4';
-                        } else if (order.status === 'Cancelled' || order.status === 'Rejected') {
-                            statusColor = '#ef4444'; // Red
-                            bg = '#fef2f2';
-                        }
-
-                        return (
-                            <div key={order.id} style={{
-                                background: 'var(--bg-surface)', padding: '20px', borderRadius: '12px',
-                                border: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                flexWrap: 'wrap', gap: '15px'
-                            }}>
-                                <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '5px' }}>
-                                        <h4 style={{ fontSize: '1.1rem' }}>{order.device_model}</h4>
-                                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--bg-element)', padding: '2px 8px', borderRadius: '4px' }}>
-                                            #{order.id}
-                                        </span>
-                                    </div>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                                        Booked on: {new Date(order.created_at).toLocaleDateString()}
-                                    </p>
-                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                                        Issue: {order.problem}
-                                    </p>
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <span style={{
-                                        padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold',
-                                        background: bg,
-                                        color: statusColor,
-                                        border: `1px solid ${statusColor}40`
-                                    }}>
-                                        {order.status || 'Pending'}
-                                    </span>
-                                </div>
-                            </div>
-                        );
-                    })}
+                    {orders.map(order => (
+                        <OrderCard key={order.id} order={order} />
+                    ))}
                 </div>
             ) : (
                 <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--text-muted)' }}>
                     <Package size={48} style={{ marginBottom: '15px', opacity: 0.5 }} />
-                    <p>You haven't placed any orders yet.</p>
+                    <p>{emptyLabel || "You haven't placed any orders yet."}</p>
                     <a href="/reparationer" className="btn btn-primary" style={{ marginTop: '20px' }}>Start a Repair</a>
                 </div>
             )}
@@ -344,6 +480,11 @@ const SettingsSection = ({ user }) => {
         e.preventDefault();
         try {
             await axios.put(`/api/users/${user.id}`, formData);
+
+            // Update local storage so AuthContext picks up the new data on reload
+            const updatedUser = { ...user, ...formData };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
             alert('Profile updated successfully!');
             // Ideally we should update the auth context here, skipping for now or auto-reloading
             window.location.reload();
@@ -544,19 +685,23 @@ const ActivityItem = ({ title, date, status }) => (
     </div>
 );
 
-const FormInput = ({ label, type = "text", ...props }) => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-muted)' }}>{label}</label>
-        <input
-            type={type}
-            style={{
-                padding: '12px 16px', borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-medium)', background: 'var(--bg-body)',
-                color: 'var(--text-main)', fontSize: '1rem'
-            }}
-            {...props}
-        />
-    </div>
-);
+const FormInput = ({ label, type = "text", id, ...props }) => {
+    const inputId = id || label.toLowerCase().replace(/\s+/g, '-');
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <label htmlFor={inputId} style={{ fontSize: '0.9rem', fontWeight: '600', color: 'var(--text-muted)' }}>{label}</label>
+            <input
+                id={inputId}
+                type={type}
+                style={{
+                    padding: '12px 16px', borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-medium)', background: 'var(--bg-body)',
+                    color: 'var(--text-main)', fontSize: '1rem'
+                }}
+                {...props}
+            />
+        </div>
+    );
+};
 
 export default Profile;

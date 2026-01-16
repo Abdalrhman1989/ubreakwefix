@@ -1,0 +1,160 @@
+import React, { useState, useEffect } from 'react';
+import { Leaf, Droplets, Recycle, ArrowRight } from 'lucide-react';
+
+const SustainabilitySection = () => {
+    const [stats, setStats] = useState({ repairs: 0, eCorrection: 0, impact: { co2: 0, waste: 0, water: 0 } });
+    const [sliderValue, setSliderValue] = useState(1);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Fetch public stats - using mock fallback for now if endpoint fails or returns empty
+        fetch('/api/stats/public')
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => setStats(data))
+            .catch(err => {
+                console.warn("Impact Stats Error (using minimal fallback):", err);
+                // Fallback to minimal data to avoid broken UI
+                setStats({ repairs: 0, eCorrection: 0, impact: { co2: 0, waste: 0, water: 0 } });
+            });
+
+        // Simple Intersection Observer for animation trigger
+        const observer = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) setIsVisible(true);
+        }, { threshold: 0.2 });
+
+        const section = document.getElementById('sustainability-section');
+        if (section) observer.observe(section);
+
+        return () => observer.disconnect();
+    }, []);
+
+    // Derived values for the slider calculator
+    const calcCo2 = (sliderValue * 60).toFixed(0);
+    const calcWaste = (sliderValue * 0.175).toFixed(2);
+    const calcWater = (sliderValue * 900).toFixed(0);
+
+    const totalRepairsDisplay = (stats.repairs || 0) + (stats.eCorrection || 0);
+
+    return (
+        <div id="sustainability-section" style={{
+            padding: '100px 0',
+            background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+            position: 'relative',
+            overflow: 'hidden',
+            color: '#14532d'
+        }}>
+
+            {/* Background Decor */}
+            <div style={{ position: 'absolute', top: -50, right: -50, opacity: 0.1 }}>
+                <Leaf size={400} color="#16a34a" />
+            </div>
+
+            <div className="container" style={{ position: 'relative', zIndex: 10 }}>
+
+                <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+                    <div style={{ display: 'inline-block', background: '#bbf7d0', color: '#15803d', padding: '6px 16px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        The Circular Economy
+                    </div>
+                    <h2 style={{ fontSize: '3.5rem', fontWeight: '800', lineHeight: 1.1, marginBottom: '20px', color: '#14532d' }}>
+                        Repair is the new <span style={{ color: '#16a34a' }}>Green.</span>
+                    </h2>
+                    <p style={{ fontSize: '1.25rem', maxWidth: '700px', margin: '0 auto', color: '#166534', opacity: 0.9 }}>
+                        Every device we repair is one less device in a landfill. Join thousands of Europeans making the smart, sustainable choice.
+                    </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '50px', alignItems: 'center' }}>
+
+                    {/* LEFT: Live Community Impact */}
+                    <div>
+                        <div className="card-glass" style={{ background: 'rgba(255,255,255,0.6)', padding: '40px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.8)' }}>
+                            <h3 style={{ fontSize: '1.5rem', marginBottom: '30px', fontWeight: '700' }}>Community Impact</h3>
+
+                            <div style={{ display: 'grid', gap: '30px' }}>
+                                {/* Stat 1 */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <div style={{ width: '60px', height: '60px', background: '#dcfce7', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#15803d' }}>
+                                        <Recycle size={30} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '2.5rem', fontWeight: '800', lineHeight: 1 }}>{isVisible ? totalRepairsDisplay : 0}</div>
+                                        <div style={{ fontSize: '0.9rem', color: '#166534', fontWeight: '600', textTransform: 'uppercase' }}>Devices Saved</div>
+                                    </div>
+                                </div>
+
+                                {/* Stat 2 */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                    <div style={{ width: '60px', height: '60px', background: '#e0f2fe', borderRadius: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0284c7' }}>
+                                        <Droplets size={30} />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '2.5rem', fontWeight: '800', lineHeight: 1 }}>{isVisible ? ((parseInt(stats.impact?.water || 0) + totalRepairsDisplay * 900)).toLocaleString() : 0}</div>
+                                        <div style={{ fontSize: '0.9rem', color: '#0369a1', fontWeight: '600', textTransform: 'uppercase' }}>Liters of Water Saved</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: User Calculator */}
+                    <div style={{ position: 'relative' }}>
+                        <div style={{ background: '#166534', color: 'white', padding: '40px', borderRadius: '24px', boxShadow: '0 25px 50px -12px rgba(22, 101, 52, 0.25)' }}>
+                            <h3 style={{ fontSize: '1.8rem', marginBottom: '10px' }}>See Your Impact</h3>
+                            <p style={{ opacity: 0.8, marginBottom: '40px' }}>Drag to see what happens when you choose repair over replacement.</p>
+
+                            <div style={{ marginBottom: '40px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontSize: '1.1rem', fontWeight: 'bold' }}>
+                                    <span>I start with...</span>
+                                    <span>{sliderValue} Device{sliderValue > 1 ? 's' : ''}</span>
+                                </div>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={sliderValue}
+                                    onChange={(e) => setSliderValue(parseInt(e.target.value))}
+                                    style={{ width: '100%', accentColor: '#4ade80', height: '6px', marginBottom: '10px', cursor: 'pointer' }}
+                                />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '16px' }}>
+                                    <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>{calcCo2} <span style={{ fontSize: '1rem', fontWeight: 'normal' }}>kg</span></div>
+                                    <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>CO2 PREVENTED</div>
+                                </div>
+                                <div style={{ background: 'rgba(255,255,255,0.1)', padding: '20px', borderRadius: '16px' }}>
+                                    <div style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '5px' }}>{calcWaste} <span style={{ fontSize: '1rem', fontWeight: 'normal' }}>kg</span></div>
+                                    <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>E-WASTE SAVED</div>
+                                </div>
+                            </div>
+
+                            <a href="/reparationer" className="btn" style={{
+                                marginTop: '30px',
+                                width: '100%',
+                                background: '#4ade80',
+                                color: '#064e3b',
+                                border: 'none',
+                                padding: '15px',
+                                fontSize: '1rem',
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '10px',
+                                textDecoration: 'none'
+                            }}>
+                                Start Impacting Now <ArrowRight size={18} />
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default SustainabilitySection;

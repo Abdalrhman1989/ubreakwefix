@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ChevronRight } from 'lucide-react';
 
 const AppointmentScheduler = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [step, setStep] = useState(1); // 1: Date/Time, 2: Details, 3: Success
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
@@ -32,7 +32,8 @@ const AppointmentScheduler = () => {
                 customerPhone: details.phone,
                 deviceModel: 'Butiksbesøg', // Special flag
                 problem: `Booket tid: ${date} kl. ${time}. Årsag: ${details.reason}`,
-                date: `${date} ${time}`
+                date: `${date} ${time}`,
+                language
             });
             setStep(3);
         } catch (err) {
@@ -123,22 +124,40 @@ const AppointmentScheduler = () => {
                     <div>
                         <label>{t('contactPage.scheduler.detailsName')}</label>
                         <div className="input-with-icon">
-                            <User size={18} />
-                            <input type="text" placeholder={t('contactPage.scheduler.detailsName')} value={details.name} onChange={e => setDetails({ ...details, name: e.target.value })} />
+                            <User size={18} className="icon" />
+                            <input
+                                type="text"
+                                className="input-field"
+                                placeholder={t('contactPage.scheduler.detailsName')}
+                                value={details.name}
+                                onChange={e => setDetails({ ...details, name: e.target.value })}
+                            />
                         </div>
                     </div>
                     <div>
                         <label>{t('contactPage.scheduler.detailsEmail')}</label>
                         <div className="input-with-icon">
-                            <Mail size={18} />
-                            <input type="email" placeholder={t('contactPage.scheduler.detailsEmail')} value={details.email} onChange={e => setDetails({ ...details, email: e.target.value })} />
+                            <Mail size={18} className="icon" />
+                            <input
+                                type="email"
+                                className="input-field"
+                                placeholder={t('contactPage.scheduler.detailsEmail')}
+                                value={details.email}
+                                onChange={e => setDetails({ ...details, email: e.target.value })}
+                            />
                         </div>
                     </div>
                     <div>
                         <label>{t('contactPage.scheduler.detailsPhone')}</label>
                         <div className="input-with-icon">
-                            <Phone size={18} />
-                            <input type="tel" placeholder={t('contactPage.scheduler.detailsPhone')} value={details.phone} onChange={e => setDetails({ ...details, phone: e.target.value })} />
+                            <Phone size={18} className="icon" />
+                            <input
+                                type="tel"
+                                className="input-field"
+                                placeholder={t('contactPage.scheduler.detailsPhone')}
+                                value={details.phone}
+                                onChange={e => setDetails({ ...details, phone: e.target.value })}
+                            />
                         </div>
                     </div>
                     <div>

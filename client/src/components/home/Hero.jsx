@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // HMR Trigger
 import SearchBox from '../SearchBox';
 
 const Hero = () => {
@@ -34,13 +34,28 @@ const Hero = () => {
                     <SearchBox />
                 </div>
 
-                <div style={{ marginTop: '40px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                        <div style={{ width: '10px', height: '10px', background: '#22C55E', borderRadius: '50%' }}></div>
-                        Åbent nu: 10:00 - 18:00
+                <div style={{ marginTop: '40px', display: 'flex', gap: '30px', justifyContent: 'center', flexWrap: 'wrap' }}>
+
+                    {/* Trustpilot - Logo includes brand name, so just score */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ background: 'white', padding: '4px 8px', borderRadius: '4px', display: 'flex', alignItems: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            <img src="/icons/tp.svg" alt="Trustpilot" style={{ height: '26px', width: 'auto' }} />
+                        </div>
+                        <div style={{ textAlign: 'left' }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#00b67a' }}>4.9/5</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Baseret på over 500+ anmeldelser</div>
+                        </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                        <span style={{ color: '#FBBF24' }}>★★★★★</span> 4.9/5 på Trustpilot
+
+                    {/* Google */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ width: '30px', height: '30px', background: 'white', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+                            <img src="/icons/google.svg" alt="Google" style={{ width: '18px', height: '18px' }} />
+                        </div>
+                        <div style={{ textAlign: 'left' }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '1rem', color: '#3B82F6' }}>4.8/5 på Google</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Baseret på over 500+ anmeldelser</div>
+                        </div>
                     </div>
                 </div>
             </div>

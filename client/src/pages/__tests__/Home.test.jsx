@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Home from '../Home';
 import * as LanguageContext from '../../context/LanguageContext';
 
@@ -26,9 +27,11 @@ vi.mock('../../components/home/BookingSection', () => ({ default: () => <div dat
 describe('Home Page', () => {
     it('renders home page content successfully', () => {
         render(
-            <BrowserRouter>
-                <Home />
-            </BrowserRouter>
+            <HelmetProvider>
+                <BrowserRouter>
+                    <Home />
+                </BrowserRouter>
+            </HelmetProvider>
         );
 
         expect(screen.getByText('hero.title')).toBeInTheDocument();

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import RepairsIndex from '../RepairsIndex';
 import axios from 'axios';
 
@@ -31,9 +32,11 @@ describe('RepairsIndex Page', () => {
 
     const renderRepairsIndex = () => {
         return render(
-            <BrowserRouter>
-                <RepairsIndex />
-            </BrowserRouter>
+            <HelmetProvider>
+                <BrowserRouter>
+                    <RepairsIndex />
+                </BrowserRouter>
+            </HelmetProvider>
         );
     };
 

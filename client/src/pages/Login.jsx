@@ -90,13 +90,61 @@ const Login = () => {
                         </button>
                     </form>
 
-                    <div style={{ marginTop: '20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                        {t('auth.noAccount')} <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('auth.createOne')}</Link>
-                    </div>
+                    {t('auth.noAccount')} <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('auth.createOne')}</Link>
                 </div>
+
+                {/* Developer Tool */}
+                <DeveloperLogin onQuickLogin={(email, password) => {
+                    setFormData({ email, password });
+                    // Slight delay to allow state update or just directly call login wrapper if needed, 
+                    // but here we just prefill. A more robust way is to trigger submit or call login directly.
+                    // Let's call login directly to be "Quick".
+                    login(email, password).then(res => {
+                        if (res.success) {
+                            if (res.user && res.user.role === 'admin') navigate('/admin');
+                            else if (res.user && res.user.role === 'business') navigate('/business/dashboard');
+                            else navigate('/profile');
+                        } else {
+                            setError(res.error);
+                        }
+                    });
+                }} />
             </div>
         </div>
+
     );
 };
+
+// Developer Login Tool Component
+const DeveloperLogin = ({ onQuickLogin }) => (
+    <div style={{ marginTop: '30px', borderTop: '1px solid var(--border-medium)', paddingTop: '20px' }}>
+        <h3 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '10px', textAlign: 'center' }}>
+            🛠 Developer Quick Login
+        </h3>
+        <div style={{ display: 'grid', gap: '10px', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <button
+                type="button"
+                onClick={() => onQuickLogin('admin@example.com', 'admin123')}
+                style={{ padding: '8px', fontSize: '0.8rem', background: '#333', color: '#fff', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+            >
+                Admin
+            </button>
+            <button
+                type="button"
+                onClick={() => onQuickLogin('business@example.com', 'business123')}
+                style={{ padding: '8px', fontSize: '0.8rem', background: '#444', color: '#fff', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+            >
+                Business
+            </button>
+            <button
+                type="button"
+                onClick={() => onQuickLogin('user@example.com', 'user123')}
+                style={{ padding: '8px', fontSize: '0.8rem', background: '#555', color: '#fff', borderRadius: '4px', border: 'none', cursor: 'pointer' }}
+            >
+                User
+            </button>
+        </div>
+    </div>
+);
 
 export default Login;

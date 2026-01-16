@@ -18,9 +18,9 @@ describe('Contact Page', () => {
     it('renders contact information correctly', () => {
         render(<Contact />);
 
-        expect(screen.getByText('nav.contact')).toBeInTheDocument();
-        expect(screen.getByText('Butiksinformation')).toBeInTheDocument();
-        expect(screen.getByText('Fonefix Odense')).toBeInTheDocument();
+        expect(screen.getByText('contactPage.title')).toBeInTheDocument();
+        expect(screen.getByText('contactPage.subtitle')).toBeInTheDocument();
+        expect(screen.getByText(/Skibhusvej 109/)).toBeInTheDocument();
         expect(screen.getByText('kontakt@ubreakwefix.dk')).toBeInTheDocument();
         expect(screen.getByTestId('map-section')).toBeInTheDocument();
     });

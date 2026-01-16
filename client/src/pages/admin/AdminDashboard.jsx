@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Package, Smartphone, Wrench, Calendar, TrendingUp, Activity, User, AlertCircle } from 'lucide-react';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState({ brands: 0, models: 0, repairs: 0, bookings: 0 });
     const [revenueData, setRevenueData] = useState([]);
     const [recentActivity, setRecentActivity] = useState([]);
@@ -114,6 +116,17 @@ const AdminDashboard = () => {
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/models'}>Manage Models</button>
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/users'}>Manage Users</button>
                     <button className="btn btn-primary" onClick={() => window.location.href = '/admin/shop-orders'}>View Orders</button>
+                    <button className="btn btn-primary" onClick={() => window.location.href = '/admin/sell-requests'}>Manage Buybacks</button>
+                    <button className="btn btn-primary" onClick={() => window.location.href = '/admin/screen-requests'}>Screen Requests</button>
+                </div>
+            </div>
+
+            {/* Settings */}
+            <div className="card-glass" style={{ marginTop: '24px', padding: '24px', borderRadius: '16px' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px' }}>Settings & Pricing</h3>
+                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                    <button className="btn btn-primary" onClick={() => navigate('/admin/pricing')}>Price Manager</button>
+                    <button className="btn btn-outline" onClick={() => navigate('/admin/conditions')}>Condition Settings</button>
                 </div>
             </div>
 

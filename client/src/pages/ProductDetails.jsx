@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import { Helmet } from 'react-helmet-async';
+import { useLanguage } from '../context/LanguageContext';
 import { ShoppingBag, ArrowLeft, Check, Truck } from 'lucide-react';
 
 const ProductDetails = () => {
@@ -10,6 +12,7 @@ const ProductDetails = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
+    const { t } = useLanguage();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -25,11 +28,45 @@ const ProductDetails = () => {
         fetchProduct();
     }, [id]);
 
-    if (loading) return <div className="container" style={{ padding: '50px' }}>Loading...</div>;
-    if (!product) return <div className="container" style={{ padding: '50px' }}>Product not found.</div>;
+    if (loading) return <div className="container" style={{ padding: '50px' }}>{t('shop.loadingProduct')}</div>;
+    if (!product) return <div className="container" style={{ padding: '50px' }}>{t('shop.notFound')}</div>;
+
+    const seoTitle = t('seo.shop.productTitle').replace('{product}', product.name);
+    const seoDesc = t('seo.shop.productDesc')
+        .replace('{product}', product.name)
+        .replace('{desc}', product.description?.substring(0, 100) || '')
+        .replace('{price}', product.price);
+
+    const jsonLd = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.image_url,
+        "description": product.description,
+        "sku": product.id,
+        "brand": {
+            "@type": "Brand",
+            "name": product.specs?.brand || "UBreak WeFix"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": window.location.href,
+            "priceCurrency": "DKK",
+            "price": product.price,
+            "availability": product.stock_quantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/RefurbishedCondition"
+        }
+    };
 
     return (
         <div className="container" style={{ padding: '60px 20px', minHeight: '80vh' }}>
+            <Helmet>
+                <title>{seoTitle}</title>
+                <meta name="description" content={seoDesc} />
+                <script type="application/ld+json">
+                    {JSON.stringify(jsonLd)}
+                </script>
+            </Helmet>
             <button
                 onClick={() => navigate('/shop')}
                 style={{
@@ -38,7 +75,7 @@ const ProductDetails = () => {
                     color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '30px'
                 }}
             >
-                <ArrowLeft size={18} /> Back to Shop
+                <ArrowLeft size={18} /> {t('shop.backToShop')}
             </button>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px' }}>
@@ -96,10 +133,10 @@ const ProductDetails = () => {
 
                     <div style={{ marginBottom: '30px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', color: '#10b981' }}>
-                            <Check size={18} /> <span>In Stock</span>
+                            <Check size={18} /> <span>{t('shop.inStock')}</span>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)' }}>
-                            <Truck size={18} /> <span>Free shipping on orders over 500 DKK</span>
+                            <Truck size={18} /> <span>{t('shop.freeShipping')}</span>
                         </div>
                     </div>
 
@@ -119,7 +156,7 @@ const ProductDetails = () => {
                             cursor: 'pointer'
                         }}
                     >
-                        <ShoppingBag size={20} /> Add to Cart
+                        <ShoppingBag size={20} /> {t('shop.addToCart')}
                     </button>
                 </div>
             </div>
