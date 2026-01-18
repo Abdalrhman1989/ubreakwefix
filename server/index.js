@@ -1211,26 +1211,44 @@ app.post('/api/shipping/droppoints', async (req, res) => {
     }
 });
 
-if (require.main === module) {
-    app.put('/api/admin/bookings/:id/status', async (req, res) => {
-        const { status } = req.body;
-        const { id } = req.params;
+// --- DEBUGGING CRASH ---
+app.get('/api/debug-status', async (req, res) => {
+    try {
+        const dbType = db.isPostgres ? "Postgres" : "SQLite";
+        const envUrl = process.env.POSTGRES_URL ? "Set (Length: " + process.env.POSTGRES_URL.length + ")" : "Not Set";
+        let tables = [];
         try {
-            const booking = await db.get("SELECT * FROM bookings WHERE id = ?", [id]);
-            if (!booking) return res.status(404).json({ error: "Booking not found" });
+            if (db.isPostgres) {
+                const res = await db.query("SELECT table_name FROM information_schema.tables WHERE table_schema='public'");
+                tables = res.rows.map(t => t.table_name);
+            } else {
+                tables = await db.all("SELECT name FROM sqlite_master WHERE type='table'");
+                tables = tables.map(t => t.name);
+            }
+        } catch (e) { tables = ["Error fetching tables: " + e.message]; }
 
-            await db.run("UPDATE bookings SET status = ? WHERE id = ?", [status, id]);
+        res.json({
+            status: "running",
+            dbType,
+            envUrl,
+            tables
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message, stack: err.stack });
+    }
+});
+// -----------------------
 
-            sendStatusUpdate(booking, status);
-            res.json({ success: true, status });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    });
-
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
-}
-
+const startServer = async () => {
+    try {
+        await db.init();
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (err) {
+        console.error("FATAL: Failed to start server:", err);
+        process.exit(1);
+    }
+};
+startServer();
 module.exports = app;
