@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import Stepper from '../components/Stepper';
 import { Check, Smartphone, Battery, Zap, ChevronRight, Speaker, Mic } from 'lucide-react';
@@ -10,7 +11,10 @@ import { Helmet } from 'react-helmet-async';
 const RepairPage = () => {
     const { modelId } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const mode = searchParams.get('mode'); // Capture mode
     const { addToCart, cart, getCartTotal } = useCart();
+    const { user } = useAuth();
     const { t } = useLanguage();
 
     const [model, setModel] = useState(null);
@@ -108,7 +112,7 @@ const RepairPage = () => {
             <div className="container" style={{ paddingTop: '40px' }}>
                 <Stepper currentStep={2} />
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px', flexWrap: 'wrap' }}>
                     <Link
                         to={`/reparationer?brand=${model.brand_slug || model.brand_id}`}
                         style={{
@@ -129,10 +133,10 @@ const RepairPage = () => {
                     </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '40px', alignItems: 'start' }}>
+                <div className="repair-layout">
 
                     {/* LEFT: REPAIRS LIST */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+                    <div className="repair-grid">
                         {repairs.map(repair => (
                             <div key={repair.id} className="card-glass" style={{ padding: '24px', background: 'var(--bg-surface)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
@@ -144,7 +148,14 @@ const RepairPage = () => {
                                         </div>
                                     </div>
                                     <div style={{ background: 'rgba(37, 99, 235, 0.1)', color: 'var(--primary)', padding: '5px 10px', borderRadius: '6px', fontWeight: 'bold' }}>
-                                        kr {repair.price}
+                                        {user && user.role === 'business' ? (
+                                            <>
+                                                <span style={{ textDecoration: 'line-through', marginRight: '6px', fontSize: '0.8em', opacity: 0.7 }}>kr {repair.price}</span>
+                                                kr {(repair.price * 0.8).toFixed(0)}
+                                            </>
+                                        ) : (
+                                            `kr ${repair.price}`
+                                        )}
                                     </div>
                                 </div>
                                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
@@ -158,8 +169,8 @@ const RepairPage = () => {
                     </div>
 
                     {/* RIGHT: SIDEBAR (Sticky) */}
-                    <div>
-                        <div style={{ background: 'var(--bg-surface)', padding: '30px', borderRadius: '16px', boxShadow: 'var(--shadow-lg)', position: 'sticky', top: '100px', border: '1px solid var(--border-light)' }}>
+                    <div className="repair-sidebar-wrapper">
+                        <div className="repair-sidebar">
                             <h3 style={{ color: 'var(--primary)', marginBottom: '20px', fontSize: '1.3rem' }}>Oversigt</h3>
                             <div style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '15px', marginBottom: '15px', color: 'var(--text-main)', fontWeight: '600' }}>
                                 {model.brand_name} {model.name}
@@ -171,7 +182,9 @@ const RepairPage = () => {
                                 cart.map((item, i) => (
                                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '0.95rem', color: 'var(--text-main)' }}>
                                         <span>{item.repairName}</span>
-                                        <span style={{ fontWeight: 'bold' }}>kr {item.price}</span>
+                                        <span style={{ fontWeight: 'bold' }}>
+                                            kr {user && user.role === 'business' ? (item.price * 0.8).toFixed(0) : item.price}
+                                        </span>
                                     </div>
                                 ))
                             )}
@@ -198,7 +211,9 @@ const RepairPage = () => {
                                         navigate('/book', {
                                             state: {
                                                 deviceModel: deviceModel,
-                                                problem: problemUpdates ? `Valgte reparationer: ${problemUpdates}` : ''
+                                                price: totalPrice,
+                                                problem: problemUpdates ? `Valgte reparationer: ${problemUpdates}` : '',
+                                                isPriority: mode === 'priority' || (user && user.role === 'business') // Auto-flag for business or mode
                                             }
                                         });
                                     }}
@@ -221,6 +236,44 @@ const RepairPage = () => {
 
                 </div>
             </div>
+
+            <style>{`
+                .repair-layout {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 40px;
+                    align-items: start;
+                }
+
+                .repair-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+
+                .repair-sidebar {
+                    background: var(--bg-surface);
+                    padding: 30px;
+                    borderRadius: 16px;
+                    boxShadow: var(--shadow-lg);
+                    border: 1px solid var(--border-light);
+                }
+
+                @media (min-width: 900px) {
+                    .repair-layout {
+                        grid-template-columns: 1fr 350px;
+                    }
+
+                    .repair-grid {
+                        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                    }
+
+                    .repair-sidebar {
+                        position: sticky;
+                        top: 100px;
+                    }
+                }
+            `}</style>
         </div >
     );
 };

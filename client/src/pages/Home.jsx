@@ -14,8 +14,11 @@ import Reviews from '../components/home/Reviews';
 
 import BookingSection from '../components/home/BookingSection';
 import SustainabilitySection from '../components/home/SustainabilitySection';
+import RecyclingSection from '../components/home/RecyclingSection';
 import WalkInService from '../components/home/WalkInService';
 import MotherboardRepairSection from '../components/home/MotherboardRepairSection';
+import PlayStationSection from '../components/home/PlayStationSection';
+import DataRecoverySection from '../components/home/DataRecoverySection';
 
 import { useLanguage } from '../context/LanguageContext';
 
@@ -223,6 +226,11 @@ const Home = () => {
             <Features />
 
             <SustainabilitySection />
+            <RecyclingSection />
+            <DataRecoverySection />
+
+            {/* PlayStation Section */}
+            <PlayStationSection />
 
             {/* WALK-IN SERVICE INFO */}
             <WalkInService />

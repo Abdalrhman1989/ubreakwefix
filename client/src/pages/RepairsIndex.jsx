@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Smartphone, Tablet, Watch, HelpCircle } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Smartphone, Tablet, Watch, HelpCircle, Shield, Zap } from 'lucide-react';
 import SearchBox from '../components/SearchBox';
 import { useLanguage } from '../context/LanguageContext';
 import { Helmet } from 'react-helmet-async';
@@ -17,6 +17,8 @@ const RepairsIndex = () => {
     const [showFindModel, setShowFindModel] = useState(false);
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
+
+    const mode = searchParams.get('mode'); // 'priority' for B2B
 
     // Specific brand list order
     const priorityBrands = ['Apple', 'Samsung', 'OnePlus', 'Google', 'Huawei', 'LG', 'Motorola', 'Oppo', 'Realme', 'Xiaomi'];
@@ -199,6 +201,53 @@ const RepairsIndex = () => {
             </Helmet>
 
             <div className="container">
+
+                {/* PRIORITY MODE BANNER */}
+                {mode === 'priority' && (
+                    <div style={{
+                        background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
+                        borderRadius: '16px',
+                        padding: '30px',
+                        marginBottom: '40px',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px',
+                        boxShadow: '0 10px 25px -5px rgba(30, 58, 138, 0.4)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}>
+                        {/* Decorative Background Elements */}
+                        <div style={{
+                            position: 'absolute', top: '-50%', right: '-10%',
+                            width: '300px', height: '300px',
+                            background: 'rgba(255,255,255,0.1)',
+                            borderRadius: '50%', blur: '40px'
+                        }}></div>
+
+                        <div style={{
+                            background: 'rgba(255,255,255,0.2)',
+                            padding: '16px',
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(5px)'
+                        }}>
+                            <Shield size={32} color="white" />
+                        </div>
+
+                        <div style={{ flex: 1, zIndex: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '5px' }}>
+                                <Zap size={16} fill="gold" color="gold" />
+                                <span style={{ fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.8rem', color: '#fbbf24' }}>
+                                    Business Priority Mode Active
+                                </span>
+                            </div>
+                            <h2 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '5px' }}>priority Repair Booking</h2>
+                            <p style={{ color: 'rgba(255,255,255,0.9)', margin: 0 }}>
+                                Skip the queue. Your company devices get immediate bench priority.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 {/* Header Section */}
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>

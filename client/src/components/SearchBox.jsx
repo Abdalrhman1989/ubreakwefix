@@ -3,7 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Search, Smartphone, Zap, Layers, Clock, ArrowRight, Sparkles, Droplets } from 'lucide-react';
 
+import { useLanguage } from '../context/LanguageContext';
+
 const SearchBox = () => {
+    const { t } = useLanguage();
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
@@ -62,7 +65,7 @@ const SearchBox = () => {
             <div style={{ position: 'relative' }}>
                 <input
                     type="text"
-                    placeholder="Search model (e.g. 'iPhone 13')"
+                    placeholder={t('hero.searchPlaceholder')}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     style={{
@@ -111,6 +114,7 @@ const SearchBox = () => {
                                 {/* --- SUGGESTION MODE (Clean List) --- */}
                                 {!aiIntent && (
                                     <div
+                                        data-testid="search-result-item"
                                         onClick={() => handleSelect(model.id)}
                                         style={{
                                             padding: '12px 20px',
@@ -141,6 +145,7 @@ const SearchBox = () => {
                                 {aiIntent && (
                                     <>
                                         <div
+                                            data-testid="search-result-item"
                                             onClick={() => handleSelect(model.id)}
                                             style={{
                                                 padding: '12px 20px',

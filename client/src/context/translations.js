@@ -1,4 +1,799 @@
 export const translations = {
+    en: {
+        nav: {
+            home: "Home",
+            repairs: "Repairs",
+            about: "About Us",
+            blog: "Blog",
+            business: "Business",
+            contact: "Contact",
+            bookNow: "Book Now",
+            login: "Login",
+            myAccount: "My Account"
+        },
+
+        hero: {
+            new: "New: iPhone 16 Repairs Available",
+            title: "The Future of Repair.",
+            subtitle: "Get a quote instantly, certified experts and lifetime warranty. We fix it, or you don't pay.",
+            searchPlaceholder: "Search for your device (e.g. iPhone 13)..."
+        },
+        checkout: {
+            namePlaceholder: "John Doe",
+            emailPlaceholder: "john@example.com",
+            phonePlaceholder: "+45 12 34 56 78",
+            streetPlaceholder: "Street name and number",
+            zipPlaceholder: "1234",
+            cityPlaceholder: "Copenhagen",
+            pay: "Confirm Order",
+            processing: "Processing...",
+            vatIncluded: "Incl. 25% VAT",
+            total: "Total",
+            orderConfirmed: "Order Confirmed",
+            thankYou: "Thank you for your order.",
+            orderReceived: "We have received your order and payment.",
+            backToHome: "Back to Home",
+            viewOrders: "View my orders",
+            errorTerms: "Please accept the terms and conditions.",
+            errorAddressDelivery: "Please fill in delivery address.",
+            terms: "I accept the terms and conditions",
+            sendDeviceFree: "Send device to us",
+            buyLabel: "Buy label",
+            sendSelf: "Send yourself",
+            selectCarrier: "Select Carrier",
+            includeNote: "Remember to include a note",
+            sendPackageTo: "Send package to:",
+            serviceMethod: "Service Method",
+            walkIn: "Visit our shop",
+            walkInDesc: "Done same day",
+            shopAddress: "Skibhusvej 109, 5000 Odense",
+            showOnMap: "Show on map",
+            selectDate: "Select Date",
+            selectTime: "Select Time",
+            payment: "Payment",
+            payOnline: "Pay Online",
+            payInStore: "Pay in Store",
+            free: "FREE",
+            buyLabel: "Buy return label",
+            sendSelf: "I send myself",
+            labelEmailInfo: "We'll email you a label to print.",
+            loadingShipping: "Loading shipping options...",
+            selectDropPoint: "Select Drop Point",
+            orderSummary: "Order Summary",
+            private: "Private",
+            business: "Business",
+            completeBooking: "Complete Booking",
+            deliveryMethod: "Delivery Method",
+            ownShipping: "Own Shipping",
+            deliveryStub: "Delivery",
+            errorAddressLabel: "Please enter address for return label.",
+            backToShop: "Back to Shop",
+            customerType: "Customer Type",
+            yourAddress: "Your Address",
+            confirmBooking: "Confirm Booking",
+            notesPlaceholder: "Notes (REMEMBER TO INCLUDE PASSCODE FOR YOUR DEVICE)"
+        },
+        business: {
+            seo: {
+                title: "Business Agreement - Electronics Repair for Companies | UBreak WeFix",
+                desc: "Get a tailored business agreement with fixed low prices, priority service, and monthly invoicing. We keep your business running."
+            },
+            hero: {
+                badge: "BUSINESS AGREEMENT",
+                title: "Keep your business running",
+                subtitle: "Get a tailored business agreement with fixed low prices, priority service, and monthly invoicing.",
+                cta: "Create Business Account"
+            },
+            features: [
+                { title: 'Priority Service', desc: 'Your devices come first in line. No waiting time.' },
+                { title: 'Monthly Invoice', desc: 'Combined invoicing for all repairs. Easy accounting.' },
+                { title: 'Pick-up & Delivery', desc: 'We pick up and deliver devices in the local area.' },
+                { title: 'Personal Contact', desc: 'Fixed contact person who knows your needs.' }
+            ]
+        },
+        auth: {
+            loginTitle: "Login to your account",
+            registerTitle: "Create new account",
+            email: "Email",
+            password: "Password",
+            confirmPassword: "Confirm Password",
+            name: "Full Name",
+            phone: "Phone Number",
+            address: "Address",
+            loginBtn: "Login",
+            registerBtn: "Create Account",
+            noAccount: "Don't have an account?",
+            hasAccount: "Already have an account?",
+            createOne: "Create one here",
+            loginHere: "Login here",
+            logout: "Logout",
+            welcome: "Welcome",
+            myDetails: "My Details",
+            myOrders: "My Orders/Repairs",
+            noOrders: "No previous orders found."
+        },
+        meta: {
+            title: "UBreak WeFix - iPhone, Samsung & Computer Repair | Odense",
+            desc: "Professional repair of iPhone, Samsung, and computers in Odense. We also offer Custom PC builds, screen replacements, and battery replacements. Lifetime warranty on screens.",
+            keywords: "repair iphone odense, samsung repair, pc build, custom pc, screen replacement, battery replacement"
+        },
+        stats: {
+            technicians: "Certified Technicians",
+            repairs: "Completed Repairs",
+            warranty: "Months Warranty",
+            happy_customers: "Happy Customers",
+            trustpilot: "Trustpilot Score"
+        },
+        home: {
+            howItWorks: "How It Works",
+            popularRepairs: "Popular Repairs",
+            whyChooseUs: "Why Choose Us?",
+            whyChooseUsSubtitle: "We care about quality and great service. See what we offer.",
+            reviewsTitle: "What our customers say",
+            googleReview: "Google Review",
+            seeAllGoogle: "See all reviews on Google",
+            trustpilotBadge: "4.9/5 Trustpilot"
+        },
+        features: {
+            experienced: {
+                title: "Experienced Technicians",
+                desc: "Over 10 years of experience with all brands."
+            },
+            walkin: {
+                title: "Walk-in Service",
+                desc: "No appointment necessary."
+            },
+            quality: {
+                title: "High Quality Parts",
+                desc: "We use only the best spare parts."
+            },
+            diagnosis: {
+                title: "Free Diagnosis",
+                desc: "We examine your device for free."
+            },
+            buysell: {
+                title: "Buy / Sell",
+                desc: "We give new life to used electronics."
+            },
+            warranty: {
+                title: "24 Month Warranty",
+                desc: "Full peace of mind on all repairs."
+            }
+        },
+        trust: {
+            trustpilot: "4.9/5 on Trustpilot",
+            reviews: "Based on over 500+ reviews",
+            google: "4.8/5 on Google",
+            warranty: "Lifetime Warranty",
+            warrantyDesc: "On all screen replacements",
+            warranty24: "24 Months Warranty",
+            delivery: "Fast Delivery",
+            return: "14 Day Return Policy",
+            technician: "Trained Technician",
+            parts: "Quality Assured Parts"
+        },
+        about: {
+            title: "About UBreak WeFix",
+            subtitle: "Your reliable partner in electronics repair.",
+            missionTitle: "Our Mission",
+            missionText: "UBreak WeFix (Fonefix) was founded with a simple mission: To deliver fast, reliable, and affordable electronics repairs without compromising on quality.",
+            missionText2: "Our team consists of certified technicians who are passionate about technology. We know how important your phone or computer is to your daily life, and that's why we always strive to repair it as quickly as possible – often while you wait.",
+            valuesTitle: "Our Values",
+            valQuality: "Quality",
+            valQualityDesc: "We use only spare parts of the highest quality.",
+            valTransparency: "Transparency",
+            valTransparencyDesc: "The price you see is the price you pay. No hidden fees.",
+            valSustainability: "Sustainability",
+            valSustainabilityDesc: "By repairing, we extend the life of electronics and reduce e-waste."
+        },
+        footer: {
+            slogan: "Your reliable partner in electronics repair.",
+            contact: "Contact Us",
+            hours: "OPENING HOURS",
+            monFri: "Monday - Friday",
+            sat: "Saturday",
+            information: "Information",
+            terms: "Terms & Conditions",
+            privacy: "Privacy Policy",
+            payment: "Payment Terms",
+            shipping: "Shipping & Delivery",
+            return: "Returns & Refunds",
+            cookiePolicy: "Cookie Policy",
+            socials: "Follow us"
+        },
+        blog: {
+            title: "Blog & News",
+            subtitle: "Tips, tricks, and guides for your electronics",
+            readMore: "Read more",
+            published: "Published",
+            writtenBy: "Written by",
+            backToBlog: "Back to blog",
+            relatedPosts: "Related Articles"
+        },
+        serviceCards: {
+            repair: {
+                title: "Repair",
+                desc: "Get your device fixed today"
+            },
+            sellPhone: {
+                title: "Sell Your Phone",
+                desc: ""
+            },
+            sellScreen: {
+                title: "Sell Your Broken Screen",
+                desc: ""
+            }
+        },
+        common: {
+            readMore: "Read more",
+            submit: "Send",
+            back: "Back",
+            next: "Next"
+        },
+        cta: {
+            title: "Ready to get your device fixed?",
+            subtitle: "Book a time in store or send your device to us. We are ready to help.",
+            btn: "Start Repair"
+        },
+        faq: {
+            title: "Frequently Asked Questions",
+            q1: "How long does a screen repair take?",
+            a1: "A typical iPhone screen repair takes approx. 30-45 minutes. Samsung and other brands can take up to 60 minutes.",
+            q2: "Do I lose my warranty upon repair?",
+            a2: "We use original parts, so in many cases provision is maintained. We always provide our own 24-month warranty on work performed.",
+            q3: "Do I need to book an appointment?",
+            a3: "It is not necessary, but we recommend it to avoid waiting time. We also accept walk-ins.",
+            q4: "What if you can't repair my phone?",
+            a4: "Then you pay nothing! We operate on a 'No Cure, No Pay' basis."
+        },
+        booking: {
+            title: "Online Booking",
+            subtitle: "Find a time that suits you and skip the line.",
+            selectDate: "Select a date",
+            selectTime: "Select a time",
+            yourDetails: "Your Details",
+            name: "Your Name",
+            email: "Your Email",
+            phone: "Your Phone Number",
+            device: "Device (e.g. iPhone 13)",
+            issue: "Description of the problem",
+            submit: "Confirm Booking",
+            success: "Thank you for your booking! We have sent a confirmation by email."
+        },
+        customPC: {
+            title: "BUILD YOUR",
+            titleAccent: "DREAM PC",
+            subtitle: "Start here. Choose your category, and our smart builder guides you to the perfect machine.",
+            gaming: {
+                title: "Gaming Elite",
+                desc: "Ultra-high FPS. Ray Tracing. RGB. Built to dominate in your favorite games."
+            },
+            workstation: {
+                title: "Pro Workstation",
+                desc: "Video editing, 3D rendering, programming. Stable performance for heavy tasks."
+            },
+            office: {
+                title: "Home Office / Budget",
+                desc: "Fast, quiet, and reliable. Perfect for study, office suite, and web."
+            },
+            cta: "Start Configuration"
+        },
+        motherboard: {
+            title: "Professional Motherboard Repair",
+            subtitle: "We are experts in micro-soldering and advanced troubleshooting at component level. Don't give up on your device before talking to us.",
+            chipLevel: "Chip-level Repair",
+            chipLevelDesc: "Replacement of IC chips, including Audio, Power, and Touch IC.",
+            liquidDamage: "Liquid Damage",
+            liquidDamageDesc: "Advanced ultrasonic cleaning and repair of corrosion damage.",
+            dataRecovery: "Data Recovery",
+            dataRecoveryDesc: "We save your photos and files, even from dead devices.",
+            cta: "Read more about Microsoldering",
+            microsolderingPage: {
+                title: "Advanced Microsoldering",
+                subtitle: "We bring dead devices to life with precision work.",
+                startDiagnostic: "Start Diagnostic Case",
+                steps: {
+                    title: "How it works",
+                    step1: "Drop-off",
+                    step1Desc: "We receive your device and register the case.",
+                    step2: "Diagnosis",
+                    step2Desc: "Our technicians troubleshoot at component level.",
+                    step3: "Quote",
+                    step3Desc: "You receive a non-binding offer for repair."
+                },
+                trust: {
+                    certified: "Certified Technicians",
+                    equipment: "Lab-Grade Equipment",
+                    guarantee: "No Cure No Pay"
+                }
+            }
+        },
+        contactPage: {
+            title: "Contact Us",
+            subtitle: "Have questions or want to book a time? We are ready to help.",
+            tabMessage: "Send Message",
+            tabBook: "Book Time",
+            messageTitle: "Send us a message",
+            messageSubtitle: "Fill out the form below, and we will get back to you as soon as possible.",
+            bookTitle: "Book a store visit",
+            bookSubtitle: "Choose when it suits you to come by.",
+            findUs: "Find Us",
+            address: "Address",
+            phone: "Phone",
+            email: "Email",
+            hours: "Opening Hours",
+            monFri: "Monday - Friday",
+            sat: "Saturday",
+            sun: "Sunday",
+            closed: "Closed",
+            reviews: "reviews",
+            readTrustpilot: "Read reviews on Trustpilot",
+            form: {
+                name: "Name",
+                namePlaceholder: "Your full name",
+                email: "Email",
+                emailPlaceholder: "your@email.com",
+                subject: "Subject",
+                subjectPlaceholder: "What is it about?",
+                message: "Message",
+                messagePlaceholder: "Write your message here...",
+                send: "Send Message",
+                sending: "Sending...",
+                successTitle: "Message Sent!",
+                successText: "We have received your message and will get back to you as soon as possible.",
+                sendNew: "Send a new message",
+                error: "An error occurred. Please try again later."
+            },
+            scheduler: {
+                step1: "1. Time",
+                step2: "2. Contact Info",
+                selectDate: "Select Date",
+                selectTime: "Select Time",
+                next: "Next",
+                detailsName: "Name",
+                detailsEmail: "Email",
+                detailsPhone: "Phone",
+                detailsReason: "Reason (optional)",
+                detailsReasonPlaceholder: "E.g. Screen replacement iPhone 13",
+                back: "Back",
+                confirm: "Confirm Booking",
+                booking: "Booking...",
+                successTitle: "Thank you for your booking!",
+                successText: "We look forward to seeing you",
+                bookNew: "Book another appointment"
+            }
+        },
+        repairs: {
+            selectDevice: "Select your device",
+            selectSeries: "Select your series",
+            selectModel: "Select your model",
+            subtitle: "We repair all major brands and models. Select your device to see prices.",
+            backToBrands: "Back to brands",
+            backToSeries: "Back to series",
+            viewRepairs: "View repairs",
+            noModels: "No models found."
+        },
+        seo: {
+            repairsIndex: {
+                title: "iPhone, Samsung & Computer Repair | UBreak WeFix",
+                desc: "We repair all brands. Get an instant quote. Lifetime warranty on screen replacements.",
+                titleBrand: "{brand} Repair - Odense | UBreak WeFix",
+                titleFamily: "{family} Repair - Odense | Screen & Battery",
+                descBrand: "Professional repair of {brand} devices in Odense. Original parts and 24 month warranty.",
+                descFamily: "Fix your {family} today. We replace screens, batteries and more in under 60 minutes."
+            },
+            repairPage: {
+                title: "{model} Repair Odense | Screen, Battery & More",
+                desc: "Get your {model} repaired at UBreak WeFix. We offer fast screen, battery, and back glass replacement. See prices here."
+            },
+            shop: {
+                title: "Buy iPhones, Cases & Accessories | UBreak WeFix Shop",
+                desc: "Buy screen protectors, cases, chargers, and refurbished iPhones with warranty. Fast delivery and great service.",
+                productTitle: "{product} | UBreak WeFix Shop",
+                productDesc: "Buy {product}. {desc} Price: {price} DKK. Fast delivery and 14 day return policy."
+            },
+            contact: {
+                title: "Contact Us | UBreak WeFix",
+                desc: "Contact UBreak WeFix in Odense. We repair iPhone, Samsung and computer. Find us at Skibhusvej 109 or book an appointment online."
+            },
+            about: {
+                title: "About UBreak WeFix | Your Electronics Expert in Odense",
+                desc: "Read about UBreak WeFix - Odense's leading repair shop for iPhone, Samsung, and computers. We value quality, transparency, and sustainability.",
+                keywords: "about us, ubreak wefix, electronics repair odense, iphone shop, sustainable electronics"
+            }
+        },
+        aboutContent: {
+            bannerTitle: "We fix it – fast, safely, and professionally",
+            whyChooseTitle: "Why choose UBreak WeFix?",
+            whyChoose: [
+                { title: "Free Diagnosis", desc: "Drop by with your device, and our staff will help find the fault and provide a repair quote." },
+                { title: "Great Offers", desc: "If you find a better offer, we'll give you a free soft serve." },
+                { title: "Extensive Product Knowledge", desc: "We repair iPhone, Samsung, Huawei, iPad, OnePlus, Sony, and MacBook." },
+                { title: "Fast Repair Times", desc: "We perform most repairs while you wait or within a day." },
+                { title: "24 Month Warranty", desc: "We always provide a 24-month warranty on all repairs, ensuring you peace of mind." },
+                { title: "No Appointment Needed", desc: "Drop by whenever it suits you. We often repair while you wait." }
+            ],
+            reliableTitle: "Known as Odense's most reliable and fastest mobile repairer",
+            reliableDesc: "Almost all our customers return when they need help again.",
+            location: "You find us here: Skibhusvej 109",
+            phone: "Phone: +45 12 34 56 78",
+            mainTitle: "About UBreak WeFix",
+            mainIntro: "At UBreak WeFix, we are specialists in professional repair of electronic devices. Our mission is clear: to deliver fast, reliable, and high-quality repairs, combined with top-class customer service. We help private and business customers daily to get their devices back in optimal condition – quickly and safely.",
+            sections: [
+                {
+                    title: "Quality and reliability in every single repair",
+                    content: "When you choose UBreak WeFix, you choose quality. We allow only high-quality spare parts and work with carefully selected suppliers. This ensures durable repairs and a result you can trust. All repairs are performed according to high professional standards."
+                },
+                {
+                    title: "Professional technical expertise",
+                    content: "Our technicians are experienced professionals who continuously update their knowledge in line with technological developments. Whether it is Screen Replacement, Battery Replacement, Charging Port Repair, or Camera and Motherboard Repair, you can be sure that the work is performed professionally, efficiently, and safely."
+                },
+                {
+                    title: "Your device is in safe hands",
+                    content: "We know that your device is an important part of your daily life and often contains valuable data. Therefore, we treat all devices with great care, discretion, and respect. Our processes are designed to ensure both quality and data security."
+                },
+                {
+                    title: "Fast repairs – minimal waiting time",
+                    content: "Time is important. At UBreak We Fix, we offer fast repairs, and many tasks can be completed in under 60 minutes. Our focus is to minimize your downtime – without compromising on quality."
+                },
+                {
+                    title: "24 month warranty",
+                    content: "For your peace of mind, we offer a 24-month warranty on all repairs. Should a problem arise against expectations, we are ready to help – quickly and professionally."
+                },
+                {
+                    title: "Customer service focused on trust",
+                    content: "We put the customer in the center. With us, you get honest advice, transparent prices, and personal service. We take the time to explain your options so you can make the right choice."
+                },
+                {
+                    title: "A long-term repair partner",
+                    content: "At UBreak WeFix, we work purposefully to build long-term customer relationships. We want to be your natural choice every time you need professional repair – today and in the future."
+                }
+            ],
+            repairListTitle: "We repair all types of devices",
+            repairList: ["Smartphones (iPhone, Samsung, etc.)", "Tablets", "Laptops", "Other electronic devices"]
+        },
+        shop: {
+            title: "Webshop",
+            products: "Products",
+            searchPlaceholder: "Search for products...",
+            showFilters: "Show Filters",
+            category: "Category",
+            allCategories: "All Categories",
+            noBrands: "No brands",
+            noFeatures: "No features",
+            clearAllFilters: "Reset Filters",
+            clearFilters: "Reset",
+            loading: "Loading products...",
+            noProducts: "No products found.",
+            soldOut: "Sold Out",
+            lowStock: "Low Stock",
+            add: "Add",
+            filters: "Filters",
+            brands: "Brands",
+            features: "Features",
+            backToShop: "Back to Shop",
+            inStock: "In Stock",
+            freeShipping: "Free shipping on orders over 500 DKK",
+            addToCart: "Add to Cart",
+            notFound: "Product not found",
+            loadingProduct: "Loading product..."
+        },
+        map: {
+            visitShop: "Visit the Shop",
+            openWeekdays: "Open all weekdays",
+            findDirections: "Get Directions"
+        },
+        mailIn: {
+            seo: {
+                title: "Send your device for repair | Mail-in Service | UBreak WeFix",
+                desc: "Send your iPhone, Samsung or computer for repair by mail. We fix it the same day we receive it and send it back. Free shipping on orders over 500 DKK."
+            },
+            hero: {
+                badge: "MAIL-IN SERVICE",
+                title: "Send your device to us.",
+                subtitle: "Don't live nearby? No problem. Send your device to us, we repair it and send it back the same day.",
+                cta: "Buy Return Label / Book"
+            },
+            steps: {
+                title: "How it works",
+                step1: { title: "1. Create Order", desc: "Find your repair and select 'Send device to us' at checkout." },
+                step2: { title: "2. Pack Device", desc: "Pack your device securely. Include your order number." },
+                step3: { title: "3. Send It", desc: "Drop off the package at the nearest parcel shop with the provided label." },
+                step4: { title: "4. We Fix & Return", desc: "We often repair the same day and ship the device back to you." }
+            },
+            guidelines: {
+                title: "Packaging Tips",
+                list: [
+                    "Use a sturdy box, not an envelope.",
+                    "Use bubble wrap or newspaper to protect the device.",
+                    "Remember to remove SIM card and cover if possible.",
+                    "Include a note with your Order Number and Contact Info."
+                ]
+            },
+            faq: {
+                title: "Shipping Questions",
+                q1: "Who pays for shipping?",
+                a1: "For repairs over 500 DKK, we often offer free return shipping. You can buy a shipping label through us for convenience.",
+                q2: "Is my device insured?",
+                a2: "Yes, when you use our package labels, your package is insured up to a certain amount (depending on the carrier).",
+                q3: "How long does it take?",
+                a3: "We typically repair your device the same day we receive it. You most often have it back within 2-3 business days in total."
+            }
+        },
+        shippingPolicy: {
+            title: "Shipping and Delivery",
+            intro: "Ubreakwefix.dk works effortlessly to ensure that your orders reach you safely and quickly. Local deliveries are made by either our own fleet or third-party providers ensuring the best possible service. See shipping costs below:",
+            pricesTitle: "Shipping Prices and Delivery Estimate",
+            freeShipping: "Free delivery:",
+            freeShippingDesc: "For orders over 500 kr. we deliver for free in Denmark (except Faroe Islands and Greenland) With PostNord Parcel Box, PostNord Business, GLS Parcel Shop, and GLS Business.",
+            under500: "For orders under 500 kr., the shipping prices below apply.",
+            deliveryTime: "When you order items, you can expect them to be sent the same day with Post Danmark if ordered before 17:30 Monday to Thursday and before 17:00 on Friday. Post Danmark also delivers parcels to parcel boxes on Saturdays. With GLS, they must be ordered before 15:00 Monday to Friday if your order is to be sent the same weekday.",
+            glsTitle: "GLS Delivery Options",
+            postNordTitle: "PostNord Delivery Options",
+            table: {
+                type: "Delivery Type",
+                desc: "Description",
+                price: "Price",
+                glsPrivat: "GLS Private",
+                glsPrivatDesc: "Delivery to private address",
+                glsBusiness: "GLS Business",
+                glsBusinessDesc: "Delivery to company address",
+                glsShop: "GLS Parcel Shop",
+                glsShopDesc: "Pickup in parcel shop",
+                postNordPrivat: "PostNord Private",
+                postNordPrivatDesc: "Delivery to private address",
+                postNordBusiness: "PostNord Business",
+                postNordBusinessDesc: "Delivery to company address",
+                postNordBox: "PostNord Parcel Box",
+                postNordBoxDesc: "Pickup in parcel box/post office"
+            },
+            liabilityTitle: "Liability and Delay",
+            liabilityText1: "UBREAK WEFIX is liable for the goods until you have received them. We deliver day to day if we order before 16.00 on all weekdays. However, unforeseen errors, such as illness, may occur.",
+            liabilityText2: "If your order is more than 2 weekdays delayed based on the above guidelines, please contact us via e-mail: support@ubreakwefix.dk and state your name, order number, and date of order.",
+            damageTitle: "Damage and Complaints",
+            damageLabel: "Damage:",
+            damageText: "My website ubreakwefix.dk is not liable for products damaged or lost during shipping. If you received your order damaged, please contact the carrier to file a claim.",
+            complaintLabel: "Complaint:",
+            complaintText: "If you discover that your products have been damaged during shipping or have a manufacturing defect, you must print a return form and return the product + the return form. Also state the item number and description of why the item is being returned. We cover any postage costs.",
+            contact: {
+                phone: "Contact us:",
+                email: "E-mail:",
+                address: "Address:",
+                note: "Note: The return and refund policy only applies in Denmark."
+            }
+        },
+        paymentTerms: {
+            title: "Payment Terms",
+            methods: {
+                title: "Payment Methods",
+                text1: "At ubreakwefix.dk you can pay with: Dankort, Visa, MasterCard, MobilePay, ViaBill.",
+                text2: "The amount is only deducted from your card when the goods are sent from ubreakwefix.dk. An amount greater than what you approved at the time of purchase can never be deducted. There is no fee for using cards."
+            },
+            security: {
+                title: "Security & Bank Transfer",
+                text1: "By bank transfer, etc., you are not protected by the opposition scheme.",
+                text2: "You agree to provide current, complete, and accurate purchase and account information for all purchases made via the site. You also agree to promptly update account and payment information, including email address, payment method, and expiration date of payment card, so we can complete your transactions and contact you as needed."
+            },
+            prices: {
+                title: "Prices & Fees",
+                text1: "Sales tax is added to the price of purchases as deemed required by us. We may change prices at any time. You agree to pay all fees at the prices applicable to your purchases and any applicable shipping fees, and you authorize us to charge your chosen payment provider for such amounts when you place your order.",
+                text2: "We reserve the right to correct any errors or mistakes in pricing, even if we have already requested or received payment."
+            },
+            cancellation: {
+                title: "Reservations & Cancellation",
+                text1: "We reserve the right to refuse any order placed via the site. We may, at our sole discretion, limit or cancel purchased quantities per person, per household, or per order. These restrictions may include orders placed by or under the same customer account, the same payment method, and/or orders using the same billing or shipping address.",
+                text2: "We reserve the right to limit or prohibit orders that, in our sole judgment, appear to be placed by dealers, resellers, or distributors."
+            }
+        },
+        returnPolicy: {
+            title: "Return & Refund Policy",
+            intro: "Right of Withdrawal Preparation. Customers have the right to withdraw from their purchase within 14 days, starting from the day they receive the item. Customers are allowed to inspect the product to establish its nature, characteristics, and functioning without losing their right of withdrawal.",
+            withdrawal: {
+                title: "Conditions for Return",
+                text1: "The item must be returned in a condition as close to its original as possible. If the item is damaged as a result of handling beyond what is necessary to inspect it, Ubreak We Fix reserves the right to reduce the refund. This applies provided you bring an invoice from ubreakwefix.dk.",
+                text2: "If desired, please contact Ubreak We fix - E-mail : support@ubreakwefix.dk. Items can also be returned directly to Ubreak We fix.",
+                text3: "In case of withdrawal, you must bear the cost of shipping to Ubreak We fix yourself. We recommend that return items are sent with tracking for safe return.",
+                text4: "You cannot withdraw by simply refusing receipt of the item without simultaneously giving us clear notice of this."
+            },
+            refundProcess: {
+                title: "Refund & Processing",
+                text1: "What you paid for the item will be refunded to you when Ubreak We Fix has received your items back. When using the right of withdrawal, an electronic refund of the money will occur. In the case of an electronic refund, it may take up to 6 days before receipt.",
+                text2: "We will notify you when we have received and inspected your return, and notify you whether the refund was approved or not. If approved, the amount will be automatically refunded to your original payment method. Remember that it may take some time for your bank or credit card company to process and post the refund."
+            },
+            condition: {
+                title: "Item Condition & Packaging",
+                text1: "Upon return, the customer is liable for any deterioration of the item. It is naturally ok to unpack the item from the bubble wrap from the cardboard box to see what has been bought. If the item has been used or damaged, Ubreak We Fix is entitled to reject the returned item or assess a potential reduction in value.",
+                text2: "REMEMBER TO SEND IN THE SAME PACKAGING THE ITEM CAME IN! I.E.: PACKED NICELY SO THE ITEM CANNOT LIE AND MOVE BACK AND FORTH."
+            },
+            address: {
+                title: "Return Address",
+                lines: [
+                    "The item must be sent to:",
+                    "Ubreak We Fix",
+                    "Skibhusvej 109 St,tv",
+                    "5000 Odense"
+                ]
+            },
+            rma: {
+                title: "RMA Handling & Warranty",
+                sections: [
+                    {
+                        subtitle: "New Rules",
+                        text: "Customers have a 12-month warranty under the Sale of Goods Act, but under EU law they can make claims up to 24 months. In the first 12 months, there is a presumption that any defect was present at delivery unless proven otherwise. After this period, the customer may be asked to prove that the defect existed when the item was received."
+                    },
+                    {
+                        subtitle: "Defect or Shortage",
+                        text: "To have as little trouble as possible, it is always a good idea to check that you have received the correct product before starting assembly or disassembly work. Compare the new product with the old one before using it. If the item suffers from a defect or shortage upon receipt, Ubreak We Fix will seek to remedy this or alternatively perform replacement. Contact support@ubreakwefix.dk as soon as possible."
+                    },
+                    {
+                        subtitle: "Handling",
+                        text: "If instructions on handling and testing are enclosed with the purchased product, this instruction must be followed closely!! If errors or damage occur to the product after the test phase due to incorrect handling during installation, such a defect/damage/error may possibly not be replaced by Ubreak Wefix."
+                    }
+                ]
+            },
+            waterDamage: {
+                title: "Terms for (Water-resistant) products",
+                text1: "When Ubreak We Fix takes over warranty and complaint rights, the original conditions from the original place of purchase still apply. A number of manufacturers (Sony, Samsung, Apple) market products as “water-resistant” but disclaim coverage for liquid damage.",
+                text2: "This is because they are resistant, not waterproof. Therefore, no form of coverage is provided for products exposed to liquid damage."
+            },
+            shippingCosts: {
+                title: "Refund of Original Delivery Costs",
+                text1: "If the complaint is justified, we naturally refund your (reasonable) shipping costs.",
+                text2: "If the customer withdraws from the purchase within the 14 days, Ubreak We Fix refunds not only the product price but also the original delivery costs. However, the customer is responsible for covering return shipping unless otherwise agreed."
+            },
+            exclusions: {
+                title: "Disclaimer",
+                intro: "Ubreak Wefix cannot be held liable for the following points:",
+                list: [
+                    "Expenses for mounting – dismounting of a defective item.",
+                    "Expenses for repair at a workshop.",
+                    "Any consequential damages caused by the defective item.",
+                    "Self-inflicted destruction.",
+                    "Ordinary wear and tear."
+                ]
+            },
+            contact: {
+                text: "You can always contact us for any question about return or refund at: support@ubreakwefix.dk - Call us: + 45 42 34 87 23"
+            }
+        },
+        terms: {
+            title: "Terms & Conditions",
+            general: {
+                title: "General Information about the Company",
+                nickname: "Company Nickname:",
+                addressLabel: "Address:",
+                cvrLabel: "CVR Number:",
+                emailLabel: "Official Email Address:",
+                webLabel: "Official Web Address:",
+                phoneLabel: "Phone Number:",
+                establishedLabel: "Established Year:",
+                address: "Skibhusvej 109 St, Tv - Odense 5000 - Denmark",
+                cvr: "DK 38804596",
+                email: "support@ubreakwefix.dk",
+                web: "www.ubreakwefix.dk",
+                phone: "+45 42 34 87 23",
+                established: "2020"
+            },
+            privacy: {
+                title: "Privacy Policy",
+                registration: {
+                    title: "Registration of Personal Data:",
+                    text: "To enter into an agreement with us via the website, the following personal information is required: Name, Address, Phone Number, Email Address."
+                },
+                encryption: "This information is transmitted and stored unencrypted.",
+                storage: {
+                    title: "Storage and Use of Information:",
+                    text: "Personal information in connection with your purchase is registered with Ubreak Wefix and stored for 3 years to ensure correct processing in case of warranty claims, after which the information is deleted. The purpose of registering personal information is to be able to deliver the item to you."
+                },
+                consent: {
+                    title: "Consent and Information about Collection:",
+                    text: "Collection of personal information via our website always happens with your express consent, where you are informed about what information is collected and why."
+                },
+                access: {
+                    title: "Access to Information:",
+                    text: "All employees in the company have access to the information registered about you."
+                },
+                usage: {
+                    title: "Use of Information:",
+                    text: "Your information is used only for shipping the item and to inform about any problems with delivery. After an order, you receive an order confirmation via email."
+                },
+                disclosure: {
+                    title: "Disclosure of Information:",
+                    text: "As an independent online store, we do not disclose your personal information to others. Your data is stored securely but unencrypted."
+                },
+                rights: {
+                    title: "Rights as Registered:",
+                    text: "As registered with Ubreak Wefix, you have the right to object to the registration and the right to insight into the information registered about you. These rights are secured under the Personal Data Act."
+                }
+            },
+            b2b: {
+                title: "Conditions For Business Purchases",
+                identification: {
+                    title: "Identification as Business Customer:",
+                    text: "When you place an order with Ubreak Wefix and provide a CVR number and company name in the billing address, you are automatically considered a business customer."
+                },
+                conditions: {
+                    title: "Special Terms for Business Customers:",
+                    list: [
+                        "Right of Withdrawal: Business customers do not have a standard right of withdrawal on their purchases.",
+                        "Warranty: We offer a warranty of 12 months on all products purchased as a business customer.",
+                        "Shipping on Complaint: In complaint cases, shipping costs are imposed on the business customer.",
+                        "Delivery: All business purchases are delivered with distribution. There will be shipping costs regardless of order size.",
+                        "Payment: Payment with Dankort is offered fee-free for business customers."
+                    ]
+                }
+            },
+            updates: {
+                title: "Reservations for Changes",
+                text1: "At Ubreak We Fix, we are committed to continuously improving and updating our services.",
+                text2: "UBREAK WE FIX reserves the right, at any time, to make changes or updates to the terms and rules that apply to our website and services.",
+                updateDate: "Latest Update: This policy was last updated and is effective from Sep 18, 2024."
+            }
+        },
+        playstation: {
+            badge: "PLAYSTATION EXPERT",
+            expert: "Console Repair Center",
+            title: "PlayStation Repair",
+            subtitle: "We fix all PlayStation models. From HDMI ports to overheating issues.",
+            diagnoseBtn: "Get Free Diagnosis",
+            repairTime: "1-2 Days",
+            repairTimeLabel: "Typical Turnaround",
+            warranty: "24 Months",
+            warrantyLabel: "Warranty on Repairs",
+            features: {
+                drift: "Stick Drift Fix",
+                hdmi: "HDMI Port Replace",
+                cleaning: "Internal Cleaning",
+                thermal: "Thermal Paste"
+            }
+        },
+        sustainabilityOriginal: {
+            badge: "SUSTAINABILITY",
+            title: "Repair is",
+            titleHighlight: "Recycling",
+            subtitle: "Every device we repair is one less distinct electronic item in a landfill. Join us in making a difference.",
+            communityImpact: "Our Community Impact",
+            devicesSaved: "Devices Saved",
+            waterSaved: "Liters Water Saved",
+            seeYourImpact: "See Your Impact",
+            calculatorDesc: "Calculate how much resources you save by repairing instead of buying new.",
+            startWith: "If you repair",
+            device: "device",
+            co2Prevented: "CO2 emissions prevented",
+            eWasteSaved: "e-waste prevented",
+            cta: "Start Your Repair"
+        },
+        sustainability: {
+            circular: "CIRCULAR ECONOMY",
+            title: "Give Tech a Second Life",
+            subtitle: "We buy your old devices, refurbish them, and find them a new home. Good for your wallet, better for the planet.",
+            buyBack: {
+                price: "Best Market Price",
+                title: "Sell Your device",
+                desc: "Get an instant quote for your old iPhone, Samsung or MacBook.",
+                btn: "Get Quote Now"
+            },
+            impact: {
+                co2: "CO2 Saved",
+                waste: "E-Waste Reuse"
+            },
+            goal: {
+                title: "Our Goal",
+                desc: "To become 100% carbon neutral by 2025."
+            }
+        },
+        dataRecovery: {
+            badge: "DATA RECOVERY",
+            title: "We Save Your Digital Life",
+            subtitle: "Lost photos? Corrupted files? Don't panic. Our experts use advanced tools to recover your precious data.",
+            features: {
+                memories: "Precious Memories Saved",
+                security: "100% Secure & Private",
+                noCure: "No Cure No Pay"
+            },
+            cta: "Start Data Recovery"
+        },
+    },
     da: {
         nav: {
             home: "Forside",
@@ -830,932 +1625,70 @@ export const translations = {
                 text: "Har du spørgsmål om vores brug af cookies eller behandling af personoplysninger, er du velkommen til at kontakte os:",
                 email: "kontakt@ubreakwefix.dk"
             }
+        },
+        sustainability: {
+            circular: "Cirkulær Økonomi",
+            title: "Bæredygtighed & Genbrug",
+            subtitle: "Vi køber dine brugte skærme og giver dem nyt liv. Sammen reducerer vi elektronisk affald og støtter FN's verdensmål.",
+            buyBack: {
+                title: "Vi køber din ødelagte skærm",
+                desc: "Smid ikke din gamle skærm ud! Hvis LCD/OLED panelet virker, køber vi den af dig.",
+                btn: "Sælg Skærm",
+                price: "Få op til 500 kr"
+            },
+            impact: {
+                co2: "CO2 Besparet",
+                waste: "E-Affald Reduceret",
+                water: "Vand Besparet"
+            },
+            goal: {
+                title: "Vores 2026 Mål",
+                desc: "Hjælp os med at redde 10.000 enheder fra at ende som skrot."
+            }
+        },
+        sustainabilityOriginal: {
+            badge: "Den Cirkulære Økonomi",
+            title: "Reparation er det nye",
+            titleHighlight: "Grøn.",
+            subtitle: "Hver enhed vi reparerer, er én mindre enhed på lossepladsen. Slut dig til tusindvis af europæere, der tager det smarte, bæredygtige valg.",
+            communityImpact: "Fælles Indflydelse",
+            devicesSaved: "Enheder Reddet",
+            waterSaved: "Liter Vand Sparet",
+            seeYourImpact: "Se Din Indflydelse",
+            calculatorDesc: "Træk for at se, hvad der sker, når du vælger reparation frem for udskiftning.",
+            startWith: "Jeg starter med...",
+            device: "Enhed",
+            co2Prevented: "CO2 FOREBYGGET",
+            eWasteSaved: "E-AFFALD SPARET",
+            cta: "Start Indflydelse Nu"
+        },
+        playstation: {
+            badge: "Ny Service",
+            expert: "Konsol Ekspert",
+            title: "PlayStation Reparation",
+            subtitle: "Larmer din konsol, eller har den drift problemer? Vores teknikere bringer din PlayStation til live igen.",
+            diagnoseBtn: "Start Diagnose",
+            repairTime: "1 Dag",
+            repairTimeLabel: "Typisk Reparationstid",
+            warranty: "1 År",
+            warrantyLabel: "Garanti på reservedele",
+            features: {
+                drift: "Drift Fix",
+                hdmi: "HDMI Port",
+                cleaning: "Rensning",
+                thermal: "Kølepasta"
+            }
+        },
+        dataRecovery: {
+            badge: "Dataredning",
+            title: "Mistet dine data?",
+            subtitle: "Mistede billeder eller vigtige dokumenter? Gå ikke i panik. Med vores avancerede udstyr kan vi genskabe det, andre ikke kan.",
+            features: {
+                memories: "Dine minder er sikre",
+                security: "Fuld diskretion",
+                noCure: "No Cure, No Pay"
+            },
+            cta: "Start Dataredning"
         }
     },
-    en: {
-        paymentTerms: {
-            title: "Payment Terms",
-            methods: {
-                title: "Payment Methods",
-                text1: "At ubreakwefix.dk you can pay with: Dankort, Visa, MasterCard, MobilePay, ViaBill.",
-                text2: "The amount is only deducted from your card when the items are shipped from ubreakwefix.dk. An amount greater than what you approved at the time of purchase can never be deducted. There are no fees for using cards."
-            },
-            security: {
-                title: "Security & Bank Transfer",
-                text1: "By bank transfer, etc., you are not protected by the opposition scheme.",
-                text2: "You agree to provide current, complete, and accurate purchase and account information for all purchases made via the site. You also agree to promptly update account and payment information, including email address, payment method, and payment card expiration date, so that we can complete your transactions and contact you as needed."
-            },
-            prices: {
-                title: "Prices & Fees",
-                text1: "Sales tax is added to the price of purchases as deemed required by us. We may change prices at any time. You agree to pay all fees at the prices applicable to your purchases and any applicable shipping fees, and you authorize us to charge your chosen payment provider for such amounts when you place your order.",
-                text2: "We reserve the right to correct any errors or mistakes in pricing, even if we have already requested or received payment."
-            },
-            cancellation: {
-                title: "Reservations & Cancellation",
-                text1: "We reserve the right to refuse any order placed via the site. We may, in our sole discretion, limit or cancel quantities purchased per person, per household, or per order. These restrictions may include orders placed by or under the same customer account, the same payment method, and/or orders that use the same billing or shipping address.",
-                text2: "We reserve the right to limit or prohibit orders that, in our sole judgment, appear to be placed by dealers, resellers, or distributors."
-            }
-        },
-        returnPolicy: {
-            title: "Return & Refund Policy",
-            intro: "Right of Withdrawal & Preparation. Customers have the right to withdraw from their purchase within 14 days, starting from the day they receive the item. Customers are allowed to inspect the product to determine its nature, characteristics, and functioning without losing their right of withdrawal.",
-            withdrawal: {
-                title: "Conditions for Return",
-                text1: "The item must be returned in a condition as close to its original as possible. If the item is damaged as a result of handling beyond what is necessary to inspect it, Ubreak We Fix reserves the right to reduce the refund. This applies provided you bring an invoice from ubreakwefix.dk.",
-                text2: "If desired, please contact Ubreak We fix - Email: support@ubreakwefix.dk. Items can also be returned directly to Ubreak We fix.",
-                text3: "In case of withdrawal, you must cover the shipping costs to Ubreak We fix yourself. We recommend sending return items with tracking for safe return.",
-                text4: "You cannot withdraw simply by refusing receipt of the item without simultaneously giving us clear notice of this."
-            },
-            refundProcess: {
-                title: "Refund & Processing",
-                text1: "What you paid for the item will be refunded to you when Ubreak We Fix has received your items back. When using the right of withdrawal, an electronic reversal of the money will occur. An electronic reversal can take up to 6 days before receipt.",
-                text2: "We will notify you when we have received and inspected your return, and verify whether the refund was approved. If approved, the amount is automatically refunded to your original payment method. Remember it can take some time for your bank or credit card company to process and post the refund."
-            },
-            condition: {
-                title: "Item Condition & Packaging",
-                text1: "Upon return, the customer is liable for any deterioration of the item. It is of course okay to unpack the item from bubble wrap to see what was bought. If the item has been used or damaged, Ubreak We Fix is allowed to reject the returned item or assess any depreciation in value.",
-                text2: "REMEMBER TO SEND IN THE SAME PACKAGING AS THE ITEM CAME IN! I.E.: PACKED NEATLY SO THE ITEM CANNOT MOVE BACK AND FORTH."
-            },
-            address: {
-                title: "Return Address",
-                lines: [
-                    "Send items to:",
-                    "Ubreak We Fix",
-                    "Skibhusvej 109 St,tv",
-                    "5000 Odense"
-                ]
-            },
-            rma: {
-                title: "RMA Handling & Warranty",
-                sections: [
-                    {
-                        subtitle: "New Rules",
-                        text: "Customers have a 12-month warranty according to the Sale of Goods Act, but under EU legislation, claims can be made up to 24 months. In the first 12 months, there is a presumption that any defect was present at delivery unless proven otherwise. After this period, the customer may be asked to prove the defect existed when received."
-                    },
-                    {
-                        subtitle: "Defects or Flaws",
-                        text: "To maximize convenience, verify you received the correct product before starting assembly/disassembly. Compare the new product with the old one before use. If the item suffers from a defect upon receipt, Ubreak We Fix will seek to remedy this or alternatively make a replacement. Contact support@ubreakwefix.dk as soon as possible."
-                    },
-                    {
-                        subtitle: "Handling",
-                        text: "If a guide on handling and testing is included with the purchased product, this guide must be followed closely!! If defects or damage occur after the test phase due to incorrect handling during installation, such defect/damage may not be compensated by Ubreak Wefix."
-                    }
-                ]
-            },
-            waterDamage: {
-                title: "Terms for (Water Resistant) Products",
-                text1: "When Ubreak We Fix takes over warranty, original purchase conditions apply. Several manufacturers (Sony, Samsung, Apple) market products as 'water-resistant' but disclaim coverage for liquid damage.",
-                text2: "This is because they are resistant, not waterproof. Therefore, no form of coverage is provided for products exposed to liquid damage."
-            },
-            shippingCosts: {
-                title: "Refund of Original Delivery Costs",
-                text1: "If the complaint is justified, we will of course refund your (reasonable) shipping costs.",
-                text2: "If the customer regrets the purchase within 14 days, Ubreak We Fix refunds not only the product price but also original delivery costs. However, the customer is responsible for covering return shipping unless otherwise agreed."
-            },
-            exclusions: {
-                title: "Disclaimer",
-                intro: "Ubreak Wefix cannot be held liable for the following points:",
-                list: [
-                    "Expenses for mounting/dismounting a defective item.",
-                    "Expenses for workshop repairs.",
-                    "Any consequential damages caused by the defective item.",
-                    "Self-inflicted destruction.",
-                    "Normal wear and tear."
-                ]
-            },
-            contact: {
-                text: "You can always contact us for any question regarding return or refund at: support@ubreakwefix.dk - Call us: + 45 42 34 87 23"
-            }
-        }
-    },
-    en: {
-        paymentTerms: {
-            title: "Payment Terms",
-            methods: {
-                title: "Payment Methods",
-                text1: "At ubreakwefix.dk you can pay with: Dankort, Visa, MasterCard, MobilePay, ViaBill.",
-                text2: "The amount is only deducted from your card when the items are shipped from ubreakwefix.dk. An amount greater than what you approved at the time of purchase can never be deducted. There are no fees for using cards."
-            },
-            security: {
-                title: "Security & Bank Transfer",
-                text1: "By bank transfer, etc., you are not protected by the opposition scheme.",
-                text2: "You agree to provide current, complete, and accurate purchase and account information for all purchases made via the site. You also agree to promptly update account and payment information, including email address, payment method, and payment card expiration date, so that we can complete your transactions and contact you as needed."
-            },
-            prices: {
-                title: "Prices & Fees",
-                text1: "Sales tax is added to the price of purchases as deemed required by us. We may change prices at any time. You agree to pay all fees at the prices applicable to your purchases and any applicable shipping fees, and you authorize us to charge your chosen payment provider for such amounts when you place your order.",
-                text2: "We reserve the right to correct any errors or mistakes in pricing, even if we have already requested or received payment."
-            },
-            cancellation: {
-                title: "Reservations & Cancellation",
-                text1: "We reserve the right to refuse any order placed via the site. We may, in our sole discretion, limit or cancel quantities purchased per person, per household, or per order. These restrictions may include orders placed by or under the same customer account, the same payment method, and/or orders that use the same billing or shipping address.",
-                text2: "We reserve the right to limit or prohibit orders that, in our sole judgment, appear to be placed by dealers, resellers, or distributors."
-            }
-        },
-        returnPolicy: {
-            title: "Return & Refund Policy",
-            intro: "Right of Withdrawal Clarification. Customers have the right to withdraw from their purchase within 14 days, starting from the day they receive the item. Customers are allowed to inspect the product to determine its nature, characteristics, and functioning without losing their right of withdrawal.",
-            withdrawal: {
-                title: "Conditions for Return",
-                text1: "The item must be returned in a condition as close to its original as possible. If the item is damaged as a result of handling beyond what is necessary to inspect it, Ubreak We Fix reserves the right to reduce the refund. This applies provided you bring an invoice from ubreakwefix.dk.",
-                text2: "If desired, please contact Ubreak We fix - Email: support@ubreakwefix.dk. Items can also be returned directly to Ubreak We fix.",
-                text3: "In case of withdrawal, you must cover the shipping costs to Ubreak We fix yourself. We recommend sending return items with tracking for safe return.",
-                text4: "You cannot withdraw simply by refusing receipt of the item without simultaneously giving us clear notice of this."
-            },
-            refundProcess: {
-                title: "Refund & Processing",
-                text1: "What you paid for the item will be refunded to you when Ubreak We Fix has received your items back. When using the right of withdrawal, an electronic reversal of the money will occur. An electronic reversal can take up to 6 days before receipt.",
-                text2: "We will notify you when we have received and inspected your return, and verify whether the refund was approved. If approved, the amount is automatically refunded to your original payment method. Remember it can take some time for your bank or credit card company to process and post the refund."
-            },
-            condition: {
-                title: "Item Condition & Packaging",
-                text1: "Upon return, the customer is liable for any deterioration of the item. It is of course okay to unpack the item from bubble wrap to see what was bought. If the item has been used or damaged, Ubreak We Fix is allowed to reject the returned item or assess any depreciation in value.",
-                text2: "REMEMBER TO SEND IN THE SAME PACKAGING AS THE ITEM CAME IN! I.E.: PACKED NEATLY SO THE ITEM CANNOT MOVE BACK AND FORTH."
-            },
-            address: {
-                title: "Return Address",
-                lines: [
-                    "Send items to:",
-                    "Ubreak We Fix",
-                    "Skibhusvej 109 St,tv",
-                    "5000 Odense"
-                ]
-            },
-            rma: {
-                title: "RMA Handling & Warranty",
-                sections: [
-                    {
-                        subtitle: "New Rules",
-                        text: "Customers have a 12-month warranty according to the Sale of Goods Act, but under EU legislation, claims can be made up to 24 months. In the first 12 months, there is a presumption that any defect was present at delivery unless proven otherwise. After this period, the customer may be asked to prove the defect existed when received."
-                    },
-                    {
-                        subtitle: "Defects or Flaws",
-                        text: "To maximize convenience, verify you received the correct product before starting assembly/disassembly. Compare the new product with the old one before use. If the item suffers from a defect upon receipt, Ubreak We Fix will seek to remedy this or alternatively make a replacement. Contact support@ubreakwefix.dk as soon as possible."
-                    },
-                    {
-                        subtitle: "Handling",
-                        text: "If a guide on handling and testing is included with the purchased product, this guide must be followed closely!! If defects or damage occur after the test phase due to incorrect handling during installation, such defect/damage may not be compensated by Ubreak Wefix."
-                    }
-                ]
-            },
-            waterDamage: {
-                title: "Terms for (Water Resistant) Products",
-                text1: "When Ubreak We Fix takes over warranty, original purchase conditions apply. Several manufacturers (Sony, Samsung, Apple) market products as 'water-resistant' but disclaim coverage for liquid damage.",
-                text2: "This is because they are resistant, not waterproof. Therefore, no form of coverage is provided for products exposed to liquid damage."
-            },
-            shippingCosts: {
-                title: "Refund of Original Delivery Costs",
-                text1: "If the complaint is justified, we will of course refund your (reasonable) shipping costs.",
-                text2: "If the customer regrets the purchase within 14 days, Ubreak We Fix refunds not only the product price but also original delivery costs. However, the customer is responsible for covering return shipping unless otherwise agreed."
-            },
-            exclusions: {
-                title: "Disclaimer",
-                intro: "Ubreak Wefix cannot be held liable for the following points:",
-                list: [
-                    "Expenses for mounting/dismounting a defective item.",
-                    "Expenses for workshop repairs.",
-                    "Any consequential damages caused by the defective item.",
-                    "Self-inflicted destruction.",
-                    "Normal wear and tear."
-                ]
-            },
-            contact: {
-                text: "You can always contact us for any question regarding return or refund at: support@ubreakwefix.dk - Call us: + 45 42 34 87 23"
-            }
-        },
-        terms: {
-            title: "Terms and Conditions",
-            general: {
-                title: "General Company Information",
-                nickname: "Company Nickname:",
-                addressLabel: "Address:",
-                cvrLabel: "CVR Number:",
-                emailLabel: "Official Email:",
-                webLabel: "Official Website:",
-                phoneLabel: "Phone Number:",
-                establishedLabel: "Established:",
-                address: "Skibhusvej 109 St, Tv - Odense 5000 - Denmark",
-                cvr: "DK 38804596",
-                email: "support@ubreakwefix.dk",
-                web: "www.ubreakwefix.dk",
-                phone: "+45 42 34 87 23",
-                established: "2020"
-            },
-            privacy: {
-                title: "Privacy Policy",
-                registration: {
-                    title: "Registration of Personal Data:",
-                    text: "To enter into an agreement with us via the website, the following personal information is required: Name, Address, Phone Number, Email Address."
-                },
-                encryption: "This information is not transmitted or stored encrypted.",
-                storage: {
-                    title: "Storage and Use of Information:",
-                    text: "Personal information in connection with your purchase is registered with Ubreak Wefix and stored for 3 years to ensure correct processing in case of warranty claims, after which the information is deleted. The purpose of registering personal information is to be able to deliver the item to you."
-                },
-                consent: {
-                    title: "Consent and Information about Collection:",
-                    text: "Collection of personal information via our website always happens with your express consent, where you are informed about what information is collected and why."
-                },
-                access: {
-                    title: "Access to Information:",
-                    text: "All employees in the company have access to the information registered about you."
-                },
-                usage: {
-                    title: "Use of Information:",
-                    text: "Your information is used only for shipping the item and to inform about any problems with delivery. After an order, you receive an order confirmation via email."
-                },
-                disclosure: {
-                    title: "Disclosure of Information:",
-                    text: "As an independent online store, we do not pass on your personal information to others. Your data is stored securely but unencrypted."
-                },
-                rights: {
-                    title: "Rights as Registered:",
-                    text: "As registered with Ubreak Wefix, you have the right to object to the registration and the right to insight into the information registered about you. These rights are secured by the Personal Data Act."
-                }
-            },
-            b2b: {
-                title: "Conditions for Business Purchases",
-                identification: {
-                    title: "Identification as Business Customer:",
-                    text: "When you place an order with Ubreak Wefix and provide a CVR number and company name in the billing address, you are automatically considered a business customer."
-                },
-                conditions: {
-                    title: "Special Terms for Business Customers:",
-                    list: [
-                        "Right of Withdrawal: Business customers do not have a standard right of withdrawal on their purchases.",
-                        "Warranty: We offer a 12-month warranty on all products purchased as a business customer.",
-                        "Shipping on Complaint: In warranty cases, shipping costs are charged to the business customer.",
-                        "Delivery: All business purchases are delivered with distribution. There will be shipping costs regardless of order size.",
-                        "Payment: Payment with Dankort is offered fee-free for business customers."
-                    ]
-                }
-            },
-            updates: {
-                title: "Reservation for Changes",
-                text1: "At Ubreak We Fix, we are committed to continuously improving and updating our services.",
-                text2: "UBREAK WE FIX reserves the right, at any time, to make changes or updates to the conditions and rules that apply to our website and services.",
-                updateDate: "Last Update: This policy was last updated and is valid from Sep 18, 2024."
-            },
-            withdrawalForm: {
-                title: "Withdrawal Form",
-                note: "(This form is only valid if you wish to exercise your right to withdraw from a purchase)",
-                to: "To:",
-                recipient: "Ubreak Wefix<br />Skibhusvej 109 st, tv<br />Odense - 5000 - Denmark<br />support@ubreakwefix.dk",
-                declaration: {
-                    title: "Declaration of Withdrawal:",
-                    text: "I hereby announce that I wish to exercise my right to withdraw from the purchase agreement for the following product(s) or service(s):"
-                },
-                details: {
-                    product: "Product Details:",
-                    service: "Service Details:",
-                    orderDate: "Date of Order:",
-                    receiptDate: "Date of Receipt:"
-                },
-                consumer: {
-                    title: "Consumer Details:",
-                    name: "Name:",
-                    address: "Address:"
-                },
-                confirmation: {
-                    title: "Confirmation:",
-                    signature: "Signature:",
-                    date: "Date:"
-                }
-            }
-        },
-        cookiePolicy: {
-            title: "Cookie Policy",
-            intro: "When you visit and use the website www.ubreakwefix.dk, you accept that Ubreak We Fix uses cookies in accordance with this Cookie Policy. Statistical and marketing cookies are only used if you have given your explicit consent via our cookie banner. You may change or withdraw your consent at any time through the cookie banner or your browser settings.",
-            whoWeAre: {
-                title: "Who we are",
-                text: "This website is owned and operated by:",
-                address: "Skibhusvej 109, 5000 Odense, Denmark",
-                email: "Email: contact@ubreakwefix.dk",
-                website: "Website: https://ubreakwefix.dk",
-                cvr: "VAT Number: DK 38804596"
-            },
-            whatAreCookies: {
-                title: "What are cookies?",
-                text1: "Cookies are small text files stored on your computer, smartphone, or tablet when you visit a website. Cookies help recognize your device, remember preferences, and collect information about how the website is used.",
-                text2: "Cookies are not programs and do not contain viruses or malicious software."
-            },
-            usage: {
-                title: "How we use cookies",
-                intro: "We use cookies on www.ubreakwefix.dk for the following purposes:",
-                necessary: {
-                    title: "Necessary cookies",
-                    text: "Necessary cookies are essential for the website to function properly. They cannot be disabled and are used for basic functionality such as security, navigation, and access to website features."
-                },
-                statistics: {
-                    title: "Statistical cookies",
-                    text: "Statistical cookies help us understand how visitors use the website so we can improve content, structure, and user experience. These cookies are only used with your consent."
-                },
-                marketing: {
-                    title: "Marketing cookies",
-                    text: "Marketing cookies are used to display relevant advertisements and measure the effectiveness of our marketing activities across platforms. These cookies are only used with your consent."
-                }
-            },
-            thirdParty: {
-                title: "Third-party cookies",
-                google: {
-                    title: "Google Analytics",
-                    text1: "We use Google Analytics to analyze website traffic and user behavior. The data is used solely for statistical and optimization purposes.",
-                    text2: "Data may be transferred to and processed on servers outside the EU/EEA, including the United States. Such transfers are carried out in accordance with EU Standard Contractual Clauses (SCCs) and applicable data protection laws.",
-                    text3: "You can opt out of Google Analytics via Google’s official opt-out solution."
-                },
-                meta: {
-                    title: "Meta / Facebook Pixel",
-                    text: "We use cookies from Meta (Facebook Pixel) to measure advertising effectiveness and deliver targeted content based on user behavior. These cookies are only activated after consent."
-                }
-            },
-            management: {
-                title: "How to refuse or delete cookies",
-                refuse: {
-                    title: "Refusing cookies",
-                    text: "You may change or withdraw your consent at any time via the cookie banner or by adjusting your browser settings. Please note that certain website functions may not work properly without cookies."
-                },
-                delete: {
-                    title: "Deleting cookies",
-                    text: "If you have previously accepted cookies, you can delete them through your browser settings.",
-                    shortcut: "Shortcut (PC): CTRL + SHIFT + DELETE",
-                    guide: "Guidance is available on your browser’s official help pages, including:",
-                    browsers: ["Google Chrome", "Mozilla Firefox", "Safari", "Microsoft Edge"]
-                }
-            },
-            personalData: {
-                title: "Personal data",
-                text: "The processing of personal data in connection with cookies is carried out in accordance with applicable data protection legislation. You can read more about how we process personal data and your rights in our Privacy Policy."
-            },
-            contact: {
-                title: "Contact",
-                text: "If you have any questions regarding our use of cookies or the processing of personal data, please contact us:",
-                email: "contact@ubreakwefix.dk"
-            }
-        },
-        nav: {
-            home: "Home",
-            repairs: "Repairs",
-            about: "About Us",
-            blog: "Blog",
-            business: "Business",
-            contact: "Contact",
-            bookNow: "Book Now",
-            login: "Login",
-            myAccount: "My Account"
-        },
-        business: {
-            seo: {
-                title: "Business Agreement - Electronics Repair for Companies | UBreak WeFix",
-                desc: "Get a tailored business agreement with fixed low prices, priority service, and monthly invoicing. We keep your business running."
-            },
-            hero: {
-                badge: "BUSINESS AGREEMENT",
-                title: "Keep your business running",
-                subtitle: "Get a tailored business agreement with fixed low prices, priority service, and monthly invoicing.",
-                cta: "Create Business Account"
-            },
-            features: [
-                { title: 'Priority Service', desc: 'Your devices come first in line. No waiting time.' },
-                { title: 'Monthly Invoice', desc: 'Consolidated invoicing for all repairs. Easy accounting.' },
-                { title: 'Pickup & Delivery', desc: 'We pick up and deliver devices in the local area.' },
-                { title: 'Personal Contact', desc: 'Dedicated contact person who knows your needs.' }
-            ]
-        },
-        auth: {
-            loginTitle: "Login to your account",
-            registerTitle: "Create new account",
-            email: "Email",
-            password: "Password",
-            confirmPassword: "Confirm Password",
-            name: "Full Name",
-            phone: "Phone Number",
-            address: "Address",
-            loginBtn: "Login",
-            registerBtn: "Create Account",
-            noAccount: "Don't have an account?",
-            hasAccount: "Already have an account?",
-            createOne: "Create one here",
-            loginHere: "Login here",
-            logout: "Logout",
-            welcome: "Welcome",
-            myDetails: "My Details",
-            myOrders: "My Orders/Repairs",
-            noOrders: "No previous orders found."
-        },
-        meta: {
-            title: "UBreak WeFix - iPhone, Samsung & Computer Repair | Odense",
-            desc: "Professional repair of iPhone, Samsung, and computers in Odense. We also offer Custom PC building, screen replacement, and battery replacement. Lifetime warranty on screens.",
-            keywords: "iphone repair odense, samsung repair, custom pc build, screen replacement, battery replacement"
-        },
-        hero: {
-            new: "New: iPhone 16 Repairs Available",
-            title: "Future of Device Repair.",
-            subtitle: "Experience instant quotes, certified experts, and a lifetime warranty. We fix it right, or you don't pay.",
-            searchPlaceholder: "Search for your device (e.g. iPhone 13)..."
-        },
-        stats: {
-            technicians: "Certified Technicians",
-            repairs: "Completed Repairs",
-            warranty: "Months Warranty"
-        },
-        home: {
-            howItWorks: "How It Works",
-            popularRepairs: "Popular Repairs",
-            whyChooseUs: "Why choose us?",
-            whyChooseUsSubtitle: "We care about quality and good service. See what we offer.",
-            reviewsTitle: "What do our customers say?",
-            googleReview: "Google Review",
-            seeAllGoogle: "See all reviews on Google",
-            trustpilotBadge: "4.9/5 Trustpilot"
-        },
-        features: {
-            experienced: {
-                title: "Experienced Technicians",
-                desc: "Over 10 years of experience with all brands."
-            },
-            walkin: {
-                title: "Walk-in Service",
-                desc: "No appointment necessary."
-            },
-            quality: {
-                title: "High Quality Parts",
-                desc: "We only use the best spare parts."
-            },
-            diagnosis: {
-                title: "Free Diagnosis",
-                desc: "We examine your device for free."
-            },
-            buysell: {
-                title: "Buy / Sell",
-                desc: "We give new life to used electronics."
-            },
-            warranty: {
-                title: "24 Month Warranty",
-                desc: "Full peace of mind on all repairs."
-            }
-        },
-        trust: {
-            trustpilot: "4.9/5 on Trustpilot",
-            reviews: "Based on over 500+ reviews",
-            google: "4.8/5 on Google",
-            warranty: "Lifetime Warranty",
-            warrantyDesc: "On all screen replacements",
-            warranty24: "24 Month Warranty",
-            delivery: "Fast Delivery",
-            return: "14 Day Return Policy",
-            technician: "Certified Technician",
-            parts: "Quality Assured Parts"
-        },
-        about: {
-            title: "About UBreak WeFix",
-            subtitle: "Your reliable partner in electronics repair.",
-            missionTitle: "Our Mission",
-            missionText: "UBreak WeFix (Fonefix) was founded with a simple mission: To deliver fast, reliable, and affordable electronics repair without compromising on quality.",
-            missionText2: "Our team consists of certified technicians who are passionate about technology. We know how important your phone or computer is to your daily life, and therefore we always strive to repair it as quickly as possible – often while you wait.",
-            valuesTitle: "Our Values",
-            valQuality: "Quality",
-            valQualityDesc: "We only use the highest quality spare parts.",
-            valTransparency: "Transparency",
-            valTransparencyDesc: "The price you see is the price you pay. No hidden fees.",
-            valSustainability: "Sustainability",
-            valSustainabilityDesc: "By repairing, we extend the life of electronics and reduce e-waste."
-        },
-        footer: {
-            slogan: "Your reliable partner in electronics repair.",
-            contact: "Contact Us",
-            hours: "OPENING HOURS",
-            monFri: "Monday - Friday",
-            sat: "Saturday",
-            information: "Information",
-            terms: "Terms & Conditions",
-            privacy: "Privacy Policy",
-            payment: "Payment Terms",
-            shipping: "Shipping & Delivery",
-            return: "Return & Refund",
-            cookiePolicy: "Cookie Policy",
-            socials: "Follow us"
-        },
-        blog: {
-            title: "Blog & News",
-            subtitle: "Tips, tricks, and guides for your electronics",
-            readMore: "Read More",
-            published: "Published",
-            writtenBy: "Written by",
-            backToBlog: "Back to Blog",
-            relatedPosts: "Related Articles"
-        },
-        serviceCards: {
-            repair: {
-                title: "Repair",
-                desc: "Get your device fixed today"
-            },
-            sellPhone: {
-                title: "Sell Your Phone",
-                desc: ""
-            },
-            sellScreen: {
-                title: "Sell Broken Screen",
-                desc: ""
-            }
-        },
-        common: {
-            readMore: "Read More",
-            submit: "Submit",
-            back: "Back",
-            next: "Next"
-        },
-        cta: {
-            title: "Ready to get your device fixed?",
-            subtitle: "Book a slot in-store or send your device to us. We are ready to help.",
-            btn: "Start Repair"
-        },
-        faq: {
-            title: "Frequently Asked Questions",
-            q1: "How long does a screen repair take?",
-            a1: "A typical iPhone screen repair takes about 30-45 minutes. Samsung and other brands may take up to 60 minutes.",
-            q2: "Do I lose my warranty upon repair?",
-            a2: "We use original parts, so in many cases the warranty is preserved. We always provide our own 24-month warranty.",
-            q3: "Do I need to book an appointment?",
-            a3: "It is not necessary, but we recommend it to avoid waiting time. We also accept walk-ins.",
-            q4: "What if you can't repair my phone?",
-            a4: "Then you pay nothing! We operate on a \"No Cure, No Pay\" principle."
-        },
-        booking: {
-            title: "Online Booking",
-            subtitle: "Find a time that suits you and skip the line.",
-            selectDate: "Select a date",
-            selectTime: "Select a time",
-            yourDetails: "Your Details",
-            name: "Your Name",
-            email: "Your Email",
-            phone: "Your Phone Number",
-            device: "Device (e.g. iPhone 13)",
-            issue: "Issue Description",
-            submit: "Confirm Booking",
-            success: "Thank you for your booking! We have sent a confirmation email."
-        },
-        customPC: {
-            title: "BUILD YOUR",
-            titleAccent: "DREAM PC",
-            subtitle: "Start here. Choose your category, and our smart builder guides you to the perfect machine.",
-            gaming: {
-                title: "Gaming Elite",
-                desc: "Ultra-high FPS. Ray Tracing. RGB. Built to dominate your favorite games."
-            },
-            workstation: {
-                title: "Pro Workstation",
-                desc: "Video editing, 3D rendering, programming. Stable performance for heavy tasks."
-            },
-            office: {
-                title: "Home Office / Budget",
-                desc: "Fast, quiet, and reliable. Perfect for study, office work, and web."
-            },
-            cta: "Start Configuration"
-        },
-        motherboard: {
-            title: "Advanced Motherboard Repairs",
-            subtitle: "We specialize in component-level repairs using state-of-the-art microsoldering equipment.",
-            chipLevel: "Chip-Level Repair",
-            chipLevelDesc: "Replacing damaged ICs, capacitors, and tiny components.",
-            liquidDamage: "Liquid Damage Treatment",
-            liquidDamageDesc: "Deep cleaning and board reconstruction after water damage.",
-            dataRecovery: "Data Recovery",
-            dataRecoveryDesc: "Retrieving precious data from dead or damaged devices.",
-            cta: "Learn more about Microsoldering",
-            microsolderingPage: {
-                title: "Advanced Microsoldering",
-                subtitle: "We bring dead devices back to life with precision work.",
-                startDiagnostic: "Start Diagnostic Case",
-                steps: {
-                    title: "How it Works",
-                    step1: "Drop-off",
-                    step1Desc: "We receive your device and register the case.",
-                    step2: "Diagnosis",
-                    step2Desc: "Our technicians troubleshoot at component level.",
-                    step3: "Quote",
-                    step3Desc: "You receive a no-obligation repair quote."
-                },
-                trust: {
-                    certified: "Certified Technicians",
-                    equipment: "Lab-Grade Equipment",
-                    guarantee: "No Cure No Pay"
-                }
-            }
-        },
-        contactPage: {
-            title: "Contact Us",
-            subtitle: "Do you have questions or want to book an appointment? We are ready to help.",
-            tabMessage: "Send Message",
-            tabBook: "Book Appointment",
-            messageTitle: "Send us a message",
-            messageSubtitle: "Fill out the form below, and we will get back to you as soon as possible.",
-            bookTitle: "Book a Store Visit",
-            bookSubtitle: "Choose a time that suits you to drop by.",
-            findUs: "Find Us",
-            address: "Address",
-            phone: "Phone",
-            email: "Email",
-            hours: "Opening Hours",
-            monFri: "Monday - Friday",
-            sat: "Saturday",
-            sun: "Sunday",
-            closed: "Closed",
-            reviews: "reviews",
-            readTrustpilot: "Read reviews on Trustpilot",
-            form: {
-                name: "Name",
-                namePlaceholder: "Your full name",
-                email: "Email",
-                emailPlaceholder: "your@email.com",
-                subject: "Subject",
-                subjectPlaceholder: "What is it about?",
-                message: "Message",
-                messagePlaceholder: "Write your message here...",
-                send: "Send Message",
-                sending: "Sending...",
-                successTitle: "Message Sent!",
-                successText: "We have received your message and will get back to you shortly.",
-                sendNew: "Send a new message",
-                error: "An error occurred. Please try again later."
-            },
-            scheduler: {
-                step1: "1. Time",
-                step2: "2. Contact Info",
-                selectDate: "Select Date",
-                selectTime: "Select Time",
-                next: "Next",
-                detailsName: "Name",
-                detailsEmail: "Email",
-                detailsPhone: "Phone",
-                detailsReason: "Reason (optional)",
-                detailsReasonPlaceholder: "E.g. Screen replacement iPhone 13",
-                back: "Back",
-                confirm: "Confirm Booking",
-                booking: "Booking...",
-                successTitle: "Booking Confirmed!",
-                successText: "We look forward to seeing you",
-                bookNew: "Book another appointment"
-            }
-        },
-        repairs: {
-            selectDevice: "Select your device",
-            selectSeries: "Select your series",
-            selectModel: "Select your model",
-            subtitle: "We repair all major brands and models. Select your device to see prices.",
-            backToBrands: "Back to brands",
-            backToSeries: "Back to series",
-            viewRepairs: "View repairs",
-            noModels: "No models found."
-        },
-        seo: {
-            repairsIndex: {
-                title: "iPhone, Samsung & Computer Repair | UBreak WeFix",
-                desc: "We repair all brands. Get an instant quote. Lifetime warranty on screen replacements.",
-                titleBrand: "{brand} Repair - Odense | UBreak WeFix",
-                titleFamily: "{family} Repair - Odense | Screen & Battery",
-                descBrand: "Professional repair of {brand} devices in Odense. Original parts and 24 month warranty.",
-                descFamily: "Fix your {family} today. We replace screens, batteries and more in under 60 minutes."
-            },
-            repairPage: {
-                title: "{model} Repair Odense | Screen, Battery & More",
-                desc: "Get your {model} repaired at UBreak WeFix. We offer fast screen, battery, and back glass replacement. See prices here."
-            },
-            shop: {
-                title: "Buy iPhones, Cases & Accessories | UBreak WeFix Shop",
-                desc: "Buy screen protectors, cases, chargers, and refurbished iPhones with warranty. Fast delivery and great service.",
-                productTitle: "{product} | UBreak WeFix Shop",
-                productDesc: "Buy {product}. {desc} Price: {price} DKK. Fast delivery and 14 day return policy."
-            },
-            contact: {
-                title: "Contact Us | UBreak WeFix",
-                desc: "Contact UBreak WeFix in Odense. We repair iPhone, Samsung and computer. Find us at Skibhusvej 109 or book an appointment online."
-            },
-            about: {
-                title: "About UBreak WeFix | Your Electronics Expert in Odense",
-                desc: "Read about UBreak WeFix - Odense's leading repair shop for iPhone, Samsung, and computers. We value quality, transparency, and sustainability.",
-                keywords: "about us, ubreak wefix, electronics repair odense, iphone shop, sustainable electronics"
-            }
-        },
-        aboutContent: {
-            bannerTitle: "We fix it – fast, safely, and professionally",
-            whyChooseTitle: "Why choose UBreak WeFix?",
-            whyChoose: [
-                { title: "Free Diagnosis", desc: "Drop by with your device, and our staff will help find the fault and provide a repair quote." },
-                { title: "Great Offers", desc: "If you find a better offer, we'll give you a free soft serve." },
-                { title: "Extensive Product Knowledge", desc: "We repair iPhone, Samsung, Huawei, iPad, OnePlus, Sony, and MacBook." },
-                { title: "Fast Repair Times", desc: "We perform most repairs while you wait or within a day." },
-                { title: "24 Month Warranty", desc: "We always provide a 24-month warranty on all repairs, ensuring you peace of mind." },
-                { title: "No Appointment Needed", desc: "Drop by whenever it suits you. We often repair while you wait." }
-            ],
-            reliableTitle: "Known as Odense's most reliable and fastest mobile repairer",
-            reliableDesc: "Almost all our customers return when they need help again.",
-            location: "You find us here: Skibhusvej 109",
-            phone: "Phone: +45 12 34 56 78",
-
-            mainTitle: "About UBreak WeFix",
-            mainIntro: "At UBreak WeFix, we specialize in professional repair services for electronic devices. Our goal is simple: to deliver fast, reliable, and high-quality repairs, combined with outstanding customer service. We help both private and business customers restore their devices quickly and safely.",
-
-            sections: [
-                {
-                    title: "Quality and reliability in every repair",
-                    content: "We use only high-quality replacement parts sourced from trusted suppliers. This ensures durable repairs and long-lasting results. Every repair is carried out according to strict quality standards."
-                },
-                {
-                    title: "Professional technical expertise",
-                    content: "Our technicians are highly trained professionals with extensive experience. They continuously update their skills to keep up with the latest technologies. Whether you need Screen replacement, Battery replacement, Charging port repair, or Board repair, you can trust us to deliver efficient and professional workmanship."
-                },
-                {
-                    title: "Your device is in safe hands",
-                    content: "We understand how important your device is and how much valuable data it may contain. That is why we handle every device with care, discretion, and respect, ensuring both quality and data security."
-                },
-                {
-                    title: "Fast repairs – minimal waiting time",
-                    content: "Time matters. Many repairs at UBreak WeFix are completed within one hour, allowing you to get back to your daily routine as quickly as possible."
-                },
-                {
-                    title: "24-month warranty",
-                    content: "We offer a 24-month warranty on all repairs, giving you peace of mind and confidence in our services."
-                },
-                {
-                    title: "Customer service built on trust",
-                    content: "Great service goes beyond technical skills. We provide honest advice, transparent pricing, and friendly support, ensuring a safe and positive customer experience."
-                },
-                {
-                    title: "Your long-term repair partner",
-                    content: "Our ambition is to build long-term relationships with our customers by offering reliable, professional, and competitively priced repair services."
-                }
-            ],
-            repairListTitle: "We repair all devices",
-            repairList: ["Smartphones (iPhone, Samsung, and more)", "Tablets", "Laptops", "Other electronic devices"]
-        },
-        shop: {
-            title: "Webshop",
-            products: "Products",
-            searchPlaceholder: "Search products...",
-            showFilters: "Show Filters",
-            category: "Category",
-            allCategories: "All Categories",
-            noBrands: "No brands",
-            noFeatures: "No features",
-            clearAllFilters: "Clear All Filters",
-            clearFilters: "Clear",
-            loading: "Loading products...",
-            noProducts: "No products found matching your criteria.",
-            soldOut: "Sold Out",
-            lowStock: "Low Stock",
-            add: "Add",
-            filters: "Filters",
-            brands: "Brands",
-            features: "Features",
-            backToShop: "Back to Shop",
-            inStock: "In Stock",
-            freeShipping: "Free shipping on orders over 500 DKK",
-            addToCart: "Add to Cart",
-            notFound: "Product not found",
-            loadingProduct: "Loading product..."
-        },
-        map: {
-            visitShop: "Visit the Shop",
-            openWeekdays: "Open all weekdays",
-            findDirections: "Get Directions"
-        },
-        checkout: {
-            completeBooking: "Complete Booking",
-            serviceMethod: "Service Method",
-            shopAddress: "Rugvang 36, 18, 5210 Odense NV",
-            walkIn: "Visit our shop",
-            walkInDesc: "Done same day",
-            mailIn: "Send device to us",
-            mailInDesc: "Repaired within 24 hours",
-            selectDate: "Select date",
-            selectTime: "Select time",
-            yourAddress: "Your Address",
-            customerType: "Customer Type",
-            private: "Private",
-            business: "Business",
-            terms: "I accept the terms and conditions",
-            confirmBooking: "Confirm Booking",
-            pay: "Proceed to Payment",
-            backToShop: "Continue Shopping",
-            emptyCart: "Your cart is empty",
-            browseRepairs: "Browse Repairs",
-            orderConfirmed: "Order Confirmed!",
-            thankYou: "Thank you for your order.",
-            orderReceived: "We have received your order and payment.",
-            backToHome: "Back to Home",
-            viewOrders: "View My Orders",
-            free: "FREE",
-            deliveryMethod: "Delivery Method",
-            selectDropPoint: "Select Drop Point",
-            enterZipForDropPoint: "Enter zip code below to select drop point",
-            noDropPoints: "No drop points found.",
-            payment: "Payment",
-            payOnline: "Pay Now (Online)",
-            payInStore: "Pay in Store",
-            sendDeviceFree: "Send device to us",
-            sendDeviceDesc: "We send label or you send yourself.",
-            buyLabel: "Buy return label",
-            sendSelf: "I send myself",
-            selectCarrier: "Select Carrier",
-            labelEmailInfo: "We send a label to your email, which you can print and attach to the package.",
-            sendPackageTo: "Send package to:",
-            includeNote: "Remember to include a note with your order number and contact details.",
-            loadingShipping: "Loading shipping...",
-            orderSummary: "Order Summary",
-            total: "Total",
-            vatIncluded: "Incl. 25% VAT",
-            deliveryStub: "Delivery",
-            ownShipping: "Own shipping",
-            errorTerms: "Please accept the terms and conditions.",
-            errorAddressLabel: "Please enter address for return label.",
-            errorAddressDelivery: "Please enter delivery address.",
-            processing: "Processing...",
-            namePlaceholder: "Name *",
-            phonePlaceholder: "Phone *",
-            emailPlaceholder: "E-mail *",
-            notesPlaceholder: "Notes (REMEMBER TO INCLUDE PASSCODE FOR YOUR DEVICE)",
-            streetPlaceholder: "Street name and number",
-            zipPlaceholder: "Zip",
-            cityPlaceholder: "City",
-            showOnMap: "Show on map"
-        },
-        mailIn: {
-            seo: {
-                title: "Send your device for repair | Mail-in Service | UBreak WeFix",
-                desc: "Send your iPhone, Samsung or computer for repair by mail. We fix it the same day we receive it and send it back. Free shipping on orders over 500 DKK."
-            },
-            hero: {
-                badge: "MAIL-IN SERVICE",
-                title: "Send your device to us.",
-                subtitle: "Don't live nearby? No problem. Send your device to us, we repair it and send it back the same day.",
-                cta: "Buy Return Label / Book"
-            },
-            steps: {
-                title: "How it works",
-                step1: { title: "1. Create Order", desc: "Find your repair and select 'Send device to us' at checkout." },
-                step2: { title: "2. Pack Device", desc: "Pack your device securely. Include your order number." },
-                step3: { title: "3. Send It", desc: "Drop off the package at the nearest parcel shop with the provided label." },
-                step4: { title: "4. We Fix & Return", desc: "We often repair the same day and ship the device back to you." }
-            },
-            guidelines: {
-                title: "Packaging Tips",
-                list: [
-                    "Use a sturdy box, not an envelope.",
-                    "Use bubble wrap or newspaper to protect the device.",
-                    "Remember to remove SIM card and case if possible.",
-                    "Include a note with your Order Number and Contact Info."
-                ]
-            },
-            faq: {
-                title: "Shipping Questions",
-                q1: "Who pays for shipping?",
-                a1: "For repairs over 500 DKK, we often offer free return shipping. You can buy a shipping label through us for convenience.",
-                q2: "Is my device insured?",
-                a2: "Yes, when using our shipping labels, your package is insured up to a certain amount (depending on carrier).",
-                q3: "How long does it take?",
-                a3: "We typically repair your device the same day we receive it. You usually have it back within 2-3 business days total."
-            }
-        },
-        shippingPolicy: {
-            title: "Shipping and Delivery",
-            intro: "Ubreakwefix.dk works tirelessly to ensure your orders arrive safely and quickly. Local deliveries are made by either our own fleet or third-party providers ensuring the best possible service. See shipping costs below:",
-            pricesTitle: "Shipping Rates and Delivery Estimates",
-            freeShipping: "Free shipping:",
-            freeShippingDesc: "For orders over 500 DKK, we deliver for free in Denmark (excluding Faroe Islands and Greenland) with PostNord Parcel Box, PostNord Business, GLS Parcel Shop, and GLS Business.",
-            under500: "For orders under 500 DKK, the shipping rates below apply.",
-            deliveryTime: "When you order items, you can expect them to be shipped the same day with PostNord if ordered before 17:30 Monday to Thursday and before 17:00 on Friday. PostNord also delivers packages to parcel boxes on Saturdays. With GLS, orders must be placed before 15:00 Monday to Friday for same-day dispatch.",
-            glsTitle: "GLS Delivery Options",
-            postNordTitle: "PostNord Delivery Options",
-            table: {
-                type: "Delivery Type",
-                desc: "Description",
-                price: "Price",
-                glsPrivat: "GLS Private",
-                glsPrivatDesc: "Delivery to private address",
-                glsBusiness: "GLS Business",
-                glsBusinessDesc: "Delivery to business address",
-                glsShop: "GLS Parcel Shop",
-                glsShopDesc: "Pickup in parcel shop",
-                postNordPrivat: "PostNord Private",
-                postNordPrivatDesc: "Delivery to private address",
-                postNordBusiness: "PostNord Business",
-                postNordBusinessDesc: "Delivery to business address",
-                postNordBox: "PostNord Parcel Box",
-                postNordBoxDesc: "Pickup in parcel box/post office"
-            },
-            liabilityTitle: "Liability and Delays",
-            liabilityText1: "UBREAK WEFIX is responsible for the goods until you have received them. We deliver day-to-day if ordered before 16:00 on weekdays. However, unforeseen errors, such as illness, may occur.",
-            liabilityText2: "If your order is delayed by more than 2 business days based on the above guidelines, please contact us via email: support@ubreakwefix.dk stating your name, order number, and order date.",
-            damageTitle: "Damages and Complaints",
-            damageLabel: "Damages:",
-            damageText: "My site ubreakwefix.dk is not liable for products damaged or lost during shipping. If you received your order damaged, please contact the shipping carrier to file a claim.",
-            complaintLabel: "Complaint:",
-            complaintText: "If you discover that your products have been damaged during shipping or have a manufacturing defect, please print a return form and return the product + the return form. Also state the item number and description of why the item is being returned. We cover any postage costs.",
-            contact: {
-                phone: "Contact us:",
-                email: "Email:",
-                address: "Address:",
-            }
-        }
-    }
 };

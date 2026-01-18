@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, Search, Filter, ChevronDown, ChevronRight, X, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Helmet } from 'react-helmet-async';
 
@@ -12,6 +13,7 @@ const Shop = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
+    const { user } = useAuth();
     const { t } = useLanguage();
 
     const [filters, setFilters] = useState({
@@ -285,7 +287,16 @@ const Shop = () => {
                                             </Link>
 
                                             <div className="card-footer">
-                                                <span className="price">{product.price} DKK</span>
+                                                <div className="price-container">
+                                                    {(user && user.role === 'business') ? (
+                                                        <>
+                                                            <span className="price-original" style={{ textDecoration: 'line-through', fontSize: '0.9rem', color: 'var(--text-muted)', marginRight: '8px' }}>{product.price} DKK</span>
+                                                            <span className="price" style={{ color: 'var(--primary)' }}>{(product.price * 0.8).toFixed(0)} DKK</span>
+                                                        </>
+                                                    ) : (
+                                                        <span className="price">{product.price} DKK</span>
+                                                    )}
+                                                </div>
                                                 <button
                                                     onClick={() => addToCart(product)}
                                                     className="add-to-cart-btn"
@@ -740,12 +751,13 @@ const Shop = () => {
                         height: 100vh;
                         width: 300px;
                         background: var(--bg-surface);
-                        z-index: 1000;
+                        z-index: 9999;
                         padding: 24px;
                         transform: translateX(-100%);
                         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                         overflow-y: auto;
                         box-shadow: 20px 0 40px rgba(0,0,0,0.1);
+                        display: block !important; /* Override index.css display:none */
                     }
                     .shop-sidebar.open {
                         transform: translateX(0);

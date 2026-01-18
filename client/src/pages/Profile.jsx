@@ -18,12 +18,22 @@ import {
     ChevronRight,
     Search,
     Wrench,
-    Smartphone
+    Smartphone,
+    ArrowRight,
+    PieChart,
+    BarChart,
+    FileText,
+    PhoneCall,
+    TrendingUp,
+    AlertCircle,
+    Download,
+    X,
+    CheckCircle
 } from 'lucide-react';
 import OrderCard from '../components/profile/OrderCard';
 
 const Profile = () => {
-    const { user, logout } = useAuth();
+    const { user, realUser, logout } = useAuth(); // Import realUser
     const { t } = useLanguage();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -67,7 +77,7 @@ const Profile = () => {
     const shopOrders = orders.filter(o => o.type === 'shop');
 
     return (
-        <div style={{ background: 'var(--bg-body)', minHeight: '90vh', paddingTop: '80px', paddingBottom: '60px' }}>
+        <div className="profile-page-wrapper">
             <div className="container" style={{ maxWidth: '1200px' }}>
 
                 {/* Header / Welcome Section */}
@@ -83,29 +93,42 @@ const Profile = () => {
                 <div className="profile-grid">
 
                     {/* SIDEBAR */}
-                    <div className="card-glass" style={{ padding: '20px', position: 'sticky', top: '100px' }}>
+                    <div className="card-glass profile-sidebar">
 
                         {/* User Profile Summary */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid var(--border-light)', marginBottom: '20px' }}>
                             <div style={{
                                 width: '80px', height: '80px', borderRadius: '50%', background: 'var(--bg-element)',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '15px',
-                                border: '2px solid var(--primary)', position: 'relative'
+                                border: user.role === 'business' ? '2px solid #f59e0b' : '2px solid var(--primary)', position: 'relative'
                             }}>
-                                <User size={40} color="var(--primary)" />
-                                <div style={{
-                                    position: 'absolute', bottom: '0', right: '0', background: 'var(--primary)',
-                                    borderRadius: '50%', padding: '4px', cursor: 'pointer'
-                                }}>
-                                    <Camera size={12} color="white" />
-                                </div>
+                                <User size={40} color={user.role === 'business' ? '#f59e0b' : "var(--primary)"} />
+                                {user.role === 'business' && (
+                                    <div style={{
+                                        position: 'absolute', bottom: '-10px', background: '#f59e0b', color: 'white',
+                                        padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold'
+                                    }}>
+                                        BUSINESS
+                                    </div>
+                                )}
+                                {user.role !== 'business' && (
+                                    <div style={{
+                                        position: 'absolute', bottom: '0', right: '0', background: 'var(--primary)',
+                                        borderRadius: '50%', padding: '4px', cursor: 'pointer'
+                                    }}>
+                                        <Camera size={12} color="white" />
+                                    </div>
+                                )}
                             </div>
                             <h3 style={{ fontSize: '1.1rem', marginBottom: '5px' }}>{user.name}</h3>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{user.email}</p>
+                            {user.role === 'business' && (
+                                <p style={{ color: '#f59e0b', fontSize: '0.8rem', fontWeight: 'bold', marginTop: '5px' }}>Verificeret Erhvervskonto</p>
+                            )}
                         </div>
 
                         {/* Navigation Links */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div className="profile-nav-items">
                             {navItems.map((item) => {
                                 const Icon = item.icon;
                                 const isActive = activeTab === item.id;
@@ -181,16 +204,20 @@ const Profile = () => {
 
 // --- SUB-COMPONENTS ---
 
-const DashboardSection = ({ user, orders, loading }) => {
+const DashboardSection = ({ user, orders = [], loading }) => {
+    const navigate = useNavigate();
+    const [supportModal, setSupportModal] = useState(null); // { show: boolean, type: 'success' | 'error', title: '', message: '' }
+
     // Calculate stats
-    const totalOrders = orders.length;
-    const pendingRepairs = orders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled').length;
-    const totalSpent = orders
+    const safeOrders = Array.isArray(orders) ? orders : [];
+    const totalOrders = safeOrders.length;
+    const pendingRepairs = safeOrders.filter(o => o.status !== 'Completed' && o.status !== 'Cancelled').length;
+    const totalSpent = safeOrders
         .filter(o => o.status === 'completed' || o.status === 'Completed')
         .reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0);
 
     // SMART: Eco Impact Calculation (approx 175g e-waste per phone saved)
-    const repairCount = orders.filter(o => o.type === 'repair').length;
+    const repairCount = safeOrders.filter(o => o.type === 'repair').length;
     const wasteSaved = (repairCount * 0.175).toFixed(2); // in kg
 
     // SMART: Loyalty Tier Calculation
@@ -218,12 +245,342 @@ const DashboardSection = ({ user, orders, loading }) => {
     // SMART: Time-aware greeting
     const hour = new Date().getHours();
     const timeGreeting = hour < 12 ? 'Good Morning' : hour < 18 ? 'Good Afternoon' : 'Good Evening';
+    const userName = user?.name ? user.name.split(' ')[0] : 'User';
+
+    // *** BUSINESS DASHBOARD VIEW ***
+    if (user.role === 'business') {
+        // --- B2B SMART LOGIC ---
+        // 1. Spend Analytics
+        const totalRepairSpend = safeOrders.filter(o => o.type === 'repair').reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0);
+        const totalShopSpend = safeOrders.filter(o => o.type === 'shop').reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0);
+        const totalB2BSpend = totalShopSpend + totalRepairSpend;
+        const repairPercentage = totalB2BSpend > 0 ? (totalRepairSpend / totalB2BSpend) * 100 : 0;
+
+        // 2. Fleet Health (Top Devices & Issues)
+        const deviceCounts = {};
+        const issueCounts = {};
+        safeOrders.filter(o => o.type === 'repair').forEach(o => {
+            if (o.device_model) deviceCounts[o.device_model] = (deviceCounts[o.device_model] || 0) + 1;
+            if (o.problem) issueCounts[o.problem] = (issueCounts[o.problem] || 0) + 1;
+        });
+        const topDevices = Object.entries(deviceCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+        const topIssues = Object.entries(issueCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+
+        // 3. Invoices (Mocking recent completed orders as having invoices)
+        const recentInvoices = safeOrders
+            .filter(o => o.status === 'Completed' || o.status === 'completed')
+            .slice(0, 5);
+
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px' }}>
+                    <div>
+                        <h2 style={{ fontSize: '1.8rem', marginBottom: '5px', color: 'var(--text-main)' }}>
+                            {timeGreeting}, {userName}
+                        </h2>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
+                            Business Command Center
+                        </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '15px' }}>
+                        <button
+                            className="btn btn-primary"
+                            style={{ gap: '8px' }}
+                            onClick={() => navigate('/reparationer?mode=priority')}
+                        >
+                            <Wrench size={18} /> Book Priority Repair
+                        </button>
+                    </div>
+                </div>
+
+                {/* 1. KEY METRICS ROW */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+                    {/* Total Spend Card */}
+                    <div className="card-glass" style={{ padding: '25px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+                            <div>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: '500' }}>Total B2B Spend</p>
+                                <h3 style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--text-main)' }}>{totalB2BSpend.toLocaleString()} DKK</h3>
+                            </div>
+                            <div style={{ background: 'var(--bg-element)', padding: '10px', borderRadius: '10px' }}>
+                                <TrendingUp size={20} color="var(--primary)" />
+                            </div>
+                        </div>
+                        {/* Visual Bar */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                                <span>Repairs ({repairPercentage.toFixed(0)}%)</span>
+                                <span>Shop ({100 - repairPercentage.toFixed(0)}%)</span>
+                            </div>
+                            <div style={{ height: '8px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden', display: 'flex' }}>
+                                <div style={{ width: `${repairPercentage}%`, background: 'var(--primary)' }}></div>
+                                <div style={{ width: `${100 - repairPercentage}%`, background: '#3b82f6', opacity: 0.6 }}></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Fleet Health Card */}
+                    <div className="card-glass" style={{ padding: '25px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+                            <div>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: '500' }}>Fleet Health</p>
+                                <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-main)' }}>Top Devices</h3>
+                            </div>
+                            <div style={{ background: 'var(--bg-element)', padding: '10px', borderRadius: '10px' }}>
+                                <PieChart size={20} color="#10b981" />
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            {topDevices.length > 0 ? topDevices.map(([device, count], idx) => (
+                                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '4px' }}>
+                                    <span>{device}</span>
+                                    <span style={{ fontWeight: 'bold', color: 'var(--text-main)' }}>{count}</span>
+                                </div>
+                            )) : <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No data yet.</p>}
+                        </div>
+                    </div>
+
+                    {/* Support Status */}
+                    <div className="card-glass" style={{ padding: '25px', background: 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)', color: 'white' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                            <div>
+                                <p style={{ opacity: 0.8, fontSize: '0.9rem', fontWeight: '500' }}>Priority Support</p>
+                                <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Dedicated Line</h3>
+                            </div>
+                            <PhoneCall size={24} color="white" />
+                        </div>
+                        <p style={{ fontSize: '0.9rem', opacity: 0.9, marginBottom: '20px' }}>
+                            Need urgent assistance? Top-tier support for our partners.
+                        </p>
+                        <button
+                            className="btn"
+                            style={{ background: 'white', color: '#1e40af', width: '100%', fontSize: '0.9rem', fontWeight: 'bold' }}
+                            onClick={async () => {
+                                try {
+                                    const res = await fetch('http://localhost:3001/api/business/support-request', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ user })
+                                    });
+                                    if (res.ok) {
+                                        setSupportModal({
+                                            show: true,
+                                            type: 'success',
+                                            title: 'Priority Request Sent',
+                                            message: 'A dedicated B2B agent has been notified and will call you within 15 minutes.'
+                                        });
+                                    } else {
+                                        setSupportModal({
+                                            show: true,
+                                            type: 'error',
+                                            title: 'Request Failed',
+                                            message: 'Could not send request. Please call us directly.'
+                                        });
+                                    }
+                                } catch (e) {
+                                    console.error(e);
+                                    setSupportModal({
+                                        show: true,
+                                        type: 'error',
+                                        title: 'Connection Error',
+                                        message: 'Please call +45 12 34 56 78 for immediate assistance.'
+                                    });
+                                }
+                            }}
+                        >
+                            Request Callback
+                        </button>
+                    </div>
+                </div>
+
+                {/* 2. MAIN SECTIONS GRID */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px' }}>
+
+                    {/* RECENT INVOICES */}
+                    <div className="card-glass" style={{ padding: '25px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h3 style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <FileText size={20} className="text-primary" /> Invoice Center
+                            </h3>
+                            <button className="btn-link" style={{ fontSize: '0.85rem', color: 'var(--primary)', textDecoration: 'none', background: 'none', border: 'none', cursor: 'pointer' }}>View All</button>
+                        </div>
+
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                                <thead>
+                                    <tr style={{ color: 'var(--text-muted)', textAlign: 'left', borderBottom: '1px solid var(--border-light)' }}>
+                                        <th style={{ padding: '10px 0', fontWeight: 'medium' }}>Order ID</th>
+                                        <th style={{ padding: '10px 0', fontWeight: 'medium' }}>Date</th>
+                                        <th style={{ padding: '10px 0', fontWeight: 'medium' }}>Amount</th>
+                                        <th style={{ padding: '10px 0', fontWeight: 'medium' }}>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {recentInvoices.length > 0 ? recentInvoices.map((inv) => (
+                                        <tr key={inv.id} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                                            <td style={{ padding: '12px 0', fontWeight: '500' }}>#{inv.id}</td>
+                                            <td style={{ padding: '12px 0', color: 'var(--text-muted)' }}>{new Date(inv.created_at).toLocaleDateString()}</td>
+                                            <td style={{ padding: '12px 0' }}>{inv.total_amount} DKK</td>
+                                            <td style={{ padding: '12px 0' }}>
+                                                <button style={{
+                                                    display: 'flex', alignItems: 'center', gap: '5px',
+                                                    background: 'var(--bg-element)', border: 'none',
+                                                    padding: '6px 10px', borderRadius: '4px',
+                                                    cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-main)'
+                                                }}>
+                                                    <Download size={14} /> PDF
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )) : (
+                                        <tr>
+                                            <td colSpan="4" style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted)' }}>No recent invoices found.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* COMMON ISSUES ANALYTICS */}
+                    <div className="card-glass" style={{ padding: '25px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            <h3 style={{ fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <AlertCircle size={20} color="#ef4444" /> Fleet Issues
+                            </h3>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Based on repair history</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                            {topIssues.length > 0 ? topIssues.map(([issue, count], idx) => (
+                                <div key={idx}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px', fontSize: '0.9rem' }}>
+                                        <span>{issue}</span>
+                                        <span style={{ color: 'var(--text-muted)' }}>{count} incidents</span>
+                                    </div>
+                                    <div style={{ width: '100%', height: '6px', background: 'var(--bg-element)', borderRadius: '3px', overflow: 'hidden' }}>
+                                        <div style={{ width: `${(count / totalRepairSpend * 1000) > 100 ? 80 : (count * 20)}%`, background: idx === 0 ? '#ef4444' : '#f59e0b', height: '100%' }}></div>
+                                    </div>
+                                </div>
+                            )) : <p style={{ color: 'var(--text-muted)' }}>Not enough data to analyze issues.</p>}
+
+                            <div style={{ marginTop: '15px', padding: '15px', background: '#eff6ff', borderRadius: '8px', border: '1px solid #dbeafe' }}>
+                                <h4 style={{ color: '#1e40af', fontSize: '0.9rem', marginBottom: '5px' }}>Pro Tip:</h4>
+                                <p style={{ color: '#1e3a8a', fontSize: '0.85rem', lineHeight: '1.4' }}>
+                                    {topIssues[0] ? `We see a lot of ${topIssues[0][0].toLowerCase()}. Consider our protective cases to reduce damage by 40%.` : 'Regular maintenance can extend device lifespan by 2 years.'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                {/* MODERN MODAL OVERLAY */}
+                {supportModal && supportModal.show && (
+                    <div style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: 'rgba(0, 0, 0, 0.6)',
+                        backdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                        animation: 'fadeIn 0.2s ease-out'
+                    }} onClick={() => setSupportModal(null)}>
+                        <div style={{
+                            background: 'white', // fallback
+                            background: 'rgba(255, 255, 255, 0.95)',
+                            padding: '40px',
+                            borderRadius: '24px',
+                            maxWidth: '450px',
+                            width: '90%',
+                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                            textAlign: 'center',
+                            position: 'relative',
+                            border: '1px solid rgba(255, 255, 255, 0.5)',
+                            transform: 'translateY(0)',
+                            animation: 'slideUp 0.3s ease-out'
+                        }} onClick={e => e.stopPropagation()}>
+
+                            <button
+                                onClick={() => setSupportModal(null)}
+                                style={{
+                                    position: 'absolute',
+                                    top: '20px',
+                                    right: '20px',
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: '#64748b'
+                                }}
+                            >
+                                <X size={24} />
+                            </button>
+
+                            <div style={{
+                                width: '80px',
+                                height: '80px',
+                                background: supportModal.type === 'success' ? '#dcfce7' : '#fee2e2',
+                                borderRadius: '50%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                margin: '0 auto 24px auto'
+                            }}>
+                                {supportModal.type === 'success' ? (
+                                    <CheckCircle size={40} color="#16a34a" />
+                                ) : (
+                                    <AlertCircle size={40} color="#dc2626" />
+                                )}
+                            </div>
+
+                            <h3 style={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: '#0f172a',
+                                marginBottom: '12px'
+                            }}>
+                                {supportModal.title}
+                            </h3>
+
+                            <p style={{
+                                color: '#64748b',
+                                fontSize: '1.05rem',
+                                lineHeight: '1.6',
+                                marginBottom: '32px'
+                            }}>
+                                {supportModal.message}
+                            </p>
+
+                            <button
+                                onClick={() => setSupportModal(null)}
+                                className="btn btn-primary"
+                                style={{
+                                    width: '100%',
+                                    padding: '16px',
+                                    fontSize: '1rem',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+    // *** END BUSINESS DASHBOARD VIEW ***
 
     // Find most recent active repair
-    const activeRepair = orders.find(o => o.status !== 'Completed' && o.status !== 'Cancelled' && o.status !== 'Rejected');
+    const activeRepair = safeOrders.find(o => o.status !== 'Completed' && o.status !== 'Cancelled' && o.status !== 'Rejected');
 
     // SMART: Extract unique devices from history WITH Warranty Check
-    const uniqueDevices = orders
+    const uniqueDevices = safeOrders
         .filter(o => o.type === 'repair')
         .reduce((acc, curr) => {
             const model = curr.device_model;
@@ -260,20 +617,31 @@ const DashboardSection = ({ user, orders, loading }) => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 5px' }}>
                 <div>
-                    <h2 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>{timeGreeting}, {user.name.split(' ')[0]}</h2>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>{timeGreeting}, {userName}</h2>
                     <p style={{ color: 'var(--text-muted)' }}>Here is your repair overview.</p>
                 </div>
                 {/* Loyalty Badge */}
                 <div style={{ textAlign: 'right' }}>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '4px' }}>My Status</div>
-                    <div style={{
-                        background: tier === 'Gold' ? 'linear-gradient(135deg, #fbbf24, #d97706)' : tier === 'Silver' ? 'linear-gradient(135deg, #9ca3af, #4b5563)' : '#e5e7eb',
-                        color: tier === 'Member' ? 'black' : 'white',
-                        padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                    }}>
-                        {tier} Member
-                    </div>
+                    {user.role === 'business' ? (
+                        <div style={{
+                            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                            color: 'white',
+                            padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem',
+                            boxShadow: '0 2px 10px rgba(245, 158, 11, 0.3)'
+                        }}>
+                            Business Partner
+                        </div>
+                    ) : (
+                        <div style={{
+                            background: tier === 'Gold' ? 'linear-gradient(135deg, #fbbf24, #d97706)' : tier === 'Silver' ? 'linear-gradient(135deg, #9ca3af, #4b5563)' : '#e5e7eb',
+                            color: tier === 'Member' ? 'black' : 'white',
+                            padding: '4px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.9rem',
+                            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                        }}>
+                            {tier} Member
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -319,6 +687,12 @@ const DashboardSection = ({ user, orders, loading }) => {
                     <div style={{ marginBottom: '20px' }}>
                         <h4 style={{ fontSize: '1.5rem', marginBottom: '5px' }}>{activeRepair.device_model}</h4>
                         <p style={{ color: 'var(--text-muted)' }}>{activeRepair.problem}</p>
+                        {activeRepair.booking_date && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px', fontSize: '0.9rem', color: 'var(--primary)', background: 'rgba(37, 99, 235, 0.1)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
+                                <Clock size={14} />
+                                <span>{activeRepair.booking_date} {activeRepair.booking_time ? `at ${activeRepair.booking_time}` : ''}</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Simple Progress Bar Visual */}
@@ -482,7 +856,9 @@ const SettingsSection = ({ user }) => {
             await axios.put(`/api/users/${user.id}`, formData);
 
             // Update local storage so AuthContext picks up the new data on reload
-            const updatedUser = { ...user, ...formData };
+            // FIX: Use realUser (permanent data) instead of user (active data) to avoid overwriting role
+            const baseUser = realUser || user;
+            const updatedUser = { ...baseUser, ...formData };
             localStorage.setItem('user', JSON.stringify(updatedUser));
 
             alert('Profile updated successfully!');

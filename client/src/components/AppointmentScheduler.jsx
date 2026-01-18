@@ -26,7 +26,7 @@ const AppointmentScheduler = () => {
     const handleBook = async () => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:3001/api/bookings', {
+            await axios.post('/api/bookings', {
                 customerName: details.name,
                 customerEmail: details.email,
                 customerPhone: details.phone,
@@ -85,6 +85,7 @@ const AppointmentScheduler = () => {
                         {timeSlots.map(slot => (
                             <button
                                 key={slot}
+                                data-testid={`time-slot-${slot}`}
                                 onClick={() => setTime(slot)}
                                 style={{
                                     padding: '10px',
@@ -103,6 +104,7 @@ const AppointmentScheduler = () => {
 
                     <div style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end' }}>
                         <button
+                            data-testid="booking-next-btn"
                             className="btn btn-primary"
                             disabled={!date || !time}
                             onClick={() => setStep(2)}
@@ -126,6 +128,7 @@ const AppointmentScheduler = () => {
                         <div className="input-with-icon">
                             <User size={18} className="icon" />
                             <input
+                                data-testid="booking-name-input"
                                 type="text"
                                 className="input-field"
                                 placeholder={t('contactPage.scheduler.detailsName')}
@@ -139,6 +142,7 @@ const AppointmentScheduler = () => {
                         <div className="input-with-icon">
                             <Mail size={18} className="icon" />
                             <input
+                                data-testid="booking-email-input"
                                 type="email"
                                 className="input-field"
                                 placeholder={t('contactPage.scheduler.detailsEmail')}
@@ -152,6 +156,7 @@ const AppointmentScheduler = () => {
                         <div className="input-with-icon">
                             <Phone size={18} className="icon" />
                             <input
+                                data-testid="booking-phone-input"
                                 type="tel"
                                 className="input-field"
                                 placeholder={t('contactPage.scheduler.detailsPhone')}
@@ -162,12 +167,13 @@ const AppointmentScheduler = () => {
                     </div>
                     <div>
                         <label>{t('contactPage.scheduler.detailsReason')}</label>
-                        <input type="text" className="input-field" placeholder={t('contactPage.scheduler.detailsReasonPlaceholder')} value={details.reason} onChange={e => setDetails({ ...details, reason: e.target.value })} style={{ width: '100%', padding: '12px' }} />
+                        <input data-testid="booking-reason-input" type="text" className="input-field" placeholder={t('contactPage.scheduler.detailsReasonPlaceholder')} value={details.reason} onChange={e => setDetails({ ...details, reason: e.target.value })} style={{ width: '100%', padding: '12px' }} />
                     </div>
 
                     <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
                         <button className="btn btn-outline" onClick={() => setStep(1)} style={{ flex: 1 }}>{t('contactPage.scheduler.back')}</button>
                         <button
+                            data-testid="booking-submit-btn"
                             className="btn btn-primary"
                             disabled={!details.name || !details.email || !details.phone || loading}
                             onClick={handleBook}

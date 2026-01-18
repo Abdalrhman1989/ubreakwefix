@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -45,7 +46,43 @@ const Register = () => {
                         {t('auth.registerTitle')}
                     </h2>
 
-                    {error && <div style={{ background: '#FECACA', color: '#DC2626', padding: '10px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>{error}</div>}
+                    {error && <div data-testid="register-error" style={{ background: '#FECACA', color: '#DC2626', padding: '10px', borderRadius: '8px', marginBottom: '20px', textAlign: 'center' }}>{error}</div>}
+
+                    <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'center' }}>
+                        <GoogleLogin
+                            text="signup_with"
+                            onSuccess={async (credentialResponse) => {
+                                setLoading(true);
+                                try {
+                                    const res = await fetch('http://localhost:3001/api/auth/google', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ token: credentialResponse.credential })
+                                    });
+                                    const data = await res.json();
+                                    if (data.success) {
+                                        localStorage.setItem('user', JSON.stringify(data.user));
+                                        window.location.href = '/profile';
+                                    } else {
+                                        setError('Google Signup failed');
+                                    }
+                                } catch (e) {
+                                    console.error(e);
+                                    setError('Connection error');
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            onError={() => {
+                                setError('Google Signup Failed');
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ position: 'relative', margin: '30px 0' }}>
+                        <hr style={{ borderColor: 'var(--border-light)' }} />
+                        <span style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: 'var(--bg-surface)', padding: '0 10px', color: 'var(--text-muted)', fontSize: '0.8rem' }}>OR</span>
+                    </div>
 
                     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '20px' }}>
                         <div>

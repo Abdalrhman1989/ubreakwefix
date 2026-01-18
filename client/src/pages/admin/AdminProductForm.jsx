@@ -30,27 +30,54 @@ const AdminProductForm = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        let active = true;
         fetchCategories();
-        if (isEditMode) {
-            fetchProduct();
-        }
+
+        const fetchData = async () => {
+            if (isEditMode) {
+                setLoading(true); // Block UI
+                try {
+                    const res = await axios.get(`/api/products/${id}`);
+                    if (active) {
+                        const prod = res.data;
+                        setFormData({
+                            ...prod,
+                            condition: prod.specs?.condition || prod.condition || '',
+                            storage: prod.specs?.storage || prod.storage || '',
+                            color: prod.specs?.color || prod.color || '',
+                            specs: prod.specs || { brand: '', model: '', features: [] }
+                        });
+                    }
+                } catch (error) {
+                    if (active) {
+                        console.error("Error fetching product:", error);
+                        alert("Failed to load product data");
+                    }
+                } finally {
+                    if (active) setLoading(false);
+                }
+            }
+        };
+
+        fetchData();
+
+        return () => { active = false; };
     }, [id]);
+
+    if (loading && isEditMode) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading...</div>;
 
     const fetchCategories = async () => {
         try {
             const res = await axios.get('/api/categories');
             setCategories(res.data);
-
-            // Auto-select first if new
             if (!isEditMode && res.data.length > 0) {
-                // Don't auto-set, force user to choose
+                // No auto-select
             }
         } catch (error) {
             console.error("Error fetching categories:", error);
         }
     };
 
-    // Helper to format category name with hierarchy
     const getFormattedCategories = () => {
         const map = {};
         categories.forEach(c => map[c.id] = c);
@@ -67,24 +94,6 @@ const AdminProductForm = () => {
     };
 
     const formattedCategories = getFormattedCategories();
-
-    const fetchProduct = async () => {
-        try {
-            const res = await axios.get(`/api/products/${id}`);
-            const prod = res.data;
-            // Merge specs into top level for form handling if needed, or keep nested
-            setFormData({
-                ...prod,
-                condition: prod.specs?.condition || prod.condition || '', // Fallback
-                storage: prod.specs?.storage || prod.storage || '',
-                color: prod.specs?.color || prod.color || '',
-                specs: prod.specs || { brand: '', model: '', features: [] }
-            });
-        } catch (error) {
-            console.error("Error fetching product:", error);
-            alert("Failed to load product data");
-        }
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -107,6 +116,7 @@ const AdminProductForm = () => {
     };
 
     const handleSubmit = async (e) => {
+        console.log("DEBUG: handleSubmit CALLED", isEditMode);
         e.preventDefault();
         setLoading(true);
 
@@ -124,7 +134,9 @@ const AdminProductForm = () => {
 
         try {
             if (isEditMode) {
-                await axios.put(`/api/admin/products/${id}`, payload);
+                console.log("DEBUG: Sending PUT payload", payload);
+                const res = await axios.put(`/api/admin/products/${id}`, payload);
+                console.log("DEBUG: PUT Response", res.data);
             } else {
                 await axios.post('/api/admin/products', payload);
             }
@@ -150,7 +162,7 @@ const AdminProductForm = () => {
                 {isEditMode ? 'Edit Product' : 'Add New Product'}
             </h1>
 
-            <form onSubmit={handleSubmit} className="admin-form">
+            <form onSubmit={handleSubmit} className="admin-form" noValidate>
                 <div className="form-group">
                     <label>Product Name</label>
                     <input
@@ -283,6 +295,7 @@ const AdminProductForm = () => {
                 <button
                     type="submit"
                     disabled={loading}
+                    data-testid="admin-save-product-btn"
                     className="btn-primary"
                     style={{ width: '100%', padding: '14px', borderRadius: '12px', fontSize: '1rem', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >

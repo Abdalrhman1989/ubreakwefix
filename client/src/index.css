@@ -28,6 +28,10 @@
 
     --font-main: 'Inter', system-ui, -apple-system, sans-serif;
     --container-width: 1200px;
+
+    /* Section Specific - Sustainability & Recycling (Green Theme) */
+    --bg-sustainability: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    --bg-recycling: linear-gradient(180deg, var(--bg-body) 0%, #f0fdf4 100%);
 }
 
 [data-theme='dark'] {
@@ -51,12 +55,24 @@
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
     --shadow-glow: 0 0 30px rgba(37, 99, 235, 0.25);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 30px rgba(37, 99, 235, 0.25);
+
+    /* Section Specific - Sustainability & Recycling (Dark Green Theme) */
+    --bg-sustainability: linear-gradient(135deg, #022c22 0%, #064e3b 100%);
+    --bg-recycling: linear-gradient(180deg, var(--bg-body) 0%, #064e3b 100%);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -286,10 +302,70 @@ h4 {
     align-items: start;
 }
 
+.profile-sidebar {
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    transition: all 0.3s ease;
+}
+
+.profile-nav-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 @media (max-width: 900px) {
     .profile-grid {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 20px;
+    }
+
+    .profile-sidebar {
+        position: static;
+        padding: 15px;
+        z-index: 10;
+        margin-bottom: 0;
+    }
+
+    .profile-nav-items {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* 2 columns on mobile for easy access */
+        gap: 10px;
+    }
+
+    /* Reset button styles for grid layout */
+    .profile-nav-items button {
+        white-space: normal;
+        padding: 10px 12px !important;
+        text-align: center !important;
+        justify-content: center;
+        background: var(--bg-body) !important;
+        border: 1px solid var(--border-light) !important;
+        font-size: 0.85rem !important;
+    }
+
+    .profile-nav-items button[style*="var(--primary)"] {
+        background: var(--primary) !important;
+        color: white !important;
+        border-color: var(--primary) !important;
+    }
+}
+
+.profile-page-wrapper {
+    background: var(--bg-body);
+    min-height: 90vh;
+    padding-top: 80px;
+    padding-bottom: 60px;
+}
+
+@media (max-width: 900px) {
+    .profile-page-wrapper {
+        padding-top: 100px;
+        /* Restored padding for mobile (Navbar is fixed) */
+        padding-bottom: 80px;
+        /* More bottom space */
     }
 }
 
@@ -786,4 +862,27 @@ div[style*="z-index: 2147483647"] {
 /* Dark Mode Logo Fixes */
 [data-theme='dark'] .trustpilot-logo {
     filter: brightness(0) invert(1);
+}
+
+/* Global Animations for Modals */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Youtube, MapPin } from 'lucide-react';
+import { Instagram, Youtube, MapPin, Leaf } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Footer = () => {
@@ -80,6 +80,18 @@ const Footer = () => {
                             <a href="https://www.google.dk/maps/place/UBREAK+WEFIX/@55.4092977,10.3919378,17z/data=!4m5!3m4!1s0x464ce1dc1460e4d3:0xd29102c06f649452!8m2!3d55.4092977!4d10.3941265?hl=en&authuser=1" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-main)' }}>
                                 <MapPin size={24} />
                             </a>
+                        </div>
+
+                        {/* Sustainability Badge */}
+                        <div style={{
+                            marginTop: '25px',
+                            display: 'flex', alignItems: 'center', gap: '10px',
+                            background: 'rgba(22, 163, 74, 0.1)',
+                            padding: '10px 15px', borderRadius: '12px',
+                            width: 'fit-content', border: '1px solid rgba(22, 163, 74, 0.2)'
+                        }}>
+                            <Leaf size={20} color="#16a34a" />
+                            <span style={{ color: '#16a34a', fontWeight: '600', fontSize: '0.9rem' }}>Repair is Recycling</span>
                         </div>
                     </div>
                 </div>

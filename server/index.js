@@ -1,18 +1,40 @@
 // Force restart
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+console.log("Server starting...");
+console.log("Email User from env:", process.env.EMAIL_USER ? "FOUND" : "MISSING");
+
 const express = require('express');
 const cors = require('cors');
 // path already declared above
 const axios = require('axios');
+const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const db = require('./database');
-const { sendBookingConfirmation, sendStatusUpdate, sendNewApplicationNotification, sendBusinessApprovalEmail, sendContactMessage } = require('./emailService');
+const {
+    sendBookingConfirmation,
+    sendStatusUpdate,
+    sendNewApplicationNotification,
+    sendBusinessApprovalEmail,
+    sendContactMessage,
+    sendOrderConfirmation,
+    sendAdminNotification,
+    sendPriorityCallbackRequest,
+    sendPasswordResetEmail
+} = require('./emailService');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+    console.error(`MW LOG: ${req.method} ${req.url}`);
+    next();
+});
 
 // API Routes
 app.get('/api/health', (req, res) => {
@@ -35,6 +57,54 @@ app.post('/api/contact', async (req, res) => {
     } catch (err) {
         console.error("Contact API Error:", err);
         res.status(500).json({ error: 'Failed to send message' });
+    }
+});
+
+app.post('/api/business/support-request', async (req, res) => {
+    const { user } = req.body;
+    if (!user || user.role !== 'business') {
+        return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        console.log(`Sending Priority Request for Business: ${user.email}`);
+        await sendPriorityCallbackRequest(user);
+        res.json({ success: true, message: 'Priority request sent' });
+    } catch (err) {
+        console.error("Priority Support API Error:", err);
+        res.status(500).json({ error: 'Failed to send priority request' });
+    }
+});
+
+app.post('/api/auth/google', async (req, res) => {
+    const { token } = req.body;
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken: token,
+            audience: GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const { sub: googleId, email, name, picture } = payload;
+
+        let user = await db.get("SELECT * FROM users WHERE google_id = ? OR email = ?", [googleId, email]);
+
+        if (!user) {
+            // Create new user
+            const result = await db.run(
+                "INSERT INTO users (name, email, role, google_id, created_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)",
+                [name, email, 'user', googleId]
+            );
+            user = await db.get("SELECT * FROM users WHERE id = ?", [result.id]);
+        } else if (!user.google_id) {
+            // Link existing user
+            await db.run("UPDATE users SET google_id = ? WHERE id = ?", [googleId, user.id]);
+            user = await db.get("SELECT * FROM users WHERE id = ?", [user.id]);
+        }
+
+        res.json({ success: true, user });
+    } catch (err) {
+        console.error("Google Auth Error:", err);
+        res.status(401).json({ error: "Invalid Google Token" });
     }
 });
 
@@ -77,6 +147,69 @@ app.post('/api/auth/login', async (req, res) => {
     } catch (err) {
         console.error("DEBUG: LOGIN DB ERROR:", err);
         return res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/auth/forgot-password', async (req, res) => {
+    const { email } = req.body;
+    try {
+        const user = await db.get("SELECT * FROM users WHERE email = ?", [email]);
+        if (!user) {
+            // Silence is golden - don't reveal if user exists
+            return res.json({ success: true, message: 'If that email exists, we sent a link.' });
+        }
+
+        const token = crypto.randomBytes(20).toString('hex');
+        const expires = Date.now() + 3600000; // 1 hour
+
+        await db.run("UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?", [token, expires, user.id]);
+
+        await sendPasswordResetEmail(email, token);
+
+        res.json({ success: true, message: 'Reset link sent.' });
+    } catch (err) {
+        console.error("Forgot Password Error:", err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+    const { token, newPassword } = req.body;
+    try {
+        const user = await db.get("SELECT * FROM users WHERE reset_token = ?", [token]);
+
+        if (!user || user.reset_expires < Date.now()) {
+            return res.status(400).json({ error: 'Invalid or expired token' });
+        }
+
+        // In a real app, hash this password!
+        await db.run("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?", [newPassword, user.id]);
+
+        res.json({ success: true, message: 'Password updated' });
+    } catch (err) {
+        console.error("Reset Password Error:", err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.get('/api/auth/verify', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+
+    const token = authHeader.replace('Bearer ', '');
+    // Mock token validation (token format: 'mock-jwt-ID')
+    const userId = token.replace('mock-jwt-', '');
+
+    if (!userId) return res.status(401).json({ error: 'Invalid token' });
+
+    try {
+        const user = await db.get("SELECT * FROM users WHERE id = ?", [userId]);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const { password: _, ...safeUser } = user;
+        res.json({ user: safeUser });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 
@@ -140,14 +273,14 @@ app.get('/api/models/:modelId/repairs', async (req, res) => {
 
 app.post('/api/bookings', async (req, res) => {
     console.log("DEBUG: POST /api/bookings BODY:", req.body);
-    const { userId, customerName, customerEmail, customerPhone, deviceModel, problem, date, language } = req.body;
+    const { userId, customerName, customerEmail, customerPhone, deviceModel, problem, date, time, estimatedPrice, language } = req.body;
     try {
-        const sql = `INSERT INTO bookings (user_id, customer_name, customer_email, customer_phone, device_model, problem, booking_date) VALUES (?,?,?,?,?,?,?)`;
-        const result = await db.run(sql, [userId || null, customerName, customerEmail, customerPhone, deviceModel, problem, date]);
+        const sql = `INSERT INTO bookings (user_id, customer_name, customer_email, customer_phone, device_model, problem, booking_date, booking_time, estimated_price) VALUES (?,?,?,?,?,?,?,?,?)`;
+        const result = await db.run(sql, [userId || null, customerName, customerEmail, customerPhone, deviceModel, problem, date, time, estimatedPrice || 0]);
 
         console.log("DEBUG: INSERT SUCCESS, ID:", result.id);
 
-        const booking = { id: result.id, customer_name: customerName, customer_email: customerEmail, device_model: deviceModel, booking_date: date, problem, customer_phone: customerPhone };
+        const booking = { id: result.id, customer_name: customerName, customer_email: customerEmail, device_model: deviceModel, booking_date: date, booking_time: time, estimated_price: estimatedPrice, problem, customer_phone: customerPhone };
 
         // Send confirmation email
         await sendBookingConfirmation(booking, language);
@@ -794,6 +927,7 @@ app.get('/api/admin/requests/business', async (req, res) => {
 });
 
 app.post('/api/admin/products', async (req, res) => {
+    console.error("DEBUG: POST /api/admin/products HIT", req.body);
     const { name, description, price, category, image_url, stock_quantity, condition, storage, color } = req.body;
     try {
         const result = await db.run("INSERT INTO products (name, description, price, category, image_url, stock_quantity, condition, storage, color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -805,10 +939,17 @@ app.post('/api/admin/products', async (req, res) => {
 });
 
 app.put('/api/admin/products/:id', async (req, res) => {
-    const { name, description, price, category, image_url, stock_quantity, condition, storage, color } = req.body;
+    console.error("DEBUG: PUT /api/admin/products/:id HIT", req.params.id);
+    const { name, description, price, category, category_id, image_url, stock_quantity, condition, storage, color } = req.body;
+    console.log("Updating Product:", req.params.id, req.body);
+    console.log("DEBUG PRICE:", {
+        priceRaw: price,
+        priceType: typeof price,
+        bodyPrice: req.body.price
+    });
     try {
-        await db.run("UPDATE products SET name = ?, description = ?, price = ?, category = ?, image_url = ?, stock_quantity = ?, condition = ?, storage = ?, color = ? WHERE id = ?",
-            [name, description, price, category, image_url, stock_quantity, condition, storage, color, req.params.id]);
+        await db.run("UPDATE products SET name = ?, description = ?, price = ?, category = ?, category_id = ?, image_url = ?, stock_quantity = ?, condition = ?, storage = ?, color = ? WHERE id = ?",
+            [name, description, price, category, category_id, image_url, stock_quantity, condition, storage, color, req.params.id]);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -905,7 +1046,7 @@ app.post('/api/payment/link', async (req, res) => {
     const apiKey = process.env.QUICKPAY_API_KEY;
 
     // --- MOCK MODE ---
-    if (!apiKey || apiKey === 'mock_quickpay_key') {
+    if (true) {
         console.log("Mocking Quickpay Payment for Order:", orderId);
         // Simulate success
         return res.json({

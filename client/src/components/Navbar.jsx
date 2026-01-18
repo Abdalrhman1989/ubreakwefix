@@ -9,7 +9,7 @@ import Logo from './Logo';
 const Navbar = () => {
     const { cart } = useCart();
     const { language, toggleLanguage, t } = useLanguage();
-    const { user } = useAuth();
+    const { user, realUser, switchRole } = useAuth();
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -112,6 +112,30 @@ const Navbar = () => {
                                         >
                                             <User size={16} /> Min Profil // My Profile
                                         </Link>
+
+                                        {/* Switch Role Button */}
+                                        {/* Debug Log for Navbar Button */}
+                                        {/* {console.log("Navbar Render: user.role=", user.role, "realUser.role=", realUser?.role)} */}
+                                        {realUser && realUser.role === 'business' && (
+                                            <button
+                                                onClick={() => {
+                                                    switchRole();
+                                                    setIsUserMenuOpen(false);
+                                                }}
+                                                style={{
+                                                    padding: '10px', textDecoration: 'none', color: user.role === 'business' ? 'var(--primary)' : 'var(--text-muted)',
+                                                    display: 'flex', alignItems: 'center', gap: '10px', borderRadius: '8px',
+                                                    transition: 'background 0.2s', fontSize: '0.9rem', background: 'none', border: 'none', cursor: 'pointer', width: '100%', textAlign: 'left'
+                                                }}
+                                                onMouseEnter={(e) => e.target.style.background = 'var(--bg-element)'}
+                                                onMouseLeave={(e) => e.target.style.background = 'transparent'}
+                                            >
+                                                <div style={{ width: 16, display: 'flex', justifyContent: 'center' }}>
+                                                    {user.role === 'business' ? '🏢' : '👤'}
+                                                </div>
+                                                {user.role === 'business' ? 'Skift til Privat' : 'Skift til Erhverv'}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -233,6 +257,29 @@ const Navbar = () => {
                             <Link to="/profile" className="mobile-nav-link" style={{ color: 'var(--primary)', fontWeight: 'bold' }}>{t('nav.myAccount')}</Link>
                         ) : (
                             <Link to="/login" className="mobile-nav-link">{t('nav.login')}</Link>
+                        )}
+
+                        {/* Mobile Role Switch */}
+                        {realUser && realUser.role === 'business' && (
+                            <button
+                                onClick={() => {
+                                    switchRole();
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                style={{
+                                    background: 'var(--bg-element)',
+                                    border: '1px solid var(--primary)',
+                                    color: 'var(--primary)',
+                                    padding: '10px',
+                                    borderRadius: '8px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
+                                }}
+                            >
+                                <div style={{ fontSize: '1.2rem' }}>{user.role === 'business' ? '🏢' : '👤'}</div>
+                                {user.role === 'business' ? 'Skift til Privat' : 'Skift til Erhverv'}
+                            </button>
                         )}
 
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', alignItems: 'center' }}>

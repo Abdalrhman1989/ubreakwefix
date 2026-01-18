@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 import { ShoppingBag, ArrowLeft, Check, Truck } from 'lucide-react';
@@ -12,6 +13,7 @@ const ProductDetails = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const { addToCart } = useCart();
+    const { user } = useAuth();
     const { t } = useLanguage();
 
     useEffect(() => {
@@ -124,7 +126,21 @@ const ProductDetails = () => {
                     </div>
 
                     <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '30px' }}>
-                        {product.price.toFixed(0)} DKK
+                        {(user && user.role === 'business') ? (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                <span style={{ textDecoration: 'line-through', color: 'var(--text-muted)', fontSize: '1.5rem' }}>
+                                    {product.price.toFixed(0)} DKK
+                                </span>
+                                <span style={{ color: 'var(--primary)' }}>
+                                    {(product.price * 0.8).toFixed(0)} DKK
+                                </span>
+                                <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '4px 8px', borderRadius: '4px' }}>
+                                    Business -20%
+                                </span>
+                            </div>
+                        ) : (
+                            `${product.price.toFixed(0)} DKK`
+                        )}
                     </div>
 
                     <div style={{ marginBottom: '30px', lineHeight: '1.6', color: 'var(--text-muted)', fontSize: '1.1rem' }}>

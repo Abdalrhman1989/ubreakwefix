@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const SHIPMONDO_USER = process.env.SHIPMONDO_API_USER || '89c2e0f2-1dff-47fc-af83-2455abe014db';
-const SHIPMONDO_KEY = process.env.SHIPMONDO_API_KEY || '9f27bf89-95d9-4631-9353-77ef30ee4120';
+const SHIPMONDO_KEY = process.env.SHIPMONDO_API_KEY || 'mock_shipmondo_key';
 const BASE_URL = 'https://app.shipmondo.com/api/public/v3';
 
 // Helper for Base64 Auth

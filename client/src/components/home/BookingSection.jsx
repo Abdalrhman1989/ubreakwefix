@@ -77,7 +77,6 @@ const BookingSection = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                     gap: '40px',
-                    gap: '40px',
                     background: 'var(--bg-surface)',
                     borderRadius: '24px',
                     padding: '40px',
@@ -104,6 +103,7 @@ const BookingSection = () => {
                             ))}
                             {calendarDays.map((day, i) => (
                                 <div key={i}
+                                    data-testid={`date-slot-${format(day, 'yyyy-MM-dd')}`}
                                     onClick={() => onDateClick(day)}
                                     style={{
                                         aspectRatio: '1',
@@ -128,6 +128,7 @@ const BookingSection = () => {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))', gap: '10px' }}>
                             {timeSlots.map(time => (
                                 <button key={time}
+                                    data-testid={`time-slot-${time}`}
                                     onClick={() => setSelectedTime(time)}
                                     style={{
                                         borderRadius: '8px',
@@ -182,7 +183,7 @@ const BookingSection = () => {
                                     </div>
                                 </div>
 
-                                <button type="submit" disabled={!selectedTime || loading} className="btn btn-primary" style={{ width: '100%', marginTop: '10px', opacity: (!selectedTime || loading) ? 0.7 : 1 }}>
+                                <button data-testid="booking-submit-btn" type="submit" disabled={!selectedTime || loading} className="btn btn-primary" style={{ width: '100%', marginTop: '10px', opacity: (!selectedTime || loading) ? 0.7 : 1 }}>
                                     {loading ? '...' : t('booking.submit')}
                                 </button>
                             </form>

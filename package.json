@@ -14,8 +14,11 @@
         "jsdom": "^27.0.1"
     },
     "dependencies": {
+        "axios": "^1.13.2",
         "cors": "^2.8.5",
         "express": "^5.2.1",
-        "pg": "^8.16.3"
+        "google-auth-library": "^10.5.0",
+        "pg": "^8.16.3",
+        "sqlite3": "^5.1.7"
     }
 }

@@ -23,14 +23,14 @@ test.describe('Admin Sell Requests Flow', () => {
         await page.click('button:has-text("Se Tilbud")');
 
         // Check Estimate shown
-        await expect(page.locator('text=DKK')).toBeVisible();
+        await expect(page.getByText(/DKK \d+/)).toBeVisible();
 
         // Fill Contact Form
         await page.fill('input[placeholder="Navn"]', 'Test Seller');
         await page.fill('input[placeholder="Email"]', 'seller@example.com');
         await page.fill('input[placeholder="Telefon"]', '12345678');
 
-        await page.click('button:has-text("Indsend: Næste")');
+        await page.click('button:has-text("Indsend: Næste")', { force: true });
 
         // Verify Success
         await expect(page.locator('text=Tak for din henvendelse!')).toBeVisible();

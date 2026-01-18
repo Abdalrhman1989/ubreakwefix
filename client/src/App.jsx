@@ -30,6 +30,8 @@ import { LanguageProvider } from './context/LanguageContext';
 import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Profile from './pages/Profile';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -54,6 +56,7 @@ import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import CustomPC from './pages/CustomPC';
+import ConsoleRepair from './pages/ConsoleRepair';
 
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminProductForm from './pages/admin/AdminProductForm';
@@ -61,6 +64,7 @@ import AdminCategories from './pages/admin/AdminCategories';
 
 import CookieConsent from './components/CookieConsent';
 import TawkTo from './components/TawkTo';
+import ScrollToTop from './components/ScrollToTop';
 
 function Layout({ children }) {
     const location = useLocation();
@@ -91,6 +95,7 @@ function App() {
                 <CartProvider>
                     <HelmetProvider>
                         <Router>
+                            <ScrollToTop />
                             <Layout>
                                 <Routes>
                                     {/* Public Routes */}
@@ -114,9 +119,12 @@ function App() {
                                     <Route path="/saelg-enhed" element={<SellDevice />} />
                                     <Route path="/saelg-skaerm" element={<SellScreen />} />
                                     <Route path="/microsoldering" element={<Microsoldering />} />
+                                    <Route path="/playstation-repair" element={<ConsoleRepair />} />
 
                                     <Route path="/login" element={<Login />} />
                                     <Route path="/register" element={<Register />} />
+                                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                                    <Route path="/reset-password" element={<ResetPassword />} />
                                     <Route path="/profile" element={<Profile />} />
                                     <Route path="/business/dashboard" element={<BusinessDashboard />} />
 

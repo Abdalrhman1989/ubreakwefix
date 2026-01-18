@@ -38,6 +38,13 @@ const OrderCard = ({ order }) => {
     let displayTitle = `Order #${order.id}`;
     let displayMeta = `${new Date(order.created_at).toLocaleDateString()} • ${items.length} Items`;
 
+    if (order.booking_date) {
+        displayMeta = `Booked for ${order.booking_date}`;
+        if (order.booking_time) {
+            displayMeta += ` at ${order.booking_time}`;
+        }
+    }
+
     if (items.length > 0) {
         const first = items[0];
         // For repairs, usually modelName is what we want (e.g. iPhone 13)
@@ -51,8 +58,10 @@ const OrderCard = ({ order }) => {
             displayTitle += ` + ${items.length - 1} more`;
         }
 
-        // Move Order ID to meta
-        displayMeta = `Order #${order.id} • ${new Date(order.created_at).toLocaleDateString()}`;
+        // Move Order ID to meta if not already set by booking date
+        if (!order.booking_date) {
+            displayMeta = `Order #${order.id} • ${new Date(order.created_at).toLocaleDateString()}`;
+        }
     }
 
     return (

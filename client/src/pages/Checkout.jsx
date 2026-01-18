@@ -180,6 +180,7 @@ const Checkout = () => {
     const vat = finalTotal - subtotal;
 
     const handleSubmit = async (e) => {
+        console.log("DEBUG: Checkout handleSubmit CALLED");
         e.preventDefault();
         setError('');
         if (!formData.termsAccepted) {
@@ -445,6 +446,7 @@ const Checkout = () => {
 
                                         {/* Option 2: Mail-In */}
                                         <div
+                                            data-testid="service-mail-in"
                                             onClick={() => setServiceMethod('mail-in')}
                                             style={{
                                                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -498,7 +500,7 @@ const Checkout = () => {
                                                                     style={{
                                                                         display: 'flex', justifyContent: 'space-between', padding: '15px',
                                                                         borderRadius: '8px', border: selectedReturnLabel?.id === label.id ? '2px solid var(--primary)' : '1px solid var(--border-light)',
-                                                                        cursor: 'pointer', background: selectedReturnLabel?.id === label.id ? 'var(--bg-primary-light)' : '#fff'
+                                                                        cursor: 'pointer', background: selectedReturnLabel?.id === label.id ? 'var(--bg-primary-light)' : 'var(--bg-element)'
                                                                     }}
                                                                 >
                                                                     <div style={{ fontWeight: '600' }}>{label.name}</div>
@@ -588,10 +590,10 @@ const Checkout = () => {
                                     <div style={{ marginLeft: '10px', borderLeft: '2px solid var(--border-light)', paddingLeft: '20px', marginTop: '20px' }}>
                                         <h4 style={{ marginBottom: '15px' }}><span style={{ color: 'var(--primary)' }}>●</span> {t('checkout.yourAddress')}</h4>
                                         <div style={{ display: 'grid', gap: '15px' }}>
-                                            <input className="input-field" placeholder={t('checkout.streetPlaceholder')} value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} />
+                                            <input className="input-field" name="address" placeholder={t('checkout.streetPlaceholder')} value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} />
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '15px' }}>
-                                                <input className="input-field" placeholder={t('checkout.zipPlaceholder')} value={formData.postalCode} onChange={e => setFormData({ ...formData, postalCode: e.target.value })} />
-                                                <input className="input-field" placeholder={t('checkout.cityPlaceholder')} value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} />
+                                                <input className="input-field" name="postalCode" placeholder={t('checkout.zipPlaceholder')} value={formData.postalCode} onChange={e => setFormData({ ...formData, postalCode: e.target.value })} />
+                                                <input className="input-field" name="city" placeholder={t('checkout.cityPlaceholder')} value={formData.city} onChange={e => setFormData({ ...formData, city: e.target.value })} />
                                             </div>
                                         </div>
                                     </div>
@@ -630,7 +632,9 @@ const Checkout = () => {
                                             </div>
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'end', gap: '5px' }}>
-                                            <span style={{ fontWeight: '600' }}>kr {item.price}</span>
+                                            <span style={{ fontWeight: '600' }}>
+                                                kr {user && user.role === 'business' ? (item.price * 0.8).toFixed(0) : item.price}
+                                            </span>
                                             <button
                                                 onClick={() => removeFromCart(item.uniqueId || item.id)}
                                                 className="btn-icon-danger"
@@ -685,14 +689,14 @@ const Checkout = () => {
                             {/* Contact Form */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
                                 <div className="floating-label">
-                                    <input className="input-field" placeholder={t('checkout.namePlaceholder')} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                                    <input className="input-field" name="name" placeholder={t('checkout.namePlaceholder')} value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                                 </div>
                                 <div className="floating-label">
-                                    <input className="input-field" placeholder={t('checkout.phonePlaceholder')} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                                    <input className="input-field" name="phone" placeholder={t('checkout.phonePlaceholder')} value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
                                 </div>
                             </div>
                             <div style={{ marginBottom: '15px' }}>
-                                <input className="input-field" placeholder={t('checkout.emailPlaceholder')} value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                                <input className="input-field" name="email" placeholder={t('checkout.emailPlaceholder')} value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
                             </div>
                             {hasRepairs && (
                                 <div style={{ marginBottom: '25px' }}>
@@ -709,7 +713,7 @@ const Checkout = () => {
                             <button
                                 onClick={handleSubmit}
                                 disabled={isSubmitting}
-                                className="btn-primary"
+                                className="btn-primary checkout-submit-btn"
                                 style={{ width: '100%', padding: '15px', fontSize: '1.2rem', background: 'var(--primary)', border: 'none', borderRadius: '8px', color: '#fff', fontWeight: '700', cursor: 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
                             >
                                 {isSubmitting ? t('checkout.processing') : ((hasRepairs && serviceMethod === 'walk-in' && walkInPayment === 'store') ? t('checkout.confirmBooking') : t('checkout.pay'))}

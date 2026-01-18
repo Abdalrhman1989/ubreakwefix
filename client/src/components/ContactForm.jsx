@@ -32,7 +32,7 @@ const ContactForm = () => {
 
     if (status === 'success') {
         return (
-            <div style={{ textAlign: 'center', padding: '40px', background: 'var(--bg-surface)', borderRadius: '16px', border: '1px solid var(--border-light)' }}>
+            <div data-testid="contact-success-message" style={{ textAlign: 'center', padding: '40px', background: 'var(--bg-surface)', borderRadius: '16px', border: '1px solid var(--border-light)' }}>
                 <CheckCircle size={48} color="var(--primary)" style={{ margin: '0 auto 20px' }} />
                 <h3>{t('contactPage.form.successTitle')}</h3>
                 <p style={{ color: 'var(--text-muted)' }}>{t('contactPage.form.successText')}</p>

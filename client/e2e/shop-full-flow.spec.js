@@ -16,13 +16,13 @@ test.describe('Full Shop to Admin Order Flow', () => {
         console.log(`Selecting product: ${productName} (${productPriceText})`);
 
         // Add to cart
-        await firstProduct.locator('button', { hasText: 'Add' }).click();
+        await firstProduct.locator('.add-to-cart-btn').click();
         // Wait for toast or cart badge update
         await page.waitForTimeout(1000);
 
         // Go to Checkout
         await page.goto('/checkout');
-        await expect(page.locator('h1')).toContainText('Checkout'); // Checkout header
+        await expect(page.locator('h1')).toContainText(/Checkout|Færdiggøre booking/i); // Checkout header
 
         // Fill Checkout Form
         // Fill Checkout Form
@@ -35,7 +35,7 @@ test.describe('Full Shop to Admin Order Flow', () => {
         await page.locator('input[name="postalCode"]').fill('1000');
 
         // Mock Payment/Submit
-        const submitBtn = page.locator('button[type="submit"]');
+        const submitBtn = page.locator('.checkout-submit-btn');
         await expect(submitBtn).toBeVisible();
         await submitBtn.click();
 

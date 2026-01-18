@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, Smartphone, User, Mail, Phone, FileText, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Calendar, Smartphone, User, Mail, Phone, FileText, CheckCircle, ArrowLeft, Clock } from 'lucide-react';
 
 const Booking = () => {
     const navigate = useNavigate();
@@ -18,7 +18,10 @@ const Booking = () => {
         customerPhone: '',
         deviceModel: prefill.deviceModel || '',
         problem: prefill.problem || '',
-        date: ''
+        estimatedPrice: prefill.price || 0,
+        date: '',
+        time: '',
+        isPriority: prefill.isPriority || false
     });
 
     useEffect(() => {
@@ -191,6 +194,20 @@ const Booking = () => {
                                                     id="date"
                                                     type="date" name="date" required
                                                     value={formData.date} onChange={handleChange}
+                                                    className="input-field"
+                                                    style={{ paddingLeft: '45px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)' }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="input-group">
+                                            <label htmlFor="time" className="form-label" style={{ fontWeight: '600', marginLeft: '5px' }}>Tidspunkt</label>
+                                            <div style={{ position: 'relative' }}>
+                                                <Clock size={18} style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+                                                <input
+                                                    id="time"
+                                                    type="time" name="time" required
+                                                    value={formData.time} onChange={handleChange}
                                                     className="input-field"
                                                     style={{ paddingLeft: '45px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-light)' }}
                                                 />

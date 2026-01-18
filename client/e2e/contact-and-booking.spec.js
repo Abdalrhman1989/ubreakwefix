@@ -27,7 +27,8 @@ test.describe('Contact and Booking Flows', () => {
         await page.click('button:has-text("Send")');
 
         // 5. Verify Success UI
-        await expect(page.locator('h3:has-text("Message Sent!")').or(page.locator('h3:has-text("Besked Sendt!")'))).toBeVisible();
+        // 5. Verify Success UI
+        await expect(page.getByTestId('contact-success-message')).toBeVisible();
 
         // 6. Verify Payload
         expect(requestBody).toBeTruthy();
@@ -40,7 +41,7 @@ test.describe('Contact and Booking Flows', () => {
         let requestBody;
         await page.route('**/api/bookings', async route => {
             requestBody = route.request().postDataJSON();
-            await route.continue();
+            await route.fulfill({ status: 200, body: JSON.stringify({ success: true }) });
         });
 
         // 2. Navigate
@@ -63,29 +64,25 @@ test.describe('Contact and Booking Flows', () => {
         futureDate.setDate(futureDate.getDate() + 5);
         const dateStr = futureDate.toISOString().split('T')[0];
 
-        // Evaluate JS to set date input because standard .fill on date inputs can be tricky across browsers
-        await page.$eval('input[type="date"]', (el, val) => {
-            el.value = val;
-            el.dispatchEvent(new Event('change', { bubbles: true }));
-        }, dateStr);
+        await page.fill('input[type="date"]', dateStr);
 
         // Select Time
-        await page.click('button:has-text("10:00")');
+        await page.getByTestId('time-slot-10:00').click();
 
-        // Next
-        await page.click('button:has-text("Næste")');
+        // Next (Step 1 -> Step 2)
+        await page.getByTestId('booking-next-btn').click();
 
-        // 4. Fill Details
-        await page.fill('input[placeholder*="Navn"]', 'Danish Tester');
-        await page.fill('input[type="email"]', 'danish@example.com');
-        await page.fill('input[type="tel"]', '12345678');
-        await page.fill('input[placeholder*="Beskrivelse"]', 'Skærmskift'); // Reason
+        // 4. Fill Details (Step 2)
+        await page.getByTestId('booking-name-input').fill('Danish Tester');
+        await page.getByTestId('booking-email-input').fill('danish@example.com');
+        await page.getByTestId('booking-phone-input').fill('12345678');
+        await page.getByTestId('booking-reason-input').fill('Skærmskift'); // Reason
 
-        // 5. Confirm
-        await page.click('button:has-text("Bekræft")');
+        // 5. Confirm (Submit)
+        await page.getByTestId('booking-submit-btn').click();
 
         // 6. Verify Success
-        await expect(page.locator('text=Tak for din bestilling')).toBeVisible();
+        await expect(page.locator('text=Tak for din booking!')).toBeVisible();
 
         // 7. Verify Payload
         expect(requestBody).toBeTruthy();

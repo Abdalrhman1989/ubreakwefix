@@ -104,13 +104,13 @@ const SellScreen = () => {
                                 />
                             </div>
 
-                            <button type="submit" className="btn btn-primary" style={{ padding: '15px', fontSize: '1.1rem', marginTop: '10px', background: '#8B5CF6', borderColor: '#8B5CF6' }}>
+                            <button type="submit" className="btn btn-primary" style={{ padding: '15px', fontSize: '1.1rem', marginTop: '10px' }}>
                                 Send Forespørgsel
                             </button>
                         </form>
                     ) : (
                         <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                            <h2 style={{ color: '#8B5CF6', marginBottom: '15px' }}>Tak for din henvendelse!</h2>
+                            <h2 style={{ color: 'var(--primary)', marginBottom: '15px' }}>Tak for din henvendelse!</h2>
                             <p style={{ color: 'var(--text-muted)' }}>Vi kontakter dig snart vedrørende dine skærme.</p>
                         </div>
                     )}
