@@ -1250,5 +1250,7 @@ const startServer = async () => {
         process.exit(1);
     }
 };
-startServer();
+if (require.main === module) {
+    startServer();
+}
 module.exports = app;
