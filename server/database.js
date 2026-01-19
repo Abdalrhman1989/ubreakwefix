@@ -1,20 +1,21 @@
-const sqlite3 = require('sqlite3').verbose();
 const { Pool } = require('pg');
 const path = require('path');
 
 class DatabaseAdapter {
     constructor() {
+        // ... (lines 6-16 omitted for clarity if using replace_file_content smartly, but I will replace the block)
         const connString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
         this.isPostgres = !!connString;
 
         if (this.isPostgres) {
-            console.log("Initializing PostgreSQL Adapter...", connString.split('@')[1]); // Log host only
+            console.log("Initializing PostgreSQL Adapter...", connString.split('@')[1]);
             this.pool = new Pool({
                 connectionString: connString,
                 ssl: { rejectUnauthorized: false }
             });
         } else {
             console.log("Initializing SQLite Adapter...");
+            const sqlite3 = require('sqlite3').verbose(); // Lazy load
             const dbPath = path.resolve(__dirname, 'ubreakwefix.db');
             this.sqlite = new sqlite3.Database(dbPath);
         }
