@@ -56,7 +56,7 @@ const ForgotPassword = () => {
                         </div>
                         <h2 style={{ fontSize: '1.8rem', fontWeight: 'bold', marginBottom: '10px' }}>Check Your Email</h2>
                         <p style={{ color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                            We have sent a password reset link to <br /><strong>{email}</strong>.
+                            We have sent a password reset link to <br /><strong>the email address associated with this account</strong>.
                         </p>
                     </div>
                 ) : (
@@ -82,15 +82,15 @@ const ForgotPassword = () => {
 
                         <form onSubmit={handleSubmit}>
                             <div style={{ marginBottom: '24px' }}>
-                                <label className="form-label" style={{ fontWeight: '600', marginLeft: '4px' }}>{t('auth.email')}</label>
+                                <label className="form-label" style={{ fontWeight: '600', marginLeft: '4px' }}>{t('auth.email')} or Phone</label>
                                 <div style={{ position: 'relative' }}>
                                     <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                                     <input
-                                        type="email"
+                                        type="text"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        placeholder="name@example.com"
+                                        placeholder="name@example.com or phone"
                                         className="input-field"
                                         style={{
                                             width: '100%', padding: '14px 14px 14px 48px', borderRadius: '12px',

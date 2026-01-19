@@ -151,12 +151,20 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 app.post('/api/auth/forgot-password', async (req, res) => {
-    const { email } = req.body;
+    const { email } = req.body; // 'email' here is the input identifier (email or phone)
     try {
-        const user = await db.get("SELECT * FROM users WHERE email = ?", [email]);
+        // Find user by Email OR Phone
+        const user = await db.get("SELECT * FROM users WHERE email = ? OR phone = ?", [email, email]);
+
         if (!user) {
             // Silence is golden - don't reveal if user exists
-            return res.json({ success: true, message: 'If that email exists, we sent a link.' });
+            return res.json({ success: true, message: 'If that account exists, we sent a link to the registered email.' });
+        }
+
+        // Always send to the registered EMAIL, even if they typed a phone number
+        const targetEmail = user.email;
+        if (!targetEmail) {
+            return res.json({ success: true, message: 'If that account exists, we sent a link to the registered email.' });
         }
 
         const token = crypto.randomBytes(20).toString('hex');
@@ -164,7 +172,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 
         await db.run("UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?", [token, expires, user.id]);
 
-        await sendPasswordResetEmail(email, token);
+        await sendPasswordResetEmail(targetEmail, token);
 
         res.json({ success: true, message: 'Reset link sent.' });
     } catch (err) {
