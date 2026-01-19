@@ -15,9 +15,14 @@ class DatabaseAdapter {
             });
         } else {
             console.log("Initializing SQLite Adapter...");
-            const sqlite3 = require('sqlite3').verbose(); // Lazy load
-            const dbPath = path.resolve(__dirname, 'ubreakwefix.db');
-            this.sqlite = new sqlite3.Database(dbPath);
+            try {
+                const sqlite3 = require('sqlite3').verbose();
+                const dbPath = path.resolve(__dirname, 'ubreakwefix.db');
+                this.sqlite = new sqlite3.Database(dbPath);
+            } catch (e) {
+                console.error("SQLite Load Failed (Normal if on Vercel without PG):", e.message);
+                this.sqlite = null;
+            }
         }
     }
 
