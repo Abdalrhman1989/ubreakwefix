@@ -130,23 +130,47 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
     console.log("DEBUG: LOGIN REQUEST:", req.body);
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Please provide credentials' });
+    }
+
     try {
-        const rows = await db.all("SELECT * FROM users WHERE email = ?", [email]);
+        email = email.trim();
+        // create a "cleaned" version if it looks like a phone number?
+        // Simple strategy: check if query matches email OR matches phone (exact) OR matches phone (cleaned)
+        const cleanedPhone = email.replace(/\D/g, ''); // Remove spaces, dashes, parens
+
+        let query = "SELECT * FROM users WHERE email = ? OR phone = ?";
+        let params = [email, email];
+
+        // If 'email' variable has digits (looks like phone), also try the cleaned version
+        if (cleanedPhone.length > 6) {
+            query += " OR phone = ?";
+            params.push(cleanedPhone);
+        }
+
+        const rows = await db.all(query, params);
+
         if (!rows || rows.length === 0) {
             console.warn("DEBUG: LOGIN FAIL - NO USER FOUND:", email);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-        if (rows[0].password !== password) {
+
+        // Ideally handle duplicates if phone is not unique, but picking first is standard safe fallback
+        const user = rows[0];
+
+        if (user.password !== password) {
             console.warn("DEBUG: LOGIN FAIL - WRONG PASSWORD:", email);
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-        const { password: _, ...u } = rows[0];
+        const { password: _, ...u } = user;
         console.log("DEBUG: LOGIN SUCCESS:", u.email);
         res.json({ user: u, token: 'mock-jwt-' + u.id });
     } catch (err) {
         console.error("DEBUG: LOGIN DB ERROR:", err);
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: "Server error during login" });
     }
 });
 
