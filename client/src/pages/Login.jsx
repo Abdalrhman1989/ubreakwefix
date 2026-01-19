@@ -122,16 +122,16 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: '20px' }}>
-                        <label className="form-label" style={{ fontWeight: '600', marginLeft: '4px' }}>{t('auth.email')}</label>
+                        <label className="form-label" style={{ fontWeight: '600', marginLeft: '4px' }}>{t('auth.email')} or Phone</label>
                         <div style={{ position: 'relative' }}>
                             <Mail size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
                             <input
-                                type="email"
+                                type="text"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                placeholder="name@example.com"
+                                placeholder="name@example.com or phone"
                                 className="input-field"
                                 style={{
                                     width: '100%', padding: '14px 14px 14px 48px', borderRadius: '12px',
