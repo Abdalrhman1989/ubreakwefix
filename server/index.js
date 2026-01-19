@@ -147,8 +147,23 @@ app.post('/api/auth/login', async (req, res) => {
 
         // If 'email' variable has digits (looks like phone), also try the cleaned version
         if (cleanedPhone.length > 6) {
+            // 1. Check raw numbers (e.g. 4542223110)
             query += " OR phone = ?";
             params.push(cleanedPhone);
+
+            // 2. Check with + prefix (e.g. +4542223110) - Common storage format
+            query += " OR phone = ?";
+            params.push('+' + cleanedPhone);
+
+            // 3. Handle double-zero prefix (0045 -> 45) common in EU
+            if (cleanedPhone.startsWith('00')) {
+                const noZero = cleanedPhone.substring(2);
+                query += " OR phone = ?";
+                params.push(noZero);
+
+                query += " OR phone = ?";
+                params.push('+' + noZero);
+            }
         }
 
         const rows = await db.all(query, params);
